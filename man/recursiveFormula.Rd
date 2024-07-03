@@ -4,8 +4,14 @@
 \alias{recursiveFormula}
 \title{return Recursive Score into raw response scale or return the theta itself}
 \usage{
-recursiveFormula(mirtModel, mins = F, devide = F, rotate = NULL,
-  individual = F, extractThetaOnly = F)
+recursiveFormula(
+  mirtModel,
+  mins = F,
+  devide = F,
+  rotate = NULL,
+  individual = F,
+  extractThetaOnly = F
+)
 }
 \arguments{
 \item{mirtModel}{estimated aefa model}

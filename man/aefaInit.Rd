@@ -6,8 +6,12 @@
 This function initalise the aefa cluster.
 If someone have Remote Cluster informaiton with SSH, put the information in the argument.}
 \usage{
-aefaInit(RemoteClusters = getOption("kaefaServers"), debug = F,
-  sshKeyPath = NULL, loadPercentage = 50)
+aefaInit(
+  RemoteClusters = getOption("kaefaServers"),
+  debug = F,
+  sshKeyPath = NULL,
+  loadPercentage = 50
+)
 }
 \arguments{
 \item{RemoteClusters}{insert google computing engine virtual machine information. If you want to use MPI address, please insert addresses here.}

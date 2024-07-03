@@ -10,3 +10,5 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^revdep$
+^\.github
+^\.trunk

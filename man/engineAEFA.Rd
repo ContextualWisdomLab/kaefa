@@ -4,14 +4,34 @@
 \alias{engineAEFA}
 \title{estimate full-information item factor analysis models with combinating random effects}
 \usage{
-engineAEFA(data, model = 1, GenRandomPars = T, NCYCLES = 4000,
-  BURNIN = 1500, SEMCYCLES = 1000, covdata = NULL, fixed = c(~1,
-  ~0, ~-1), random = list(~1 | items), key = NULL,
-  accelerate = "squarem", symmetric = F, resampling = T,
-  samples = 5000, printDebugMsg = F, fitEMatUIRT = F,
-  ranefautocomb = T, tryLCA = T, forcingMixedModelOnly = F,
-  forcingQMC = F, turnOffMixedEst = F, anchor = NULL,
-  skipggumInternal = F, powertest = F, idling = 60, leniency = F)
+engineAEFA(
+  data,
+  model = 1,
+  GenRandomPars = T,
+  NCYCLES = 4000,
+  BURNIN = 1500,
+  SEMCYCLES = 1000,
+  covdata = NULL,
+  fixed = c(~1, ~0, ~-1),
+  random = list(~1 | items),
+  key = NULL,
+  accelerate = "squarem",
+  symmetric = F,
+  resampling = T,
+  samples = 5000,
+  printDebugMsg = F,
+  fitEMatUIRT = F,
+  ranefautocomb = T,
+  tryLCA = T,
+  forcingMixedModelOnly = F,
+  forcingQMC = F,
+  turnOffMixedEst = F,
+  anchor = NULL,
+  skipggumInternal = F,
+  powertest = F,
+  idling = 60,
+  leniency = F
+)
 }
 \arguments{
 \item{data}{insert \code{data.frame} object.}

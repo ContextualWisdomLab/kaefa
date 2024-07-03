@@ -4,8 +4,13 @@
 \alias{evaluateItemFit}
 \title{assessment of fit indices of the calibrated model}
 \usage{
-evaluateItemFit(mirtModel, RemoteClusters = NULL, rotate = "bifactorQ",
-  PV_Q1 = T, S_X2 = T)
+evaluateItemFit(
+  mirtModel,
+  RemoteClusters = NULL,
+  rotate = "bifactorQ",
+  PV_Q1 = T,
+  S_X2 = T
+)
 }
 \arguments{
 \item{mirtModel}{insert estimated \code{mirt::mirt} or \code{mirt::mixedmirt} model.}
