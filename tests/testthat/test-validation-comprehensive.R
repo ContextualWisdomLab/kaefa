@@ -1,8 +1,6 @@
 # Comprehensive validation that tests catch the corrected issues
 # This test file demonstrates that our test suite would have caught the original typos
 
-context("Validation that tests catch original issues")
-
 test_that("test suite would catch original DESCRIPTION typo", {
   # This test verifies our test logic by checking the corrected version
   desc_path <- system.file("DESCRIPTION", package = "kaefa")
