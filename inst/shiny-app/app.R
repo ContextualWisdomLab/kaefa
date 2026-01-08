@@ -41,6 +41,7 @@ ui <- fluidPage(
       numericInput("maxFactors", "Maximum Factors:", 
                    value = 5, min = 1, max = 20),
       
+      # Keep this list in sync with supported rotation methods in kaefa.
       selectInput("rotation", "Rotation Method:",
                   choices = c("bifactorQ", "geominQ", "geominT", "bentlerQ", 
                               "bentlerT", "oblimin", "simplimax", "tandemII"),
