@@ -315,6 +315,7 @@ server <- function(input, output, session) {
     if (inherits(values$results, "aefa") && 
         length(values$results$itemFitTrials) > 0) {
       itemFit <- values$results$itemFitTrials[[length(values$results$itemFitTrials)]]
+      req(itemFit)
       datatable(itemFit, 
                 options = list(pageLength = 20, scrollX = TRUE),
                 rownames = FALSE) %>%
