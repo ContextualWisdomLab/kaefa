@@ -100,9 +100,11 @@ test_that("WORDLIST contains IRT and psychometric terms", {
     irt_terms <- c("2PL", "3PL", "4PL", "Rasch", "gpcm", "grsm", "pcm", "rsm")
     
     found_irt_terms <- sum(irt_terms %in% wordlist_content)
-    expect_true(found_irt_terms >= 5,
-                info = paste("WORDLIST should contain common IRT terms.",
-                            "Found", found_irt_terms, "out of", length(irt_terms)))
+    missing_irt_terms <- setdiff(irt_terms, wordlist_content)
+    expect_true(length(missing_irt_terms) == 0,
+                info = paste("WORDLIST missing IRT terms:",
+                            paste(missing_irt_terms, collapse = ", "),
+                            "| Found", found_irt_terms, "out of", length(irt_terms)))
   }
 })
 
