@@ -64,8 +64,8 @@ The `example_data.csv` file contains sample item response data with 10 items and
 ## Support
 
 For issues or questions:
-- GitHub Issues: https://github.com/seonghobae/kaefa/issues
-- Documentation: https://github.com/seonghobae/kaefa
+- [GitHub Issues](https://github.com/seonghobae/kaefa/issues)
+- [Documentation](https://github.com/seonghobae/kaefa)
 
 ## Citation
 
