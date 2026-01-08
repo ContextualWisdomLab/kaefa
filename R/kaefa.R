@@ -352,6 +352,11 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
 }
 
 #' doing automated exploratory factor analysis (aefa) for research capability to identify unexplained factor structure with complexly cross-classified multilevel structured data in R environment
+#'
+#' This function implements a greedy search algorithm to efficiently explore the model space and find improved model configurations.
+#' The algorithm iteratively evaluates model candidates, selects the best based on information criteria,
+#' assesses item fit, and removes poorly fitting items until convergence to a locally optimal solution.
+#' This greedy approach enables efficient exploration while seeking improved solutions through iterative refinement.
 #' @param data insert \code{data.frame} object.
 #' @param model specify the mirt model if you have want to calibrate. default is NULL to run exploratory models, but accepting \code{mirt::mirt.model} object.
 #' @param minExtraction specify the minimum number of factors to calibrate. defaults is 1 but can change this. if model is not NULL, aefa will ignoring this.
@@ -439,6 +444,19 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
         }
       }
     }
+  }
+
+  if (!is.numeric(minExtraction) || length(minExtraction) != 1 || is.na(minExtraction)) {
+    stop("minExtraction must be a single numeric value.")
+  }
+  if (!is.numeric(maxExtraction) || length(maxExtraction) != 1 || is.na(maxExtraction)) {
+    stop("maxExtraction must be a single numeric value.")
+  }
+  if (minExtraction < 1) {
+    stop("minExtraction must be >= 1.")
+  }
+  if (maxExtraction < minExtraction) {
+    stop("maxExtraction must be >= minExtraction.")
   }
 
     TimeStart <- Sys.time()
