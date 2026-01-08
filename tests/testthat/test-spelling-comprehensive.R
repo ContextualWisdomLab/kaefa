@@ -161,15 +161,27 @@ test_that("parameter names are spelled correctly across all documentation", {
       "GenRandomPars",
       "RemoteClusters"
     )
-    
+
+    param_found <- setNames(logical(length(correct_params)), correct_params)
+
     for (rd_file in rd_files) {
       content <- paste(readLines(rd_file, warn = FALSE), collapse = " ")
-      
+
       for (param in correct_params) {
         if (grepl(param, content, fixed = TRUE)) {
-          expect_true(TRUE)
+          param_found[param] <- TRUE
         }
       }
+    }
+
+    for (param in correct_params) {
+      expect_true(
+        param_found[param],
+        info = paste(
+          "Parameter name", param,
+          "was not found in any .Rd documentation file; check for typos or inconsistent naming."
+        )
+      )
     }
   }
 })
