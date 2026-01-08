@@ -62,9 +62,16 @@ ui <- fluidPage(
       
       # Download Results Section
       h3("3. Download Results"),
-      downloadButton("downloadResults", "Download Results (.RDS)"),
-      br(), br(),
-      downloadButton("downloadReport", "Download Report (.txt)")
+      conditionalPanel(
+        condition = "output.analysisComplete",
+        downloadButton("downloadResults", "Download Results (.RDS)"),
+        br(), br(),
+        downloadButton("downloadReport", "Download Report (.txt)")
+      ),
+      conditionalPanel(
+        condition = "!output.analysisComplete",
+        helpText("Run the analysis to enable downloads.")
+      )
     ),
     
     mainPanel(
@@ -366,6 +373,7 @@ server <- function(input, output, session) {
       paste0("kaefa_results_", Sys.Date(), ".RDS")
     },
     content = function(file) {
+      req(values$analysisComplete)
       req(values$results)
       saveRDS(values$results, file)
     }
@@ -377,6 +385,7 @@ server <- function(input, output, session) {
       paste0("kaefa_report_", Sys.Date(), ".txt")
     },
     content = function(file) {
+      req(values$analysisComplete)
       req(values$results)
       
       sink(file)
