@@ -10,8 +10,7 @@ test_that("man directory exists and contains .Rd files", {
 })
 
 test_that("documentation uses correct spelling for common terms", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -52,8 +51,7 @@ test_that("documentation uses correct spelling for common terms", {
 })
 
 test_that("documentation uses consistent British English spelling", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -80,8 +78,7 @@ test_that("documentation uses consistent British English spelling", {
 })
 
 test_that("key documentation files have correct parameter descriptions", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     aefa_rd <- file.path(man_dir, "aefa.Rd")
@@ -106,8 +103,7 @@ test_that("key documentation files have correct parameter descriptions", {
 })
 
 test_that("documentation examples are present for main functions", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     key_functions <- c("aefa.Rd", "engineAEFA.Rd", "aefaInit.Rd")
@@ -125,8 +121,7 @@ test_that("documentation examples are present for main functions", {
 })
 
 test_that("documentation cross-references are valid", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -146,8 +141,7 @@ test_that("documentation cross-references are valid", {
 })
 
 test_that("documentation titles are descriptive", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
