@@ -77,7 +77,7 @@ test_that("Example data values are within expected range", {
     exampleFile <- file.path(appDir, "example_data.csv")
     data <- read.csv(exampleFile, header = TRUE)
     
-    # Check for reasonable Likert scale values (typically 1-5 or 1-7)
+    # Check for reasonable Likert scale values (typically 1-5)
     min_val <- min(data, na.rm = TRUE)
     max_val <- max(data, na.rm = TRUE)
     
@@ -86,8 +86,8 @@ test_that("Example data values are within expected range", {
       info = "Minimum value should be at least 1"
     )
     expect_true(
-      max_val <= 10,
-      info = "Maximum value should be reasonable for Likert scale"
+      max_val <= 5,
+      info = "Maximum value should be 5 for a 1-5 Likert scale"
     )
     
     # Check that values appear to be integers
@@ -283,8 +283,8 @@ test_that("Example data numeric ranges make sense", {
     )
     
     expect_true(
-      max(unique_vals) <= 7,
-      info = "Maximum response should be typical Likert scale"
+      max(unique_vals) <= 5,
+      info = "Maximum response should be 5 for a 1-5 Likert scale"
     )
   } else {
     skip("Package not installed")
