@@ -246,7 +246,6 @@
   }
 
 # Compute raw scores from response data
-#' @export
   .computeRawScores <- function(data){
     if(is.data.frame(data) || is.matrix(data)){
       # Sum across items for each person (row sums)
