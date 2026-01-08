@@ -15,6 +15,7 @@ get_app_dir <- function() {
 # Helper function to load app components
 load_app_components <- function() {
   appDir <- get_app_dir()
+  skip_on_cran()
   appFile <- file.path(appDir, "app.R")
   
   # Source the app in a new environment to get ui and server
