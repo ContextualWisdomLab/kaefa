@@ -138,6 +138,10 @@ For more examples and detailed documentation, see the `examples/` directory.
 software quality information
 ----------------------------
 
+### Continuous Integration (Ubuntu, macOS, Windows)
+
+[![R-CMD-check](https://github.com/seonghobae/kaefa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/seonghobae/kaefa/actions/workflows/R-CMD-check.yaml)
+
 ### ubuntu and mac environment
 
 [![Travis-CI Build Status](https://travis-ci.org/seonghobae/kaefa.svg?branch=master)](https://travis-ci.org/seonghobae/kaefa)
