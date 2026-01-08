@@ -281,6 +281,11 @@
     if(length(rawScores) < 3){
       stop("Not enough data points to fit distribution")
     }
+
+    dist_fun <- paste0("d", dist)
+    if (!exists(dist_fun, mode = "function")) {
+      stop("Unknown distribution '", dist, "'. Provide a name with a matching density function (e.g., 'norm' for stats::dnorm).")
+    }
     
     # Fit distribution using fitdistrplus
     tryCatch({
