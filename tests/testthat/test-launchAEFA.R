@@ -129,13 +129,13 @@ test_that("launchAEFA produces appropriate message", {
 })
 
 test_that("launchAEFA error message is descriptive", {
-  # Test error message content
+  # Test error message includes helpful guidance
   with_mocked_bindings(
     system.file = function(...) "",
     {
       expect_error(
         launchAEFA(),
-        "Shiny app directory not found"
+        "Reinstall with source files"
       )
     }
   )
