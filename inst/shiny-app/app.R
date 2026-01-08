@@ -27,9 +27,9 @@ ui <- fluidPage(
       
       # Data Upload Section
       h3("1. Upload Data"),
-      fileInput("dataFile", "Choose CSV/RDS File",
-                accept = c(".csv", ".rds", ".RDS")),
-      helpText("Upload your item response data in CSV or RDS format."),
+      fileInput("dataFile", "Choose CSV File",
+                accept = c(".csv")),
+      helpText("Upload your item response data in CSV format."),
       checkboxInput("hasHeader", "File has header", TRUE),
       
       hr(),
