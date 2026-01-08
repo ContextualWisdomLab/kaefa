@@ -244,6 +244,28 @@ server <- function(input, output, session) {
   observeEvent(input$runAnalysis, {
     req(values$data)
     
+    n_items <- ncol(values$data)
+    if (is.null(n_items) || n_items < 1) {
+      showNotification("The dataset does not contain any columns (items) for factor analysis.",
+                       type = "error")
+      return()
+    }
+
+    if (input$minFactors < 1 || input$maxFactors < 1) {
+      showNotification("Minimum and maximum number of factors must be at least 1.",
+                       type = "error")
+      return()
+    }
+
+    if (input$maxFactors > n_items) {
+      showNotification(
+        paste0("Maximum number of factors (", input$maxFactors,
+               ") cannot exceed the number of items in the dataset (", n_items, ")."),
+        type = "error"
+      )
+      return()
+    }
+
     # Validate inputs
     if (input$minFactors > input$maxFactors) {
       showNotification("Minimum factors must be less than or equal to maximum factors!", 
