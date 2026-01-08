@@ -1,8 +1,6 @@
 # Tests for example data file
 # Validates the structure and content of example_data.csv
 
-context("Example Data Validation")
-
 test_that("Example data file exists", {
   appDir <- get_app_dir("Package not installed, skipping example data tests")
   exampleFile <- file.path(appDir, "example_data.csv")
