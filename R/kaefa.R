@@ -25,36 +25,43 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 
     # Helper function to detect OS on remote or local server
     detectOS <- function(serverName, sshKeyPath = NULL) {
-        if (serverName == "localhost") {
-            osInfo <- tryCatch(system("grep '^NAME=' /etc/os-release", intern = TRUE), 
-                             error = function(e) { "" })
-        } else {
-            # Remote server via SSH
+        runCmd <- function(cmd) {
+            if (serverName == "localhost") {
+                return(tryCatch(system(cmd, intern = TRUE), error = function(e) { character() }))
+            }
             if (!is.null(sshKeyPath) && (grepl("pem", sshKeyPath) || grepl("key", sshKeyPath))) {
-                osInfo <- tryCatch(system(paste("ssh", serverName, "-i", sshKeyPath, 
-                                              "grep '^NAME=' /etc/os-release"), 
-                                        intern = TRUE), 
-                                 error = function(e) { "" })
-            } else {
-                osInfo <- tryCatch(system(paste("ssh", serverName, 
-                                              "grep '^NAME=' /etc/os-release"), 
-                                        intern = TRUE), 
-                                 error = function(e) { "" })
+                return(tryCatch(system(paste("ssh", serverName, "-i", sshKeyPath, cmd),
+                                     intern = TRUE), error = function(e) { character() }))
+            }
+            tryCatch(system(paste("ssh", serverName, cmd), intern = TRUE),
+                   error = function(e) { character() })
+        }
+
+        osInfo <- runCmd("cat /etc/os-release")
+        osFields <- tolower(paste(grep("^(NAME|ID|ID_LIKE)=", osInfo, value = TRUE), collapse = " "))
+
+        # Ubuntu/Debian-based systems use column 11
+        if (grepl("ubuntu|debian", osFields)) {
+            return(11)
+        }
+        # CentOS/RHEL-based systems use column 8
+        if (grepl("centos|red hat|rhel|fedora", osFields)) {
+            return(8)
+        }
+
+        # Fallback for unknown distributions by sampling uptime output
+        uptimeOut <- runCmd("uptime")
+        if (length(uptimeOut) > 0) {
+            fields <- strsplit(gsub(",", "", uptimeOut[1]), "\\s+")[[1]]
+            if (length(fields) >= 11 && !is.na(suppressWarnings(as.numeric(fields[11])))) {
+                return(11)
+            }
+            if (length(fields) >= 8 && !is.na(suppressWarnings(as.numeric(fields[8])))) {
+                return(8)
             }
         }
-        
-        # Determine uptime column based on OS
-        # Ubuntu, Debian and similar distributions use column 11
-        # CentOS, RHEL, and similar distributions use column 8
-        if (length(osInfo) > 0 && (grepl("Ubuntu", osInfo) || grepl("Debian", osInfo))) {
-            return(11)  # Ubuntu/Debian-based systems use column 11
-        } else if (length(osInfo) > 0 && (grepl("CentOS", osInfo) || grepl("Red Hat", osInfo) || grepl("RHEL", osInfo))) {
-            return(8)   # CentOS/RHEL-based systems use column 8
-        } else {
-            # Default fallback for unknown distributions
-            # Try to detect by checking if column 8 contains numeric value
-            return(8)   # Default to column 8 for other distributions
-        }
+
+        return(11)
     }
 
     assignClusterNodes <- function(serverList, loadPercentage = 50, freeRamPercentage = 30,
