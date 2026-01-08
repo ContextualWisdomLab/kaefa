@@ -61,8 +61,15 @@ test_that("Algorithm implements iterative refinement", {
 # ============================================================
 
 test_that("kaefa.R greedy algorithm description is present", {
-  # Read the source file to verify documentation
-  kaefa_source <- readLines("../../R/kaefa.R")
+  # Read the source file to verify documentation using robust path resolution
+  kaefa_path <- system.file("R", "kaefa.R", package = "kaefa", mustWork = FALSE)
+  if (kaefa_path == "") {
+    kaefa_path <- testthat::test_path("../../R/kaefa.R")
+  }
+  if (!file.exists(kaefa_path)) {
+    skip("kaefa.R source file not found for documentation check")
+  }
+  kaefa_source <- readLines(kaefa_path)
   
   # Look for greedy algorithm documentation
   greedy_mentions <- grep("greedy", kaefa_source, ignore.case = TRUE)
@@ -72,8 +79,15 @@ test_that("kaefa.R greedy algorithm description is present", {
 })
 
 test_that("newEngine.R greedy algorithm description is present", {
-  # Read the source file to verify documentation
-  newengine_source <- readLines("../../R/newEngine.R")
+  # Read the source file to verify documentation using robust path resolution
+  newengine_path <- system.file("R", "newEngine.R", package = "kaefa", mustWork = FALSE)
+  if (newengine_path == "") {
+    newengine_path <- testthat::test_path("../../R/newEngine.R")
+  }
+  if (!file.exists(newengine_path)) {
+    skip("newEngine.R source file not found for documentation check")
+  }
+  newengine_source <- readLines(newengine_path)
   
   # Look for greedy algorithm documentation
   greedy_mentions <- grep("greedy", newengine_source, ignore.case = TRUE)
