@@ -1,8 +1,6 @@
 # Test suite for inst/WORDLIST file validation
 # This file tests the WORDLIST used by the spelling package
 
-context("WORDLIST validation")
-
 test_that("WORDLIST file exists", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   expect_true(file.exists(wordlist_path), 
