@@ -3,15 +3,6 @@
 
 library(shiny)
 
-# Helper function to get app directory
-get_app_dir <- function() {
-  appDir <- system.file("shiny-app", package = "kaefa")
-  if (appDir == "") {
-    skip("Package not installed, skipping Shiny app tests")
-  }
-  return(appDir)
-}
-
 # Helper function to load app components
 load_app_components <- function() {
   appDir <- get_app_dir()

@@ -3,14 +3,6 @@
 
 context("Shiny App README Documentation")
 
-get_app_dir <- function() {
-  appDir <- system.file("shiny-app", package = "kaefa")
-  if (appDir == "") {
-    skip("Package not installed")
-  }
-  appDir
-}
-
 test_that("Shiny app README exists", {
   appDir <- get_app_dir()
   readmeFile <- file.path(appDir, "README.md")
