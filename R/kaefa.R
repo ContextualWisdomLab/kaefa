@@ -1238,7 +1238,13 @@ launchAEFA <- function(...) {
   appDir <- system.file("shiny-app", package = "kaefa")
   
   if (appDir == "") {
-    stop("Could not find Shiny app directory. Try re-installing the kaefa package.")
+    stop(
+      "Could not find Shiny app directory for kaefa (shiny-app).\n",
+      "This may indicate:\n",
+      "  1. The kaefa package was not installed correctly\n",
+      "  2. The package version is outdated\n",
+      "Try re-installing: install.packages('kaefa', type = 'source')"
+    )
   }
   
   message("Launching kaefa Shiny interface...")
