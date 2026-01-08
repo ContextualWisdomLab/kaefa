@@ -27,6 +27,13 @@ create_binary_test_data <- function(n_items = 10, n_obs = 100) {
   return(data)
 }
 
+expect_valid_aefa <- function(result) {
+  expect_false(inherits(result, "try-error"))
+  expect_s3_class(result, "aefa")
+  expect_true(all(c("estModelTrials", "itemFitTrials", "rotationTrials") %in% names(result)))
+  expect_true(length(result$estModelTrials) > 0)
+}
+
 # ============================================================
 # Test Suite 1: Model Selection Criteria Variations
 # ============================================================
@@ -40,7 +47,7 @@ test_that("aefa respects different model selection criteria - DIC", {
                      modelSelectionCriteria = "DIC"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa respects different model selection criteria - AIC", {
@@ -52,7 +59,7 @@ test_that("aefa respects different model selection criteria - AIC", {
                      modelSelectionCriteria = "AIC"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa respects different model selection criteria - BIC", {
@@ -64,7 +71,7 @@ test_that("aefa respects different model selection criteria - BIC", {
                      modelSelectionCriteria = "BIC"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa respects different model selection criteria - AICc", {
@@ -76,7 +83,7 @@ test_that("aefa respects different model selection criteria - AICc", {
                      modelSelectionCriteria = "AICc"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa respects different model selection criteria - saBIC", {
@@ -88,7 +95,7 @@ test_that("aefa respects different model selection criteria - saBIC", {
                      modelSelectionCriteria = "saBIC"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -104,7 +111,7 @@ test_that("aefa handles bifactorQ rotation", {
                      rotate = "bifactorQ"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles geominQ rotation", {
@@ -116,7 +123,7 @@ test_that("aefa handles geominQ rotation", {
                      rotate = "geominQ"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles geominT rotation", {
@@ -128,7 +135,7 @@ test_that("aefa handles geominT rotation", {
                      rotate = "geominT"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles oblimin rotation", {
@@ -140,7 +147,7 @@ test_that("aefa handles oblimin rotation", {
                      rotate = "oblimin"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles quartimax rotation", {
@@ -152,7 +159,7 @@ test_that("aefa handles quartimax rotation", {
                      rotate = "quartimax"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -168,7 +175,7 @@ test_that("aefa handles custom NCYCLES parameter", {
                      NCYCLES = 2000), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles custom BURNIN parameter", {
@@ -180,7 +187,7 @@ test_that("aefa handles custom BURNIN parameter", {
                      BURNIN = 1000), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles custom SEMCYCLES parameter", {
@@ -192,7 +199,7 @@ test_that("aefa handles custom SEMCYCLES parameter", {
                      SEMCYCLES = 500), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles combined MCMC parameter adjustments", {
@@ -206,7 +213,7 @@ test_that("aefa handles combined MCMC parameter adjustments", {
                      SEMCYCLES = 600), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -222,7 +229,7 @@ test_that("aefa handles resampling disabled", {
                      resampling = FALSE), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles resampling with custom sample size", {
@@ -235,7 +242,7 @@ test_that("aefa handles resampling with custom sample size", {
                      samples = 150), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles large datasets with resampling", {
@@ -251,7 +258,7 @@ test_that("aefa handles large datasets with resampling", {
                      samples = 500), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -266,7 +273,7 @@ test_that("aefa greedy search with wide extraction range", {
                      maxExtraction = 5), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles GenRandomPars parameter", {
@@ -284,8 +291,8 @@ test_that("aefa handles GenRandomPars parameter", {
                            GenRandomPars = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles accelerate parameter variations", {
@@ -297,7 +304,7 @@ test_that("aefa handles accelerate parameter variations", {
                      accelerate = "squarem"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles symmetric parameter", {
@@ -315,8 +322,8 @@ test_that("aefa handles symmetric parameter", {
                            symmetric = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 # ============================================================
@@ -338,8 +345,8 @@ test_that("aefa handles printItemFit parameter", {
                            printItemFit = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles fitIndicesCutOff parameter", {
@@ -351,7 +358,7 @@ test_that("aefa handles fitIndicesCutOff parameter", {
                      fitIndicesCutOff = 0.01), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles stricter fitIndicesCutOff", {
@@ -363,7 +370,7 @@ test_that("aefa handles stricter fitIndicesCutOff", {
                      fitIndicesCutOff = 0.001), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -385,7 +392,8 @@ test_that("aefa handles saveModelHistory parameter", {
                            saveModelHistory = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
+  expect_valid_aefa(result_true)
+  expect_false(inherits(result_false, "try-error"))
   expect_true(!is.null(result_false))
 })
 
@@ -404,8 +412,8 @@ test_that("aefa handles saveRawEstModels parameter", {
                            saveRawEstModels = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 # ============================================================
@@ -427,8 +435,8 @@ test_that("aefa handles fitEMatUIRT parameter", {
                            fitEMatUIRT = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles ranefautocomb parameter", {
@@ -446,8 +454,8 @@ test_that("aefa handles ranefautocomb parameter", {
                            ranefautocomb = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles tryLCA parameter", {
@@ -465,8 +473,8 @@ test_that("aefa handles tryLCA parameter", {
                            tryLCA = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles forcingQMC parameter", {
@@ -484,8 +492,8 @@ test_that("aefa handles forcingQMC parameter", {
                            forcingQMC = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles turnOffMixedEst parameter", {
@@ -503,8 +511,8 @@ test_that("aefa handles turnOffMixedEst parameter", {
                            turnOffMixedEst = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles PV_Q1 parameter", {
@@ -522,8 +530,8 @@ test_that("aefa handles PV_Q1 parameter", {
                            PV_Q1 = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 # ============================================================
@@ -539,7 +547,7 @@ test_that("aefa handles anchor parameter with item names", {
                      anchor = c("Item1", "Item2")), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles NULL anchor parameter", {
@@ -551,7 +559,7 @@ test_that("aefa handles NULL anchor parameter", {
                      anchor = NULL), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -568,7 +576,7 @@ test_that("aefa greedy algorithm explores model space efficiently", {
                      modelSelectionCriteria = "BIC"), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles skipggum parameter", {
@@ -586,8 +594,8 @@ test_that("aefa handles skipggum parameter", {
                            skipggum = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 test_that("aefa handles leniency parameter", {
@@ -605,8 +613,8 @@ test_that("aefa handles leniency parameter", {
                            leniency = FALSE), 
                       silent = TRUE)
   
-  expect_true(!is.null(result_true))
-  expect_true(!is.null(result_false))
+  expect_valid_aefa(result_true)
+  expect_valid_aefa(result_false)
 })
 
 # ============================================================
@@ -626,7 +634,7 @@ test_that("aefa handles complex parameter combination 1", {
                      samples = 100), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles complex parameter combination 2", {
@@ -641,7 +649,7 @@ test_that("aefa handles complex parameter combination 2", {
                      printItemFit = FALSE), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 test_that("aefa handles complex parameter combination 3", {
@@ -656,7 +664,7 @@ test_that("aefa handles complex parameter combination 3", {
                      ranefautocomb = FALSE), 
                 silent = TRUE)
   
-  expect_true(!is.null(result))
+  expect_valid_aefa(result)
 })
 
 # ============================================================
@@ -713,7 +721,7 @@ test_that("greedy algorithm handles sequential factor additions", {
                    silent = TRUE)
   
   # All should complete or fail consistently
-  expect_true(!is.null(result_1f))
-  expect_true(!is.null(result_2f))
-  expect_true(!is.null(result_3f))
+  expect_valid_aefa(result_1f)
+  expect_valid_aefa(result_2f)
+  expect_valid_aefa(result_3f)
 })
