@@ -1,11 +1,13 @@
 # KAEFA Test Suite
 
 ## Overview
+
 This comprehensive test suite validates the greedy search algorithm implementation in the KAEFA (Kwangwoon Automated Exploratory Factor Analysis) package, specifically focusing on the changes documented in the recent commit.
 
 ## Test Coverage
 
 ### 1. test-aefa-greedy-algorithm.R
+
 **Purpose**: Core tests for the main `aefa()` function and its greedy search algorithm implementation.
 
 **Key Test Areas**:
@@ -23,6 +25,7 @@ This comprehensive test suite validates the greedy search algorithm implementati
 **Test Count**: ~50+ individual test cases
 
 ### 2. test-engineAEFA-greedy-algorithm.R
+
 **Purpose**: Tests for the `engineAEFA()` function which implements greedy search for IRT model configurations.
 
 **Key Test Areas**:
@@ -42,6 +45,7 @@ This comprehensive test suite validates the greedy search algorithm implementati
 **Test Count**: ~40+ individual test cases
 
 ### 3. test-aefa-utilities.R
+
 **Purpose**: Tests for utility and supporting functions in the AEFA framework.
 
 **Key Test Areas**:
@@ -56,6 +60,7 @@ This comprehensive test suite validates the greedy search algorithm implementati
 **Test Count**: ~25+ individual test cases
 
 ### 4. test-aefa-integration.R
+
 **Purpose**: Integration tests for the complete AEFA workflow.
 
 **Key Test Areas**:
@@ -69,6 +74,7 @@ This comprehensive test suite validates the greedy search algorithm implementati
 **Test Count**: ~15+ individual test cases
 
 ### 5. test-documentation-validation.R
+
 **Purpose**: Validates that the code matches the documentation added in the commit.
 
 **Key Test Areas**:
@@ -85,6 +91,7 @@ This comprehensive test suite validates the greedy search algorithm implementati
 **Test Count**: ~20+ individual test cases
 
 ### 6. test-edge-cases.R
+
 **Purpose**: Comprehensive edge case and stress testing.
 
 **Key Test Areas**:
@@ -101,6 +108,7 @@ This comprehensive test suite validates the greedy search algorithm implementati
 ## Testing Philosophy
 
 ### Bias for Action
+
 Following the requirement for "bias for action," this test suite includes:
 - Tests even for functionality that may already be tested elsewhere
 - Comprehensive coverage of edge cases
@@ -108,6 +116,7 @@ Following the requirement for "bias for action," this test suite includes:
 - Stress tests and boundary condition tests
 
 ### Greedy Algorithm Focus
+
 The tests specifically validate the greedy search algorithm described in the documentation:
 1. **Model Space Exploration**: Tests verify the algorithm explores multiple model candidates
 2. **Selection Criteria**: Tests ensure models are selected based on information criteria
@@ -116,6 +125,7 @@ The tests specifically validate the greedy search algorithm described in the doc
 5. **Item Fit Assessment**: Tests verify item fit evaluation and removal
 
 ### Test Design Principles
+
 - **Graceful Degradation**: Tests allow for either success or graceful failure
 - **Silent Execution**: Uses `try(..., silent = TRUE)` to handle expected failures
 - **Minimal Dependencies**: Tests use only the testthat framework already in DESCRIPTION
@@ -139,6 +149,7 @@ covr::package_coverage()
 ```
 
 ## Test Data Generation
+
 The test suite includes helper functions to generate:
 - Simple test data with controllable dimensions
 - Binary (dichotomous) test data
@@ -148,6 +159,7 @@ The test suite includes helper functions to generate:
 - Extreme and edge case data patterns
 
 ## Expected Behavior
+
 Given that KAEFA depends on the `mirt` package for actual model estimation:
 - Many tests use `try(..., silent = TRUE)` to handle cases where mirt estimation may fail
 - Tests validate that functions exist, accept proper inputs, and return appropriate types
@@ -155,12 +167,14 @@ Given that KAEFA depends on the `mirt` package for actual model estimation:
 - Integration tests verify the complete workflow from data to results
 
 ## Continuous Integration
+
 These tests are designed to work with:
 - Travis CI (as configured in `.travis.yml`)
 - AppVeyor (as configured in `appveyor.yml`)
 - Code coverage reporting via codecov
 
 ## Future Enhancements
+
 Potential additions to the test suite:
 - Performance benchmarking tests
 - Memory usage profiling
@@ -170,4 +184,5 @@ Potential additions to the test suite:
 - Comparison with manual model selection
 
 ## Total Test Count
+
 **Approximately 175+ individual test cases** covering all aspects of the greedy search algorithm implementation and supporting functionality.
