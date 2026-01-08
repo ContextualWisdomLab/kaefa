@@ -87,9 +87,12 @@ test_that("README explains data upload requirements", {
       info = "README should document supported file formats"
     )
     
-    # Should mention data structure
+    # Should mention data structure - check for more specific patterns
+    has_structure_info <- grepl("data.*structure", content_text, ignore.case = TRUE) ||
+      grepl("item.*column", content_text, ignore.case = TRUE) ||
+      grepl("row.*respondent", content_text, ignore.case = TRUE)
     expect_true(
-      grepl("item|column|row|respondent", content_text, ignore.case = TRUE),
+      has_structure_info,
       info = "README should explain data structure requirements"
     )
   } else {
