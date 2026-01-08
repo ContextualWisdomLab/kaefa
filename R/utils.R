@@ -340,7 +340,7 @@
     
     # If mirtModel is provided, compare theta estimates with raw score distribution
     if(!is.null(mirtModel)){
-      if(class(mirtModel) == "aefa"){
+      if (inherits(mirtModel, "aefa")) {
         mirtModel <- mirtModel$estModelTrials[[NROW(mirtModel$estModelTrials)]]
       }
       
