@@ -288,7 +288,7 @@
       return(fit)
     }, error = function(e){
       message("Error fitting distribution: ", e$message)
-      message("Trying with different starting values...")
+      message("Trying with method of moments estimation (MME)...")
       
       # Try with moment matching method as fallback
       tryCatch({
