@@ -43,6 +43,7 @@ The test suite is organized into the following files:
 ## Running the Tests
 
 ### Run all tests:
+
 ```r
 library(testthat)
 library(kaefa)
@@ -50,11 +51,13 @@ test_check("kaefa")
 ```
 
 ### Run specific test file:
+
 ```r
 test_file("tests/testthat/test-wordlist.R")
 ```
 
 ### Run with detailed output:
+
 ```r
 test_check("kaefa", reporter = "progress")
 ```
