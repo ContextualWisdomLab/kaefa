@@ -240,13 +240,17 @@ test_that("App handles CSV data loading", {
   )
 })
 
-test_that("App handles RDS data loading", {
+test_that("App blocks RDS data loading for security", {
   server_code <- get_server_code()
   
-  # Check for RDS reading logic
+  # Check that RDS uploads are blocked
   expect_true(
+    any(grepl("RDS uploads are not supported", server_code, fixed = TRUE)),
+    info = "Server should block RDS uploads for security"
+  )
+  expect_false(
     any(grepl("readRDS", server_code)),
-    info = "Server should have RDS reading capability"
+    info = "Server should not read RDS uploads"
   )
 })
 
