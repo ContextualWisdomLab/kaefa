@@ -120,7 +120,7 @@ test_that("test coverage is comprehensive", {
     for (test_file in test_files) {
       file_path <- file.path(test_dir, test_file)
       content <- readLines(file_path, warn = FALSE)
-      test_count <- sum(grepl("^test_that\\(", content))
+      test_count <- sum(grepl("^\\s*test_that\\(", content))
       total_tests <- total_tests + test_count
     }
     
