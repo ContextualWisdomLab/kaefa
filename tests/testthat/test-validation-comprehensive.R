@@ -5,7 +5,7 @@ context("Validation that tests catch original issues")
 
 test_that("test suite would catch original DESCRIPTION typo", {
   # This test verifies our test logic by checking the corrected version
-  desc_path <- file.path(find.package("kaefa"), "DESCRIPTION")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc_content <- paste(readLines(desc_path, warn = FALSE), collapse = " ")
@@ -21,8 +21,7 @@ test_that("test suite would catch original DESCRIPTION typo", {
 })
 
 test_that("test suite validates all documentation spelling corrections", {
-  pkg_root <- find.package("kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -87,7 +86,7 @@ test_that("WORDLIST additions are validated by test suite", {
 })
 
 test_that("test suite enforces British English consistency", {
-  desc_path <- file.path(find.package("kaefa"), "DESCRIPTION")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -109,7 +108,7 @@ test_that("test suite enforces British English consistency", {
 
 test_that("test coverage is comprehensive", {
   # Count all test files
-  test_dir <- file.path(find.package("kaefa"), "tests", "testthat")
+  test_dir <- system.file("tests", "testthat", package = "kaefa")
   
   if (dir.exists(test_dir)) {
     test_files <- list.files(test_dir, pattern = "^test-.*\\.R$")
@@ -134,8 +133,7 @@ test_that("test coverage is comprehensive", {
 })
 
 test_that("documentation changes are thoroughly tested", {
-  pkg_root <- find.package("kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   # Files that had spelling corrections in this commit
   changed_files <- c("aefa.Rd", "aefaInit.Rd", "engineAEFA.Rd", 
