@@ -19,14 +19,14 @@ The goal of kaefa is to improving research capability to identify unexplained fa
 
 ## Algorithm
 
-The automated exploratory factor analysis (aefa) framework implements a **greedy search algorithm** to find the global-optimal model configuration. The algorithm iteratively:
+The automated exploratory factor analysis (aefa) framework implements a **greedy search algorithm** to efficiently explore the model space and find improved model configurations. The algorithm iteratively:
 
 1. Evaluates multiple model candidates with different factor structures and item response models
 2. Selects the best model based on information criteria (DIC, AIC, BIC, etc.)
 3. Assesses item fit and removes poorly fitting items one at a time
-4. Re-estimates the model until convergence to an optimal solution
+4. Re-estimates the model until convergence to a locally optimal solution
 
-This greedy approach enables efficient exploration of the model space while seeking globally-optimal solutions. The method is inspired by research on globally-optimal greedy algorithms in tracking and optimization problems (Pirsiavash, Ramanan, & Fowlkes, 2011).
+This greedy approach enables efficient exploration of the model space while seeking improved solutions through iterative refinement. The method is inspired by research on greedy algorithms in tracking and optimization problems (Pirsiavash, Ramanan, & Fowlkes, 2011), which have shown that greedy methods can approach globally optimal solutions under certain conditions.
 
 **References:**
 
