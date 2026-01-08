@@ -5,7 +5,7 @@
 \title{return Recursive Score into raw response scale or return the theta itself}
 \usage{
 recursiveFormula(mirtModel, mins = F, divide = F, rotate = NULL,
-  individual = F, extractThetaOnly = F)
+  individual = F, extractThetaOnly = F, ...)
 }
 \arguments{
 \item{mirtModel}{estimated aefa model}
@@ -19,6 +19,8 @@ recursiveFormula(mirtModel, mins = F, divide = F, rotate = NULL,
 \item{individual}{logical; return tracelines for individual items?}
 
 \item{extractThetaOnly}{logical; return the theta only without recursive score? if TRUE, theta will return.}
+
+\item{...}{additional arguments (unused).}
 }
 \value{
 recursively expected test score
