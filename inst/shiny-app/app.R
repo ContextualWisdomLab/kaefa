@@ -267,7 +267,7 @@ server <- function(input, output, session) {
   output$modelSummary <- renderPrint({
     req(values$results)
     
-    if (class(values$results) == "aefa") {
+    if (inherits(values$results, "aefa")) {
       cat("Automated Exploratory Factor Analysis Results\n")
       cat("==============================================\n\n")
       cat("Number of internal validation trials:", 
@@ -290,7 +290,7 @@ server <- function(input, output, session) {
   output$itemFitTable <- renderDT({
     req(values$results)
     
-    if (class(values$results) == "aefa" && 
+    if (inherits(values$results, "aefa") && 
         length(values$results$itemFitTrials) > 0) {
       itemFit <- values$results$itemFitTrials[[length(values$results$itemFitTrials)]]
       datatable(itemFit, 
@@ -320,7 +320,7 @@ server <- function(input, output, session) {
   output$fitIndices <- renderPrint({
     req(values$results)
     
-    if (class(values$results) == "aefa") {
+    if (inherits(values$results, "aefa")) {
       finalModel <- values$results$estModelTrials[[length(values$results$estModelTrials)]]
       
       cat("Model Fit Information:\n")
@@ -370,7 +370,7 @@ server <- function(input, output, session) {
       cat("=============================================\n\n")
       cat("Report generated:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n")
       
-      if (class(values$results) == "aefa") {
+      if (inherits(values$results, "aefa")) {
         cat("Analysis Summary:\n")
         cat("-----------------\n")
         cat("Number of validation trials:", 
