@@ -2,7 +2,7 @@
 
 ## Issue Requirements
 
-**Issue Title**: Applying FIt Dist R Plus?
+**Issue Title**: Applying Fit Dist R Plus?
 
 **Requirements**:
 1. Link to fitdistrplus package: https://cran.r-project.org/web/packages/fitdistrplus/fitdistrplus.pdf
