@@ -4,7 +4,9 @@
 test_that("WORDLIST has no trailing whitespace", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_lines <- readLines(wordlist_path, warn = FALSE)
     
     for (i in seq_along(wordlist_lines)) {
@@ -18,7 +20,9 @@ test_that("WORDLIST has no trailing whitespace", {
 test_that("WORDLIST entries are not excessively long", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     long_entries <- wordlist_content[nchar(wordlist_content) > 50]
@@ -32,7 +36,9 @@ test_that("WORDLIST entries are not excessively long", {
 test_that("WORDLIST contains model selection criteria terms", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     criteria_terms <- c("AICc", "saBIC")
@@ -48,22 +54,28 @@ test_that("WORDLIST contains model selection criteria terms", {
 test_that("WORDLIST contains statistical method abbreviations", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     stat_abbrevs <- c("MH", "MHRM", "QMC", "LCA", "DIF")
     
     found_abbrevs <- sum(stat_abbrevs %in% wordlist_content)
-    expect_true(found_abbrevs >= 3,
-                info = paste("WORDLIST should contain common statistical abbreviations.",
-                            "Found", found_abbrevs, "out of", length(stat_abbrevs)))
+    missing_abbrevs <- setdiff(stat_abbrevs, wordlist_content)
+    expect_true(length(missing_abbrevs) == 0,
+                info = paste("WORDLIST missing statistical abbreviations:",
+                            paste(missing_abbrevs, collapse = ", "),
+                            "| Found", found_abbrevs, "out of", length(stat_abbrevs)))
   }
 })
 
 test_that("WORDLIST entries do not have common typos", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     typos <- c("historys", "critera", "messeages", "avaliable", 
@@ -80,7 +92,9 @@ test_that("WORDLIST entries do not have common typos", {
 test_that("WORDLIST case sensitivity is appropriate", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     if ("aefa" %in% wordlist_content) {
@@ -98,7 +112,9 @@ test_that("WORDLIST case sensitivity is appropriate", {
 test_that("WORDLIST contains package-specific terminology", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     package_terms <- c(
@@ -110,16 +126,20 @@ test_that("WORDLIST contains package-specific terminology", {
     )
     
     found_terms <- sum(package_terms %in% wordlist_content)
-    expect_true(found_terms >= 4,
-                info = paste("WORDLIST should contain package-specific terms.",
-                            "Found", found_terms, "out of", length(package_terms)))
+    missing_terms <- setdiff(package_terms, wordlist_content)
+    expect_true(length(missing_terms) == 0,
+                info = paste("WORDLIST missing package-specific terms:",
+                            paste(missing_terms, collapse = ", "),
+                            "| Found", found_terms, "out of", length(package_terms)))
   }
 })
 
 test_that("WORDLIST file ends with newline", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     con <- file(wordlist_path, "rb")
     content <- readBin(con, "raw", file.info(wordlist_path)$size)
     close(con)
