@@ -675,9 +675,17 @@ test_that("greedy algorithm shows consistent behavior with same seed", {
                       maxExtraction = 2), 
                  silent = TRUE)
   
-  # Both should have same error/success status
-  expect_equal(inherits(result1, "try-error"), 
-               inherits(result2, "try-error"))
+  # Both should succeed
+  expect_false(inherits(result1, "try-error"))
+  expect_false(inherits(result2, "try-error"))
+
+  # Results should be consistent
+  expect_equal(length(result1$estModelTrials), length(result2$estModelTrials))
+  expect_equal(result1$rotationTrials, result2$rotationTrials)
+  expect_equal(
+    vapply(result1$estModelTrials, function(m) m@Model$nfact, numeric(1)),
+    vapply(result2$estModelTrials, function(m) m@Model$nfact, numeric(1))
+  )
 })
 
 test_that("greedy algorithm handles sequential factor additions", {
