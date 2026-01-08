@@ -65,8 +65,11 @@ test_that("documentation uses consistent British English spelling", {
       all_text <- paste(all_content, collapse = " ")
       
       if (grepl("initiali[sz]e", all_text, ignore.case = TRUE)) {
-        initialize_count <- length(gregexpr("initialize", all_text, ignore.case = TRUE)[[1]])
-        initialise_count <- length(gregexpr("initialise", all_text, ignore.case = TRUE)[[1]])
+        initialize_matches <- gregexpr("initialize", all_text, ignore.case = TRUE)[[1]]
+        initialise_matches <- gregexpr("initialise", all_text, ignore.case = TRUE)[[1]]
+        
+        initialize_count <- ifelse(initialize_matches[1] == -1, 0, length(initialize_matches))
+        initialise_count <- ifelse(initialise_matches[1] == -1, 0, length(initialise_matches))
         
         if (initialize_count > 0 || initialise_count > 0) {
           expect_true(initialise_count >= initialize_count,
