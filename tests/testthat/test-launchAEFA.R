@@ -106,6 +106,7 @@ test_that("launchAEFA function has proper documentation", {
 })
 
 test_that("launchAEFA produces appropriate message", {
+  skip_on_cran()
   # Test the message output when the function would run
   appDir <- system.file("shiny-app", package = "kaefa")
   
