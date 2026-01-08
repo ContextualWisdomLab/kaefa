@@ -97,8 +97,8 @@ The new `inst/WORDLIST` file contains 90 technical terms organized into categori
 8. **Technical Terms** (20+ terms)
    - Bifactor, Testlet, testlet, tracelines, itemdesign, covdata, etc.
 
-9. **British English Terms** (6 terms)
-   - Behavioral, customised, generaliseability, maximising, summarise, Orthogonalisation
+9. **British English Terms** (7 terms)
+   - Behavioral, Behavioural, customised, generaliseability, maximising, summarise, Orthogonalisation
 
 ## Test Execution
 
