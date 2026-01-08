@@ -29,7 +29,9 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
             if (serverName == "localhost") {
                 return(tryCatch(system(cmd, intern = TRUE), error = function(e) { character() }))
             }
-            if (!is.null(sshKeyPath) && (grepl("pem", sshKeyPath) || grepl("key", sshKeyPath))) {
+            if (!is.null(sshKeyPath) && !is.na(sshKeyPath) &&
+                (grepl("\\.(pem|key)$", sshKeyPath, ignore.case = TRUE) ||
+                  file.exists(sshKeyPath))) {
                 return(tryCatch(system(paste("ssh", serverName, "-i", sshKeyPath, cmd),
                                      intern = TRUE), error = function(e) { character() }))
             }
@@ -98,7 +100,8 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                     key_path <- if (length(jj) > 0) sshKeyPath[[jj[1]]] else NULL
 
                     if (!is.null(key_path) && !is.na(key_path) &&
-                        (grepl("pem", key_path) || grepl("key", key_path))) {
+                        (grepl("\\.(pem|key)$", key_path, ignore.case = TRUE) ||
+                          file.exists(key_path))) {
                       # Detect OS for remote server and use appropriate uptime column
                       uptimeCol <- detectOS(i, key_path)
                       statusList[[i]] <- tryCatch(system(paste("ssh", i, "-i",
