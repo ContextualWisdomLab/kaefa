@@ -105,27 +105,38 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                           file.exists(key_path))) {
                       # Detect OS for remote server and use appropriate uptime column
                       uptimeCol <- detectOS(i, key_path)
-                      statusList[[i]] <- tryCatch(system(paste("ssh", i, "-i",
-                        key_path, paste0("uptime | awk '{print $", uptimeCol, "}' &&"),
-                        "ssh", i, "-i", key_path, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                        "ssh", i, "-i", key_path, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                        intern = TRUE), error = function(e) {
+                      remote_cmd <- paste0(
+                        "uptime | awk '{print $", uptimeCol, "}' && ",
+                        "cat /proc/cpuinfo | grep processor | wc -l && ",
+                        "free | grep Mem | awk '{print $4/$2 * 100}'"
+                      )
+                      statusList[[i]] <- tryCatch(system2("ssh",
+                        c(i, "-i", key_path, remote_cmd),
+                        stdout = TRUE, stderr = TRUE), error = function(e) {
                       })
                     } else {
                       # Detect OS for remote server and use appropriate uptime column
                       uptimeCol <- detectOS(i)
-                      statusList[[i]] <- tryCatch(system(paste("ssh", i, paste0("uptime | awk '{print $", uptimeCol, "}' &&"),
-                        "ssh", i, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                        "ssh", i, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                        intern = TRUE), error = function(e) {
+                      remote_cmd <- paste0(
+                        "uptime | awk '{print $", uptimeCol, "}' && ",
+                        "cat /proc/cpuinfo | grep processor | wc -l && ",
+                        "free | grep Mem | awk '{print $4/$2 * 100}'"
+                      )
+                      statusList[[i]] <- tryCatch(system2("ssh",
+                        c(i, remote_cmd), stdout = TRUE, stderr = TRUE),
+                        error = function(e) {
                       })
                     }
                   } else {
                     # Detect OS for remote server and use appropriate uptime column
                     uptimeCol <- detectOS(i)
-                    statusList[[i]] <- tryCatch(system(paste("ssh", i, paste0("uptime | awk '{print $", uptimeCol, "}' &&"),
-                      "ssh", i, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                      "ssh", i, "free | grep Mem | awk '{print $4/$2 * 100}'"), intern = TRUE),
+                    remote_cmd <- paste0(
+                      "uptime | awk '{print $", uptimeCol, "}' && ",
+                      "cat /proc/cpuinfo | grep processor | wc -l && ",
+                      "free | grep Mem | awk '{print $4/$2 * 100}'"
+                    )
+                    statusList[[i]] <- tryCatch(system2("ssh",
+                      c(i, remote_cmd), stdout = TRUE, stderr = TRUE),
                       error = function(e) {
                       })
                   }
