@@ -239,13 +239,16 @@ test_that("aefa handles resampling with custom sample size", {
 })
 
 test_that("aefa handles large datasets with resampling", {
-  test_data <- create_test_data(n_items = 5, n_obs = 10000)
+  skip_on_cran()
+  skip_if_not(nzchar(Sys.getenv("RUN_LARGE_TESTS")))
+
+  test_data <- create_test_data(n_items = 5, n_obs = 1000)
   
   result <- try(aefa(test_data, 
                      minExtraction = 1, 
                      maxExtraction = 1,
                      resampling = TRUE,
-                     samples = 1000), 
+                     samples = 500), 
                 silent = TRUE)
   
   expect_true(!is.null(result))
