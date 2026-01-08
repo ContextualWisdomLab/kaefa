@@ -10,18 +10,19 @@ Authors@R: c(person("Seongho", family="Bae", role = c("aut", "cre"),
 Author: Seongho Bae [aut, cre]
 Maintainer: Seongho Bae <seongho@kw.ac.kr>
 Depends: R (>= 3.4.0)
-Imports: future, mirt (>= 1.27), psych, plyr, listenv, parallel, NCmisc, progress
+Imports: future, mirt (>= 1.27), psych, plyr, listenv, parallel, NCmisc, progress, fitdistrplus
 Description: The software of automated exploratory
     factor analysis (aefa) framework,
     to exploring unexplained factor structure
     with complexly cross-classified multilevel
     structured data in R environment.
-    This software can be pallelise to
+    This software can be parallelised to
     multiple computers via LAN even heterogeneous environment,
     so that applied researchers may expand
     their research capability more easy with kaefa
     even data has too complicated structure.
     This project started in 2013, and restructured in 2017.
+Language: en-GB
 License: GPL-3 + file LICENSE
 URL: https://github.com/seonghobae/kaefa, http://seonghobae.me
 BugReports: https://github.com/seonghobae/kaefa/issues

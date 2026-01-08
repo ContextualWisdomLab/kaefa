@@ -6,6 +6,23 @@ kaefa
 
 The goal of kaefa is to improving research capability to identify unexplained factor structure with complexly cross-classified multilevel structured data in R environment with automated exploratory factor analysis (aefa) framework
 
+Algorithm
+---------
+
+The automated exploratory factor analysis (aefa) framework implements a **greedy search algorithm** to efficiently explore the model space and find improved model configurations. The algorithm iteratively:
+
+1. Evaluates multiple model candidates with different factor structures and item response models
+2. Selects the best model based on information criteria (DIC, AIC, BIC, etc.)
+3. Assesses item fit and removes poorly fitting items one at a time
+4. Re-estimates the model until convergence to a locally optimal solution
+
+This greedy approach enables efficient exploration of the model space while seeking improved solutions through iterative refinement. The method aligns with model selection and exploratory factor analysis research (Preacher, Zhang, Kim, & Mels, 2013; Jennrich & Bentler, 2011).
+
+**References:**
+
+- Preacher, K. J., Zhang, G., Kim, C., & Mels, G. (2013). Choosing the optimal number of factors in exploratory factor analysis: A model selection perspective. Multivariate Behavioral Research, 48(1), 28-56. https://doi.org/10.1080/00273171.2012.710386
+- Jennrich, R. I., & Bentler, P. M. (2011). Exploratory bi-factor analysis. Psychometrika, 76(4), 537-549. https://doi.org/10.1007/s11336-011-9218-4
+
 Installation
 ------------
 

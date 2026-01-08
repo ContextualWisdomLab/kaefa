@@ -17,7 +17,7 @@ evaluateItemFit(
 
 \item{RemoteClusters}{insert google computing engine virtual machine information.}
 
-\item{rotate}{set the rotate critera if mirt model is exploratory model. default is bifactorQ}
+\item{rotate}{set the rotate criteria if mirt model is exploratory model. default is bifactorQ}
 
 \item{PV_Q1}{Do you want to get PV_Q1 (Chalmers & Ng, 2017) if can get it? default is TRUE.}
 

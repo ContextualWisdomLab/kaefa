@@ -14,7 +14,7 @@ in the automated exploratory factor analysis framework what imports
 \code{mirt::mirt}, \code{mirt::mixedmirt} and \code{mirt::mdirt}
 (Chalmers, 2012; Chalmers, 2015).
 
-In practice of applied psychological resarch, so much researcher ignoring
+In practice of applied psychological research, so much researcher ignoring
 the impact of the MMMM (Multiple Membership Multilevel Model) and MM
 in exploratory factor analysis from unfamiliar with statistical innovations
 who noted in Sharpe (2013) and Foster, Min, and Zickar (2017).
@@ -56,10 +56,10 @@ After the every \emph{n-th} calibration, kaefa do the item appropriateness test
 for check which item contribute to explain conceptual criterion with
 robustness of aberrant response using \emph{Zh, S-X2, PV-Q1}. If kaefa
 find out the improper item, kaefa will exclude the worst one automatically
-and recalibrating the models until all items are acceptable via statistcal
+and recalibrating the models until all items are acceptable via statistical
 criteria.
 
-This software can be pallelise to multiple computers via LAN
+This software can be parallelised to multiple computers via LAN
 even heterogeneous environment, so that applied researchers may expand
 their research capability more easy with kaefa
 even data has too complicated structure to calibrate in single machine.

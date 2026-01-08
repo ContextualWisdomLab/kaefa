@@ -2,7 +2,7 @@
 % Please edit documentation in R/newEngine.R
 \name{engineAEFA}
 \alias{engineAEFA}
-\title{estimate full-information item factor analysis models with combinating random effects}
+\title{estimate full-information item factor analysis models with combining random effects}
 \usage{
 engineAEFA(
   data,
@@ -62,13 +62,13 @@ engineAEFA(
 
 \item{samples}{specify the number samples with resampling. default is 5000.}
 
-\item{printDebugMsg}{Do you want to see the debugging messeages? default is FALSE}
+\item{printDebugMsg}{Do you want to see the debugging messages? default is FALSE}
 
 \item{fitEMatUIRT}{Do you want to fit the model with EM at UIRT? default is FALSE}
 
 \item{ranefautocomb}{Do you want to find global-optimal random effect combination? default is TRUE}
 
-\item{tryLCA}{Do you want to try calibrate LCA model if avaliable? default is TRUE}
+\item{tryLCA}{Do you want to try calibrate LCA model if available? default is TRUE}
 
 \item{forcingMixedModelOnly}{Do you want to forcing the Mixed model calibration? default is FALSE}
 
@@ -90,7 +90,7 @@ engineAEFA(
 possible optimal combinations of models in list
 }
 \description{
-estimate full-information item factor analysis models with combinating random effects
+estimate full-information item factor analysis models with combining random effects
 }
 \examples{
 \dontrun{
