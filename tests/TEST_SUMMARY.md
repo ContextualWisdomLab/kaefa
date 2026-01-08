@@ -6,7 +6,7 @@ This test suite provides comprehensive validation for the spelling corrections a
 
 1. **DESCRIPTION file**: Corrected "pallelise" → "parallelised" and added "Language: en-GB"
 2. **inst/WORDLIST**: New file with 90 technical terms for spell checking
-3. **Documentation files**: 11 spelling corrections across 6 .Rd files
+3. **Documentation files**: 18 spelling corrections across 6 .Rd files
 
 ## Test Statistics
 
