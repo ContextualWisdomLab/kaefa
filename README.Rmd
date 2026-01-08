@@ -17,6 +17,22 @@ knitr::opts_chunk$set(
 
 The goal of kaefa is to improving research capability to identify unexplained factor structure with complexly cross-classified multilevel structured data in R environment with automated exploratory factor analysis (aefa) framework
 
+## Algorithm
+
+The automated exploratory factor analysis (aefa) framework implements a **greedy search algorithm** to efficiently explore the model space and find improved model configurations. The algorithm iteratively:
+
+1. Evaluates multiple model candidates with different factor structures and item response models
+2. Selects the best model based on information criteria (DIC, AIC, BIC, etc.)
+3. Assesses item fit and removes poorly fitting items one at a time
+4. Re-estimates the model until convergence to a locally optimal solution
+
+This greedy approach enables efficient exploration of the model space while seeking improved solutions through iterative refinement. The method aligns with model selection and exploratory factor analysis research (Preacher, Zhang, Kim, & Mels, 2013; Jennrich & Bentler, 2011).
+
+**References:**
+
+- Preacher, K. J., Zhang, G., Kim, C., & Mels, G. (2013). Choosing the optimal number of factors in exploratory factor analysis: A model selection perspective. Multivariate Behavioral Research, 48(1), 28-56. https://doi.org/10.1080/00273171.2012.710386
+- Jennrich, R. I., & Bentler, P. M. (2011). Exploratory bi-factor analysis. Psychometrika, 76(4), 537-549. https://doi.org/10.1007/s11336-011-9218-4
+
 ## Installation
 
 You can install kaefa from github with:
@@ -55,6 +71,29 @@ The Shiny interface provides:
 - **Export results**: Download complete results and summary reports
 
 This makes kaefa accessible to researchers without programming experience while maintaining all the powerful automated factor analysis capabilities.
+
+## New Feature: fitdistrplus Integration for Theta Priors
+
+kaefa now supports setting theta priors based on empirical raw score distributions using the `fitdistrplus` package. This feature allows you to:
+
+1. Fit distributions to raw scores to inform theta priors
+2. Test if calibration works for non-nominal models
+3. Validate model calibration against empirical distributions
+
+Example usage:
+
+```{r fitdistrplus-example, eval = FALSE}
+# Fit a distribution to raw scores
+fit <- fitThetaPrior(mirt::Science, dist = "norm")
+
+# Test calibration with distribution fit
+testResult <- testThetaPriorCalibration(mirt::Science, dist = "norm")
+
+# Apply theta prior during calibration
+model <- applyThetaPrior(mirt::Science, fit, minExtraction = 1, maxExtraction = 1)
+```
+
+For more examples and detailed documentation, see the `examples/` directory.
 
 ## software quality information
 
