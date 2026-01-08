@@ -14,12 +14,13 @@ test_that("aefaInit completes without hanging on localhost", {
     aefaInit(RemoteClusters = "localhost", debug = FALSE)
     "completed"
   }, error = function(e) {
-    "error"
+    paste("error:", e$message)
   }, finally = {
     setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE)
   })
   
-  expect_true(result %in% c("completed", "error"))
+  expect_equal(result, "completed",
+               info = if (grepl("^error:", result)) result else NULL)
 })
 
 test_that("Multiple sequential calls to aefaInit work correctly", {
