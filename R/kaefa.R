@@ -117,6 +117,8 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                       statusList[[i]] <- tryCatch(system2("ssh",
                         c(i, "-i", key_path, remote_cmd),
                         stdout = TRUE, stderr = TRUE), error = function(e) {
+                        warning("Status check failed for ", i, ": ", conditionMessage(e))
+                        return(NULL)
                       })
                     } else {
                       # Detect OS for remote server and use appropriate uptime column
@@ -129,6 +131,8 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                       statusList[[i]] <- tryCatch(system2("ssh",
                         c(i, remote_cmd), stdout = TRUE, stderr = TRUE),
                         error = function(e) {
+                        warning("Status check failed for ", i, ": ", conditionMessage(e))
+                        return(NULL)
                       })
                     }
                   } else {
@@ -142,7 +146,9 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                     statusList[[i]] <- tryCatch(system2("ssh",
                       c(i, remote_cmd), stdout = TRUE, stderr = TRUE),
                       error = function(e) {
-                      })
+                      warning("Status check failed for ", i, ": ", conditionMessage(e))
+                      return(NULL)
+                    })
                   }
                 }
                 # evaluation
