@@ -74,6 +74,17 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
         requiredMinimumClusters = max(c(1, round(sqrt(NROW(serverList))))), sshKeyPath = NULL) {
 
 
+        osCache <- list()
+
+        getCachedOS <- function(serverName, keyPath = NULL) {
+          missing_key <- is.null(keyPath) || (length(keyPath) == 1 && is.na(keyPath))
+          cacheKey <- paste0(serverName, "_", if (missing_key) "nokey" else keyPath)
+          if (is.null(osCache[[cacheKey]])) {
+            osCache[[cacheKey]] <<- detectOS(serverName, keyPath)
+          }
+          osCache[[cacheKey]]
+        }
+
         STOP <- F
         while (!STOP) {
           pb <- progress::progress_bar$new(
@@ -86,7 +97,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
               suppressWarnings(pb$tick())
                 if (i == "localhost") {
                   # localhost side - detect OS and use appropriate uptime column
-                  uptimeCol <- detectOS("localhost")
+                  uptimeCol <- getCachedOS("localhost")
                   statusList$localhost <- tryCatch(system(paste0("uptime | awk '{print $", uptimeCol, "}' &&",
                     "cat /proc/cpuinfo | grep processor | wc -l &&", "free | grep Mem | awk '{print $4/$2 * 100}'"),
                     intern = TRUE), error = function(e) {
@@ -108,7 +119,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                         (grepl("\\.(pem|key)$", key_path, ignore.case = TRUE) ||
                           file.exists(key_path))) {
                       # Detect OS for remote server and use appropriate uptime column
-                      uptimeCol <- detectOS(i, key_path)
+                      uptimeCol <- getCachedOS(i, key_path)
                       remote_cmd <- paste0(
                         "uptime | awk '{print $", uptimeCol, "}' && ",
                         "cat /proc/cpuinfo | grep processor | wc -l && ",
@@ -122,7 +133,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                       })
                     } else {
                       # Detect OS for remote server and use appropriate uptime column
-                      uptimeCol <- detectOS(i)
+                      uptimeCol <- getCachedOS(i)
                       remote_cmd <- paste0(
                         "uptime | awk '{print $", uptimeCol, "}' && ",
                         "cat /proc/cpuinfo | grep processor | wc -l && ",
@@ -137,7 +148,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                     }
                   } else {
                     # Detect OS for remote server and use appropriate uptime column
-                    uptimeCol <- detectOS(i)
+                    uptimeCol <- getCachedOS(i)
                     remote_cmd <- paste0(
                       "uptime | awk '{print $", uptimeCol, "}' && ",
                       "cat /proc/cpuinfo | grep processor | wc -l && ",
