@@ -74,6 +74,26 @@ mod1
 #> 4 Benefit 1.9453938 9.971430      11 0.5329589 19.25101 17.43333 0.3409037
 ```
 
+Interactive Shiny Interface
+----------------------------
+
+For applied psychologists who prefer a point-and-click interface without writing code, kaefa now includes an interactive Shiny web application:
+
+``` r
+# Launch the interactive interface
+library('kaefa')
+launchAEFA()
+```
+
+The Shiny interface provides:
+
+-   **Easy data upload**: Upload your item response data in CSV or RDS format
+-   **Simple configuration**: Configure factor extraction, rotation methods, and model selection criteria through dropdown menus
+-   **Visual results**: View factor loadings, item fit statistics, and model fit indices in an organized interface
+-   **Export results**: Download complete results and summary reports
+
+This makes kaefa accessible to researchers without programming experience while maintaining all the powerful automated factor analysis capabilities.
+
 software quality information
 ----------------------------
 

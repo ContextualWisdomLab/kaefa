@@ -1216,3 +1216,31 @@ recursiveFormula <- function(mirtModel, mins = F, devide = F, rotate = NULL, ind
   }
 
 }
+
+#' Launch interactive Shiny interface for kaefa
+#'
+#' @description
+#' This function launches an interactive web-based interface for performing
+#' automated exploratory factor analysis without writing code. Designed for
+#' applied psychologists who prefer a point-and-click interface.
+#'
+#' @param ... Additional arguments passed to \code{shiny::runApp()}
+#'
+#' @return Does not return a value, launches the Shiny application
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Launch the interactive interface
+#' launchAEFA()
+#' }
+launchAEFA <- function(...) {
+  appDir <- system.file("shiny-app", package = "kaefa")
+  
+  if (appDir == "") {
+    stop("Could not find Shiny app directory. Try re-installing the kaefa package.")
+  }
+  
+  message("Launching kaefa Shiny interface...")
+  shiny::runApp(appDir, ...)
+}
