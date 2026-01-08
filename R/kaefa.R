@@ -23,9 +23,67 @@
 aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshKeyPath = NULL, loadPercentage = 50) {
     # options(future.debug = debug)
 
+    # Helper function to detect OS on remote or local server
+    detectOS <- function(serverName, sshKeyPath = NULL) {
+        runCmd <- function(cmd) {
+            if (serverName == "localhost") {
+                return(tryCatch(system(cmd, intern = TRUE), error = function(e) { character() }))
+            }
+            if (!is.null(sshKeyPath) && !is.na(sshKeyPath) &&
+                (grepl("\\.(pem|key)$", sshKeyPath, ignore.case = TRUE) ||
+                  file.exists(sshKeyPath))) {
+                return(tryCatch(system(paste("ssh", shQuote(serverName), "-i",
+                  shQuote(sshKeyPath), shQuote(cmd)), intern = TRUE),
+                  error = function(e) { character() }))
+            }
+            tryCatch(system(paste("ssh", shQuote(serverName), shQuote(cmd)),
+              intern = TRUE), error = function(e) { character() })
+        }
+
+        osInfo <- runCmd("cat /etc/os-release")
+        osFields <- tolower(paste(grep("^(NAME|ID|ID_LIKE)=", osInfo, value = TRUE), collapse = " "))
+
+        # Ubuntu/Debian-based systems use column 11
+        if (grepl("ubuntu|debian", osFields)) {
+            return(11)
+        }
+        # CentOS/RHEL-based systems use column 8
+        if (grepl("centos|red hat|rhel|fedora", osFields)) {
+            return(8)
+        }
+
+        # Fallback for unknown distributions by sampling uptime output
+        warning(paste0("Could not detect OS from /etc/os-release for ", serverName,
+          ". Falling back to uptime sampling."))
+        uptimeOut <- runCmd("uptime")
+        if (length(uptimeOut) > 0) {
+            fields <- strsplit(gsub(",", "", uptimeOut[1]), "\\s+")[[1]]
+            if (length(fields) >= 11 && !is.na(suppressWarnings(as.numeric(fields[11])))) {
+                return(11)
+            }
+            if (length(fields) >= 8 && !is.na(suppressWarnings(as.numeric(fields[8])))) {
+                return(8)
+            }
+        }
+
+        warning(paste0("Using default uptime column (11) for ", serverName))
+        return(11)
+    }
+
     assignClusterNodes <- function(serverList, loadPercentage = 50, freeRamPercentage = 30,
         requiredMinimumClusters = max(c(1, round(sqrt(NROW(serverList))))), sshKeyPath = NULL) {
 
+
+        osCache <- list()
+
+        getCachedOS <- function(serverName, keyPath = NULL) {
+          missing_key <- is.null(keyPath) || (length(keyPath) == 1 && is.na(keyPath))
+          cacheKey <- paste0(serverName, "_", if (missing_key) "nokey" else keyPath)
+          if (is.null(osCache[[cacheKey]])) {
+            osCache[[cacheKey]] <<- detectOS(serverName, keyPath)
+          }
+          osCache[[cacheKey]]
+        }
 
         STOP <- F
         while (!STOP) {
@@ -38,77 +96,70 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
             for (i in serverList) {
               suppressWarnings(pb$tick())
                 if (i == "localhost") {
-                  # localhost side
-                  statusList$localhost <- tryCatch(system(paste("uptime | awk '{print $8}' &&",
+                  # localhost side - detect OS and use appropriate uptime column
+                  uptimeCol <- getCachedOS("localhost")
+                  statusList$localhost <- tryCatch(system(paste0("uptime | awk '{print $", uptimeCol, "}' &&",
                     "cat /proc/cpuinfo | grep processor | wc -l &&", "free | grep Mem | awk '{print $4/$2 * 100}'"),
                     intern = TRUE), error = function(e) {
-                  })  # CentOS
-                  if (length(grep("load", statusList[[i]][1])) > 0 | length(grep("average",
-                    statusList[[i]][1])) > 0) {
-                    Sys.sleep(10)
-                    statusList$localhost <- tryCatch(system(paste("uptime | awk '{print $11}' &&",
-                      "cat /proc/cpuinfo | grep processor | wc -l &&", "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                      intern = TRUE), error = function(e) {
-                    })  # Ubuntu
-                  }
+                    if (isTRUE(debug)) {
+                      message("Error getting localhost status: ", e$message)
+                    }
+                    rep(NA_character_, 3)
+                  })
                 } else {
                   # SSH side if key is provided
                   if (!is.null(sshKeyPath)) {
-                    for (jj in 1:length(serverList)) {
-                      if (names(serverList)[[jj]] %in% names(serverList) && (length(grep(c("pem"),
-                        sshKeyPath[[jj]])) > 0 | length(grep(c("key"), sshKeyPath[[jj]])) >
-                        0)) {
-                        statusList[[i]] <- tryCatch(system(paste("ssh", i, "-i",
-                          sshKeyPath[[jj]], "uptime | awk '{print $8}' &&", "ssh",
-                          i, "-i", jj, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                          "ssh", i, "-i", jj, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                          intern = TRUE), error = function(e) {
-                        })  # CentOS
-                        if (length(grep("load", statusList[[i]][1])) > 0 | length(grep("average",
-                          statusList[[i]][1])) > 0) {
-                          Sys.sleep(10)
+                    jj <- which(serverList == i)
+                    if (length(jj) == 0 && !is.null(names(serverList))) {
+                      jj <- which(names(serverList) == i)
+                    }
+                    key_path <- if (length(jj) > 0) sshKeyPath[[jj[1]]] else NULL
 
-                          statusList[[i]] <- tryCatch(system(paste("ssh", i, "-i",
-                            sshKeyPath[[jj]], "uptime | awk '{print $11}' &&", "ssh",
-                            i, "-i", jj, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                            "ssh", i, "-i", jj, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                            intern = TRUE), error = function(e) {
-                          })  # Ubuntu
-                        }
-
-                      } else {
-                        statusList[[i]] <- tryCatch(system(paste("ssh", i, "uptime | awk '{print $8}' &&",
-                          "ssh", i, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                          "ssh", i, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                          intern = TRUE), error = function(e) {
-                        })  # CentOS
-                        if (length(grep("load", statusList[[i]][1])) > 0 | length(grep("average",
-                          statusList[[i]][1])) > 0) {
-                          Sys.sleep(10)
-
-                          statusList[[i]] <- tryCatch(system(paste("ssh", i, "uptime | awk '{print $11}' &&",
-                            "ssh", i, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                            "ssh", i, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                            intern = TRUE), error = function(e) {
-                          })  # Ubuntu
-                        }
-                      }
+                    if (!is.null(key_path) && !is.na(key_path) &&
+                        (grepl("\\.(pem|key)$", key_path, ignore.case = TRUE) ||
+                          file.exists(key_path))) {
+                      # Detect OS for remote server and use appropriate uptime column
+                      uptimeCol <- getCachedOS(i, key_path)
+                      remote_cmd <- paste0(
+                        "uptime | awk '{print $", uptimeCol, "}' && ",
+                        "cat /proc/cpuinfo | grep processor | wc -l && ",
+                        "free | grep Mem | awk '{print $4/$2 * 100}'"
+                      )
+                      statusList[[i]] <- tryCatch(system2("ssh",
+                        c(i, "-i", key_path, remote_cmd),
+                        stdout = TRUE, stderr = TRUE), error = function(e) {
+                        warning("Status check failed for ", i, ": ", conditionMessage(e))
+                        return(NULL)
+                      })
+                    } else {
+                      # Detect OS for remote server and use appropriate uptime column
+                      uptimeCol <- getCachedOS(i)
+                      remote_cmd <- paste0(
+                        "uptime | awk '{print $", uptimeCol, "}' && ",
+                        "cat /proc/cpuinfo | grep processor | wc -l && ",
+                        "free | grep Mem | awk '{print $4/$2 * 100}'"
+                      )
+                      statusList[[i]] <- tryCatch(system2("ssh",
+                        c(i, remote_cmd), stdout = TRUE, stderr = TRUE),
+                        error = function(e) {
+                        warning("Status check failed for ", i, ": ", conditionMessage(e))
+                        return(NULL)
+                      })
                     }
                   } else {
-                    statusList[[i]] <- tryCatch(system(paste("ssh", i, "uptime | awk '{print $8}' &&",
-                      "ssh", i, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                      "ssh", i, "free | grep Mem | awk '{print $4/$2 * 100}'"), intern = TRUE),
+                    # Detect OS for remote server and use appropriate uptime column
+                    uptimeCol <- getCachedOS(i)
+                    remote_cmd <- paste0(
+                      "uptime | awk '{print $", uptimeCol, "}' && ",
+                      "cat /proc/cpuinfo | grep processor | wc -l && ",
+                      "free | grep Mem | awk '{print $4/$2 * 100}'"
+                    )
+                    statusList[[i]] <- tryCatch(system2("ssh",
+                      c(i, remote_cmd), stdout = TRUE, stderr = TRUE),
                       error = function(e) {
-                      })  # CentOS
-                    if (length(grep("load", statusList[[i]][1])) > 0 | length(grep("average",
-                      statusList[[i]][1])) > 0) {
-                      Sys.sleep(5)
-                      statusList[[i]] <- tryCatch(system(paste("ssh", i, "uptime | awk '{print $11}' &&",
-                        "ssh", i, "cat /proc/cpuinfo | grep processor | wc -l &&",
-                        "ssh", i, "free | grep Mem | awk '{print $4/$2 * 100}'"),
-                        intern = TRUE), error = function(e) {
-                      })  # Ubuntu
-                    }
+                      warning("Status check failed for ", i, ": ", conditionMessage(e))
+                      return(NULL)
+                    })
                   }
                 }
                 # evaluation
