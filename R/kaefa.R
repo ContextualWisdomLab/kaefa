@@ -1239,11 +1239,18 @@ launchAEFA <- function(...) {
   
   if (appDir == "") {
     stop(
-      "Could not find Shiny app directory for kaefa (shiny-app).\n",
+      "Shiny app directory not found in the installed kaefa package (shiny-app).\n",
+      "Verify the installed files with:\n",
+      "  system.file('shiny-app', package = 'kaefa')\n",
       "This may indicate:\n",
-      "  1. The kaefa package was not installed correctly\n",
-      "  2. The package version is outdated\n",
-      "Try re-installing: install.packages('kaefa', type = 'source')"
+      "  1. kaefa was installed without source files (use type = 'source')\n",
+      "  2. Package version is outdated and lacks the Shiny interface\n",
+      "  3. Installation was incomplete\n",
+      "\n",
+      "Solution: Reinstall with source files:\n",
+      "  install.packages('kaefa', type = 'source')\n",
+      "Or from GitHub:\n",
+      "  remotes::install_github('seonghobae/kaefa')"
     )
   }
   

@@ -13,7 +13,7 @@ test_that("launchAEFA returns error when app directory not found", {
     {
       expect_error(
         launchAEFA(),
-        "Could not find Shiny app directory"
+        "Shiny app directory not found"
       )
     }
   )
@@ -135,7 +135,7 @@ test_that("launchAEFA error message is descriptive", {
     {
       expect_error(
         launchAEFA(),
-        "re-installing.*kaefa"
+        "Shiny app directory not found"
       )
     }
   )
