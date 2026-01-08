@@ -149,7 +149,8 @@ test_that("No redundant system calls in refactored code", {
   
   # Should not have 10-second or 5-second Sys.sleep delays
   # that existed in old code
-  expect_true(TRUE)  # Completion is success
+  expect_true(elapsed < 15,
+              info = paste("Expected < 15s, actual:", elapsed, "seconds"))
 })
 
 context("Integration - Real-world scenarios")
