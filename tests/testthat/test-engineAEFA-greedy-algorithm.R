@@ -41,17 +41,20 @@ test_that("engineAEFA function exists and is exported", {
 
 test_that("engineAEFA accepts valid data.frame input", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
-  expect_silent(result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE))
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
+  expect_true(!inherits(result, "try-error"))
 })
 
 test_that("engineAEFA validates model parameter", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   
   # Should accept numeric model (number of factors)
-  expect_silent(result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE))
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
+  expect_true(!inherits(result, "try-error"))
   
   # Should accept model = 2 for two-factor model
-  expect_silent(result <- try(engineAEFA(test_data, model = 2, idling = 0), silent = TRUE))
+  result <- try(engineAEFA(test_data, model = 2, idling = 0), silent = TRUE)
+  expect_true(!inherits(result, "try-error"))
 })
 
 test_that("engineAEFA handles invalid model specifications", {
