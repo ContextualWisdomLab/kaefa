@@ -32,11 +32,12 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
             if (!is.null(sshKeyPath) && !is.na(sshKeyPath) &&
                 (grepl("\\.(pem|key)$", sshKeyPath, ignore.case = TRUE) ||
                   file.exists(sshKeyPath))) {
-                return(tryCatch(system(paste("ssh", serverName, "-i", sshKeyPath, cmd),
-                                     intern = TRUE), error = function(e) { character() }))
+                return(tryCatch(system(paste("ssh", shQuote(serverName), "-i",
+                  shQuote(sshKeyPath), shQuote(cmd)), intern = TRUE),
+                  error = function(e) { character() }))
             }
-            tryCatch(system(paste("ssh", serverName, cmd), intern = TRUE),
-                   error = function(e) { character() })
+            tryCatch(system(paste("ssh", shQuote(serverName), shQuote(cmd)),
+              intern = TRUE), error = function(e) { character() })
         }
 
         osInfo <- runCmd("cat /etc/os-release")
