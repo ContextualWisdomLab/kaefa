@@ -5,6 +5,10 @@ library(shiny)
 library(DT)
 library(kaefa)
 
+max_upload_mb <- 50
+max_upload_size <- max_upload_mb * 1024^2
+options(shiny.maxRequestSize = max_upload_size)
+
 # UI Definition
 ui <- fluidPage(
   titlePanel("kaefa: Automated Exploratory Factor Analysis"),
@@ -29,7 +33,8 @@ ui <- fluidPage(
       h3("1. Upload Data"),
       fileInput("dataFile", "Choose CSV File",
                 accept = c(".csv")),
-      helpText("Upload your item response data in CSV format."),
+      helpText(paste0("Upload your item response data in CSV format (max ",
+                      max_upload_mb, " MB).")),
       checkboxInput("hasHeader", "File has header", TRUE),
       
       hr(),
@@ -126,7 +131,9 @@ ui <- fluidPage(
                  h3("How to Use This Application"),
                  
                  h4("Step 1: Upload Your Data"),
-                 p("Upload a CSV or RDS file containing your item response data. Each row should represent a respondent, and each column should represent an item."),
+                 p(paste0("Upload a CSV file containing your item response data (max ",
+                          max_upload_mb, " MB). Each row should represent a respondent, ",
+                          "and each column should represent an item.")),
                  
                  h4("Step 2: Configure the Model"),
                  tags$ul(
@@ -176,6 +183,20 @@ server <- function(input, output, session) {
   # Load and preview data
   observeEvent(input$dataFile, {
     req(input$dataFile)
+
+    if (!is.null(input$dataFile$size) &&
+        any(input$dataFile$size > max_upload_size, na.rm = TRUE)) {
+      showNotification(
+        paste0("File size exceeds the ", max_upload_mb,
+               " MB limit. Please upload a smaller CSV file."),
+        type = "error",
+        duration = 10
+      )
+      values$data <- NULL
+      values$analysisComplete <- FALSE
+      values$results <- NULL
+      return()
+    }
     
     tryCatch({
       ext <- tolower(tools::file_ext(input$dataFile$name))
