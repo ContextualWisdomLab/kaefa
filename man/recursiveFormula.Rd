@@ -4,7 +4,7 @@
 \alias{recursiveFormula}
 \title{return Recursive Score into raw response scale or return the theta itself}
 \usage{
-recursiveFormula(mirtModel, mins = F, devide = F, rotate = NULL,
+recursiveFormula(mirtModel, mins = F, divide = F, rotate = NULL,
   individual = F, extractThetaOnly = F)
 }
 \arguments{
@@ -12,7 +12,7 @@ recursiveFormula(mirtModel, mins = F, devide = F, rotate = NULL,
 
 \item{mins}{logical; include the minimum value constants in the dataset. If FALSE, the expected values for each item are determined from the scoring 0:(ncat-1)}
 
-\item{devide}{logical; devide into the number of items. default is FALSE.}
+\item{divide}{logical; divide into the number of items. default is FALSE.}
 
 \item{rotate}{rotation method. Default is NULL, kaefa will be automatically select the rotation criteria using aefa calibrated model.}
 
