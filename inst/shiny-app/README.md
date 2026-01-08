@@ -54,7 +54,6 @@ launchAEFA()
 The following R packages are required (automatically installed with kaefa):
 - shiny
 - DT
-- ggplot2
 - mirt
 - psych
 
