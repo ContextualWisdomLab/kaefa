@@ -182,18 +182,21 @@ test_file("tests/testthat/test-integration.R")
 ## Test Categories
 
 ### Unit Tests
+
 - Pure function logic tests
 - Pattern matching validation
 - Command construction verification
 - Parameter validation
 
 ### Integration Tests
+
 - System-level behavior
 - Complete workflow validation
 - Real-world scenario testing
 - Performance benchmarking
 
 ### Regression Tests
+
 - Verify refactored code maintains behavior
 - Ensure performance improvements
 - Validate elimination of retry logic
