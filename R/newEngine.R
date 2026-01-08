@@ -3,7 +3,7 @@
 #'
 #' This function uses a greedy search algorithm to estimate and compare multiple model configurations,
 #' including various item response models and random effect structures. The algorithm evaluates candidates
-#' in parallel and selects improved combinations based on model fit criteria.
+#' in parallel and returns all estimated models for subsequent selection based on model fit criteria in aefa().
 #'
 #' @importFrom utils combn
 #' @import future
