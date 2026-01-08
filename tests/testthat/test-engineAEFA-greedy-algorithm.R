@@ -41,27 +41,27 @@ test_that("engineAEFA function exists and is exported", {
 
 test_that("engineAEFA accepts valid data.frame input", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
-  expect_silent(result <- try(engineAEFA(test_data, model = 1), silent = TRUE))
+  expect_silent(result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE))
 })
 
 test_that("engineAEFA validates model parameter", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   
   # Should accept numeric model (number of factors)
-  expect_silent(result <- try(engineAEFA(test_data, model = 1), silent = TRUE))
+  expect_silent(result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE))
   
   # Should accept model = 2 for two-factor model
-  expect_silent(result <- try(engineAEFA(test_data, model = 2), silent = TRUE))
+  expect_silent(result <- try(engineAEFA(test_data, model = 2, idling = 0), silent = TRUE))
 })
 
 test_that("engineAEFA handles invalid model specifications", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   
   # Model = 0 should error
-  expect_error(engineAEFA(test_data, model = 0))
+  expect_error(engineAEFA(test_data, model = 0, idling = 0))
   
   # Negative model should error
-  expect_error(engineAEFA(test_data, model = -1))
+  expect_error(engineAEFA(test_data, model = -1, idling = 0))
 })
 
 # ============================================================
@@ -72,7 +72,7 @@ test_that("engineAEFA explores multiple IRT model configurations", {
   test_data <- create_binary_irt_data(n_items = 6, n_obs = 150)
   
   # Should evaluate multiple item response models
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   if (!inherits(result, "try-error")) {
     expect_true(is.list(result))
@@ -84,7 +84,7 @@ test_that("engineAEFA evaluates candidates in parallel", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   
   # The greedy algorithm should evaluate multiple candidates
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   if (!inherits(result, "try-error")) {
     # Should return list of model candidates
@@ -100,7 +100,7 @@ test_that("engineAEFA selects based on model fit criteria", {
   test_data <- create_binary_irt_data(n_items = 5, n_obs = 150)
   
   # Should select improved combinations based on fit
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   if (!inherits(result, "try-error") && !is.null(result)) {
     # Result should contain fitted models
@@ -116,10 +116,10 @@ test_that("engineAEFA handles GenRandomPars parameter", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   
   # With random parameters
-  result1 <- try(engineAEFA(test_data, model = 1, GenRandomPars = TRUE), silent = TRUE)
+  result1 <- try(engineAEFA(test_data, model = 1, GenRandomPars = TRUE, idling = 0), silent = TRUE)
   
   # Without random parameters
-  result2 <- try(engineAEFA(test_data, model = 1, GenRandomPars = FALSE), silent = TRUE)
+  result2 <- try(engineAEFA(test_data, model = 1, GenRandomPars = FALSE, idling = 0), silent = TRUE)
   
   # Both should complete (or fail consistently)
   expect_true(!is.null(result1) && !is.null(result2))
@@ -130,7 +130,7 @@ test_that("engineAEFA handles random effects formulas", {
   
   # Should handle random effects structure
   result <- try(engineAEFA(test_data, model = 1, 
-                          random = list(~1 | items)), silent = TRUE)
+                          random = list(~1 | items), idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -143,7 +143,7 @@ test_that("engineAEFA respects NCYCLES parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
   # Lower cycles for faster testing
-  result <- try(engineAEFA(test_data, model = 1, NCYCLES = 1000), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, NCYCLES = 1000, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -151,7 +151,7 @@ test_that("engineAEFA respects NCYCLES parameter", {
 test_that("engineAEFA respects BURNIN parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
-  result <- try(engineAEFA(test_data, model = 1, BURNIN = 500), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, BURNIN = 500, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -159,7 +159,7 @@ test_that("engineAEFA respects BURNIN parameter", {
 test_that("engineAEFA respects SEMCYCLES parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
-  result <- try(engineAEFA(test_data, model = 1, SEMCYCLES = 500), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, SEMCYCLES = 500, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -173,11 +173,11 @@ test_that("engineAEFA handles resampling parameter", {
   
   # With resampling
   result1 <- try(engineAEFA(test_data, model = 1, 
-                           resampling = TRUE, samples = 100), silent = TRUE)
+                           resampling = TRUE, samples = 100, idling = 0), silent = TRUE)
   
   # Without resampling
   result2 <- try(engineAEFA(test_data, model = 1, 
-                           resampling = FALSE), silent = TRUE)
+                           resampling = FALSE, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result1) && !is.null(result2))
 })
@@ -186,7 +186,7 @@ test_that("engineAEFA respects samples parameter when resampling", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 500)
   
   result <- try(engineAEFA(test_data, model = 1, 
-                          resampling = TRUE, samples = 200), silent = TRUE)
+                          resampling = TRUE, samples = 200, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -200,7 +200,7 @@ test_that("engineAEFA handles data with zero variance items", {
   test_data$ConstantItem <- rep(1, nrow(test_data))
   
   # Should exclude constant items
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -213,7 +213,7 @@ test_that("engineAEFA handles items with many categories", {
     ncol = 5
   ))
   
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -221,7 +221,7 @@ test_that("engineAEFA handles items with many categories", {
 test_that("engineAEFA handles small sample sizes", {
   test_data <- create_simple_irt_data(n_items = 4, n_obs = 50)
   
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   # Should either work or fail gracefully
   expect_true(is.list(result) || inherits(result, "try-error"))
@@ -235,7 +235,7 @@ test_that("engineAEFA respects accelerate parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
   result <- try(engineAEFA(test_data, model = 1, 
-                          accelerate = "squarem"), silent = TRUE)
+                          accelerate = "squarem", idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -244,10 +244,10 @@ test_that("engineAEFA respects symmetric parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
   # symmetric = FALSE (default)
-  result1 <- try(engineAEFA(test_data, model = 1, symmetric = FALSE), silent = TRUE)
+  result1 <- try(engineAEFA(test_data, model = 1, symmetric = FALSE, idling = 0), silent = TRUE)
   
   # symmetric = TRUE
-  result2 <- try(engineAEFA(test_data, model = 1, symmetric = TRUE), silent = TRUE)
+  result2 <- try(engineAEFA(test_data, model = 1, symmetric = TRUE, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result1) && !is.null(result2))
 })
@@ -259,7 +259,7 @@ test_that("engineAEFA respects symmetric parameter", {
 test_that("engineAEFA returns list of models", {
   test_data <- create_binary_irt_data(n_items = 5, n_obs = 150)
   
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   if (!inherits(result, "try-error")) {
     expect_true(is.list(result))
@@ -269,7 +269,7 @@ test_that("engineAEFA returns list of models", {
 test_that("engineAEFA filters out NULL and invalid models", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   
-  result <- try(engineAEFA(test_data, model = 1), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, idling = 0), silent = TRUE)
   
   if (!inherits(result, "try-error") && is.list(result)) {
     # All elements should be valid model objects (not NULL)
@@ -286,7 +286,7 @@ test_that("engineAEFA handles key parameter for multiple choice items", {
   test_data <- create_simple_irt_data(n_items = 5, n_obs = 100)
   key_vector <- c("A", "B", "C", "D", "A")
   
-  result <- try(engineAEFA(test_data, model = 1, key = key_vector), silent = TRUE)
+  result <- try(engineAEFA(test_data, model = 1, key = key_vector, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -299,10 +299,10 @@ test_that("engineAEFA respects tryLCA parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
   # With LCA
-  result1 <- try(engineAEFA(test_data, model = 1, tryLCA = TRUE), silent = TRUE)
+  result1 <- try(engineAEFA(test_data, model = 1, tryLCA = TRUE, idling = 0), silent = TRUE)
   
   # Without LCA
-  result2 <- try(engineAEFA(test_data, model = 1, tryLCA = FALSE), silent = TRUE)
+  result2 <- try(engineAEFA(test_data, model = 1, tryLCA = FALSE, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result1) && !is.null(result2))
 })
@@ -311,7 +311,7 @@ test_that("engineAEFA respects forcingMixedModelOnly parameter", {
   test_data <- create_simple_irt_data(n_items = 4, n_obs = 100)
   
   result <- try(engineAEFA(test_data, model = 1, 
-                          forcingMixedModelOnly = TRUE), silent = TRUE)
+                          forcingMixedModelOnly = TRUE, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
@@ -320,7 +320,7 @@ test_that("engineAEFA respects turnOffMixedEst parameter", {
   test_data <- create_binary_irt_data(n_items = 4, n_obs = 100)
   
   result <- try(engineAEFA(test_data, model = 1, 
-                          turnOffMixedEst = TRUE), silent = TRUE)
+                          turnOffMixedEst = TRUE, idling = 0), silent = TRUE)
   
   expect_true(!is.null(result))
 })
