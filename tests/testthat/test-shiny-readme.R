@@ -1,8 +1,6 @@
 # Tests for Shiny app README documentation
 # Validates documentation quality and completeness
 
-context("Shiny App README Documentation")
-
 test_that("Shiny app README exists", {
   appDir <- get_app_dir()
   readmeFile <- file.path(appDir, "README.md")
