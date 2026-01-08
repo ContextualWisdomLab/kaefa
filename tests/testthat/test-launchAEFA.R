@@ -103,6 +103,7 @@ test_that("launchAEFA function has proper documentation", {
   # Check that function has help documentation
   help_file <- utils::help("launchAEFA", package = "kaefa")
   expect_true(length(help_file) > 0)
+  expect_true(all(file.exists(help_file)))
 })
 
 test_that("launchAEFA produces appropriate message", {
