@@ -79,19 +79,19 @@ test_that("launchAEFA validates app.R syntax", {
     # Check that app.R contains required Shiny components
     appContent <- readLines(appFile)
     expect_true(
-      any(grepl("library\\(shiny\\)", appContent)),
+      any(grepl("(library|require)\\s*\\(\\s*['\\\"]?shiny['\\\"]?\\s*\\)", appContent)),
       info = "app.R should load shiny library"
     )
     expect_true(
-      any(grepl("ui\\s*<-", appContent)),
+      any(grepl("ui\\s*(<-|=)", appContent)),
       info = "app.R should define ui"
     )
     expect_true(
-      any(grepl("server\\s*<-", appContent)),
+      any(grepl("server\\s*(<-|=)", appContent)),
       info = "app.R should define server"
     )
     expect_true(
-      any(grepl("shinyApp\\(", appContent)),
+      any(grepl("shinyApp\\s*\\(", appContent)),
       info = "app.R should call shinyApp()"
     )
   } else {
