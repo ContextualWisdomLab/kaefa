@@ -59,7 +59,7 @@ The following R packages are required (automatically installed with kaefa):
 
 ## Example Data
 
-The `example_data.csv` file contains sample item response data with 10 items and 20 respondents. You can use this to test the application.
+The `example_data.csv` file contains sample item response data with 10 items and 29 respondents. You can use this to test the application.
 
 ## Support
 
