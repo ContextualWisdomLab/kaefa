@@ -184,6 +184,17 @@ server <- function(input, output, session) {
         values$data <- read.csv(input$dataFile$datapath, 
                                 header = input$hasHeader,
                                 stringsAsFactors = FALSE)
+        if (!all(sapply(values$data, is.numeric))) {
+          showNotification(
+            "All columns must be numeric for factor analysis. Please check your CSV file.",
+            type = "error",
+            duration = 10
+          )
+          values$data <- NULL
+          values$analysisComplete <- FALSE
+          values$results <- NULL
+          return()
+        }
       } else if (ext == "rds") {
         showNotification(
           "RDS uploads are not supported for security reasons. Please upload a CSV file instead.",
