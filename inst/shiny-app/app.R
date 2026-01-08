@@ -229,10 +229,15 @@ server <- function(input, output, session) {
   # Data preview table
   output$dataPreview <- renderDT({
     req(values$data)
-    datatable(values$data, 
+    preview_data <- values$data
+    max_preview_rows <- 10000L
+    if (nrow(preview_data) > max_preview_rows) {
+      preview_data <- head(preview_data, max_preview_rows)
+    }
+    datatable(preview_data, 
               options = list(pageLength = 10, scrollX = TRUE),
               rownames = TRUE)
-  })
+  }, server = TRUE)
   
   # Run analysis
   observeEvent(input$runAnalysis, {
