@@ -51,7 +51,7 @@ launchAEFA()
 
 ## Requirements
 
-The following R packages are required (automatically installed with kaefa):
+The following R packages are required (installed as dependencies when you install kaefa):
 - shiny
 - DT
 - mirt
