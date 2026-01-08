@@ -365,6 +365,7 @@ server <- function(input, output, session) {
       req(values$results)
       
       sink(file)
+      on.exit(sink(), add = TRUE)
       cat("kaefa: Automated Exploratory Factor Analysis\n")
       cat("=============================================\n\n")
       cat("Report generated:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n")
@@ -405,8 +406,6 @@ server <- function(input, output, session) {
           cat("Error displaying factor loadings:", e$message, "\n")
         })
       }
-      
-      sink()
     }
   )
 }
