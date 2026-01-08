@@ -114,7 +114,7 @@ test_that("Results are internally consistent", {
   
   if (!inherits(result, "try-error") && !is.null(result) && is.list(result)) {
     # If result is a list, it should not be empty
-    expect_true(length(result) >= 0)
+    expect_gt(length(result), 0)
   }
 })
 
