@@ -79,23 +79,39 @@ test_that("WORDLIST covers all technical terms in documentation", {
   
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
-    wordlist <- readLines(wordlist_path, warn = FALSE)
-    man_dir <- system.file("man", package = "kaefa")
-    
-    if (dir.exists(man_dir)) {
-      rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
-      
-      specialized_terms <- c("aefa", "AEFA", "mirt", "bifactorQ", "geominQ",
-                            "kwangwoon", "AICc", "saBIC", "MMMM")
-      
-      for (term in specialized_terms) {
-        expect_true(term %in% wordlist,
-                    info = paste("Specialized term", term, 
-                                "should be in WORDLIST to avoid false spell check errors"))
-      }
-    }
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
   }
+
+  wordlist <- readLines(wordlist_path, warn = FALSE)
+  man_dir <- system.file("man", package = "kaefa")
+
+  if (!dir.exists(man_dir)) {
+    skip(paste("Documentation directory not found:", man_dir))
+  }
+
+  rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
+  if (length(rd_files) == 0) {
+    skip("No Rd files found to scan for technical terms")
+  }
+
+  rd_text <- vapply(rd_files, function(file) {
+    paste(readLines(file, warn = FALSE), collapse = " ")
+  }, character(1))
+  all_text <- paste(rd_text, collapse = " ")
+
+  tokens <- unique(unlist(strsplit(all_text, "[^A-Za-z0-9_]+")))
+  tokens <- tokens[nchar(tokens) > 1]
+  technical_tokens <- tokens[grepl("[0-9]", tokens) |
+                             grepl("[a-z][A-Z]", tokens) |
+                             grepl("[A-Z].*[A-Z]", tokens)]
+  ignore_tokens <- c("NA", "NULL", "TRUE", "FALSE", "R", "RDS", "Rd")
+  technical_tokens <- setdiff(technical_tokens, ignore_tokens)
+
+  missing_terms <- setdiff(technical_tokens, wordlist)
+  expect_true(length(missing_terms) == 0,
+              info = paste("WORDLIST missing technical terms from docs:",
+                           paste(missing_terms, collapse = ", ")))
 })
 
 test_that("documentation language consistency", {
