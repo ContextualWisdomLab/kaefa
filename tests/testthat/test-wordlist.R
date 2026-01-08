@@ -10,7 +10,9 @@ test_that("WORDLIST file exists", {
 test_that("WORDLIST has correct format", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     # Should not be empty
@@ -30,7 +32,9 @@ test_that("WORDLIST has correct format", {
 test_that("WORDLIST entries are unique", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     # Check for duplicates
@@ -44,7 +48,9 @@ test_that("WORDLIST entries are unique", {
 test_that("WORDLIST contains expected technical terms", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     # Expected terms that should be in WORDLIST
@@ -67,7 +73,9 @@ test_that("WORDLIST contains expected technical terms", {
 test_that("WORDLIST is sorted alphabetically", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     sorted_content <- sort(wordlist_content, method = "radix")
     
@@ -79,7 +87,9 @@ test_that("WORDLIST is sorted alphabetically", {
 test_that("WORDLIST entries follow naming conventions", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     # Only allow letters, numbers, underscores, and hyphens in entries.
@@ -94,7 +104,9 @@ test_that("WORDLIST entries follow naming conventions", {
 test_that("WORDLIST contains IRT and psychometric terms", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     irt_terms <- c("2PL", "3PL", "4PL", "Rasch", "gpcm", "grsm", "pcm", "rsm")
@@ -111,7 +123,9 @@ test_that("WORDLIST contains IRT and psychometric terms", {
 test_that("WORDLIST contains rotation method terms", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     rotation_terms <- c("bifactorQ", "bifactorT", "geominQ", "geominT", 
@@ -127,7 +141,9 @@ test_that("WORDLIST contains rotation method terms", {
 test_that("WORDLIST contains author and reference names", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     author_terms <- c("Bentler", "Jennrich", "Schmid", "Leiman")
@@ -142,7 +158,9 @@ test_that("WORDLIST contains author and reference names", {
 test_that("WORDLIST file size is reasonable", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
-  if (file.exists(wordlist_path)) {
+  if (!file.exists(wordlist_path)) {
+    skip(paste("WORDLIST file not found:", wordlist_path))
+  } else {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
     expect_true(length(wordlist_content) >= 50,
