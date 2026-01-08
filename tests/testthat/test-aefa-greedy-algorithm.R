@@ -3,30 +3,6 @@
 
 context("AEFA Greedy Search Algorithm")
 
-# Helper function to create simple test data
-create_test_data <- function(n_items = 10, n_obs = 100) {
-  set.seed(123)
-  data <- data.frame(matrix(
-    sample(1:5, n_items * n_obs, replace = TRUE),
-    nrow = n_obs,
-    ncol = n_items
-  ))
-  colnames(data) <- paste0("Item", 1:n_items)
-  return(data)
-}
-
-# Helper function to create binary test data
-create_binary_test_data <- function(n_items = 10, n_obs = 100) {
-  set.seed(123)
-  data <- data.frame(matrix(
-    sample(0:1, n_items * n_obs, replace = TRUE),
-    nrow = n_obs,
-    ncol = n_items
-  ))
-  colnames(data) <- paste0("Item", 1:n_items)
-  return(data)
-}
-
 # ============================================================
 # Test 1: Basic Function Existence and Structure
 # ============================================================
