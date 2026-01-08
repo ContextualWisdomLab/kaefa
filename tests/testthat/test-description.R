@@ -1,8 +1,6 @@
 # Test suite for DESCRIPTION file validation
 # This file tests the package metadata and configuration
 
-context("DESCRIPTION file validation")
-
 test_that("DESCRIPTION file exists and is readable", {
   desc_path <- system.file("DESCRIPTION", package = "kaefa")
   expect_true(file.exists(desc_path),
