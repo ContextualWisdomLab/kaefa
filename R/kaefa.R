@@ -26,28 +26,34 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
     # Helper function to detect OS on remote or local server
     detectOS <- function(serverName, sshKeyPath = NULL) {
         if (serverName == "localhost") {
-            osInfo <- tryCatch(system("cat /etc/os-release | grep '^NAME='", intern = TRUE), 
+            osInfo <- tryCatch(system("grep '^NAME=' /etc/os-release", intern = TRUE), 
                              error = function(e) { "" })
         } else {
             # Remote server via SSH
-            if (!is.null(sshKeyPath) && (length(grep("pem", sshKeyPath)) > 0 | length(grep("key", sshKeyPath)) > 0)) {
+            if (!is.null(sshKeyPath) && (grepl("pem", sshKeyPath) | grepl("key", sshKeyPath))) {
                 osInfo <- tryCatch(system(paste("ssh", serverName, "-i", sshKeyPath, 
-                                              "cat /etc/os-release | grep '^NAME='"), 
+                                              "grep '^NAME=' /etc/os-release"), 
                                         intern = TRUE), 
                                  error = function(e) { "" })
             } else {
                 osInfo <- tryCatch(system(paste("ssh", serverName, 
-                                              "cat /etc/os-release | grep '^NAME='"), 
+                                              "grep '^NAME=' /etc/os-release"), 
                                         intern = TRUE), 
                                  error = function(e) { "" })
             }
         }
         
         # Determine uptime column based on OS
-        if (length(osInfo) > 0 && length(grep("Ubuntu", osInfo)) > 0) {
-            return(11)  # Ubuntu uses column 11
+        # Ubuntu, Debian and similar distributions use column 11
+        # CentOS, RHEL, and similar distributions use column 8
+        if (length(osInfo) > 0 && (grepl("Ubuntu", osInfo) | grepl("Debian", osInfo))) {
+            return(11)  # Ubuntu/Debian-based systems use column 11
+        } else if (length(osInfo) > 0 && (grepl("CentOS", osInfo) | grepl("Red Hat", osInfo) | grepl("RHEL", osInfo))) {
+            return(8)   # CentOS/RHEL-based systems use column 8
         } else {
-            return(8)   # CentOS and others use column 8
+            # Default fallback for unknown distributions
+            # Try to detect by checking if column 8 contains numeric value
+            return(8)   # Default to column 8 for other distributions
         }
     }
 
@@ -76,9 +82,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                   # SSH side if key is provided
                   if (!is.null(sshKeyPath)) {
                     for (jj in 1:length(serverList)) {
-                      if (names(serverList)[[jj]] %in% names(serverList) && (length(grep(c("pem"),
-                        sshKeyPath[[jj]])) > 0 | length(grep(c("key"), sshKeyPath[[jj]])) >
-                        0)) {
+                      if (names(serverList)[[jj]] %in% names(serverList) && (grepl("pem", sshKeyPath[[jj]]) | grepl("key", sshKeyPath[[jj]]))) {
                         # Detect OS for remote server and use appropriate uptime column
                         uptimeCol <- detectOS(i, sshKeyPath[[jj]])
                         statusList[[i]] <- tryCatch(system(paste("ssh", i, "-i",
