@@ -113,16 +113,25 @@ test_that("launchAEFA produces appropriate message", {
   if (appDir != "") {
     # We can't actually run shiny::runApp in tests, but we can verify
     # the function would produce a message before calling runApp
+    captured <- new.env(parent = emptyenv())
+    captured$args <- list()
     with_mocked_bindings(
-      runApp = function(...) invisible(NULL),
+      runApp = function(appDir, ...) {
+        captured$dir <- appDir
+        captured$args <- list(...)
+        invisible(NULL)
+      },
       .env = asNamespace("shiny"),
       {
         expect_message(
-          launchAEFA(),
+          launchAEFA(port = 1234, launch.browser = FALSE),
           "Launching kaefa Shiny interface"
         )
       }
     )
+    expect_equal(captured$dir, appDir)
+    expect_equal(captured$args$port, 1234)
+    expect_equal(captured$args$launch.browser, FALSE)
   } else {
     skip("Package not installed")
   }
