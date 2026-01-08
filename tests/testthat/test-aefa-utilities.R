@@ -148,6 +148,13 @@ test_that("Results are reproducible with same seed", {
   set.seed(12345)
   result2 <- try(aefa(test_data, minExtraction = 1, maxExtraction = 1), silent = TRUE)
   
-  # Should get consistent behavior
-  expect_equal(inherits(result1, "try-error"), inherits(result2, "try-error"))
+  # Should get consistent behavior and identical results
+  if (inherits(result1, "try-error") || inherits(result2, "try-error")) {
+    expect_true(inherits(result1, "try-error") && inherits(result2, "try-error"))
+    err1 <- conditionMessage(attr(result1, "condition"))
+    err2 <- conditionMessage(attr(result2, "condition"))
+    expect_equal(err1, err2)
+  } else {
+    expect_identical(result1, result2)
+  }
 })
