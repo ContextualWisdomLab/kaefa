@@ -120,7 +120,16 @@ test_that("launchAEFA produces appropriate message", {
   if (appDir != "") {
     # We can't actually run shiny::runApp in tests, but we can verify
     # the function would produce a message before calling runApp
-    expect_true(TRUE)  # Placeholder for message test
+    with_mocked_bindings(
+      runApp = function(...) invisible(NULL),
+      .env = asNamespace("shiny"),
+      {
+        expect_message(
+          launchAEFA(),
+          "Launching kaefa Shiny interface"
+        )
+      }
+    )
   } else {
     skip("Package not installed")
   }
