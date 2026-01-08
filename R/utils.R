@@ -311,7 +311,7 @@
 #' @param data Response data matrix or data frame
 #' @param mirtModel Optional: pre-calibrated mirt model to test
 #' @param dist Distribution to test against (default: "norm")
-#' @param test Test statistic to use (default: "ks" for Kolmogorov-Smirnov)
+#' @param test Test statistic to use ("ks" default; "cvm" or "ad" require goftest)
 #' @return List with fit results and test statistics
 #' @export
 #'
@@ -364,11 +364,22 @@
       
       # Compare distributions if theta extraction succeeded
       if(!is.null(thetaEst)){
-        # Perform KS test between raw scores and theta estimates
-        ksTest <- tryCatch({
-          ks.test(scale(rawScores), scale(thetaEst[,1]))
+        test <- tolower(test)
+        if (test %in% c("cvm", "ad") && !requireNamespace("goftest", quietly = TRUE)) {
+          stop("Requested test '", test, "' requires the goftest package.")
+        }
+        test_fun <- switch(
+          test,
+          ks = stats::ks.test,
+          cvm = goftest::cvm.test,
+          ad = goftest::ad.test,
+          stop("Unsupported test: ", test, ". Choose 'ks', 'cvm', or 'ad'.")
+        )
+
+        thetaTest <- tryCatch({
+          test_fun(scale(rawScores), scale(thetaEst[,1]))
         }, error = function(e){
-          message("KS test failed: ", e$message)
+          message("Test failed: ", e$message)
           return(NULL)
         })
         
@@ -376,7 +387,7 @@
           fitted = TRUE,
           fit = fit,
           gofstat = gofTest,
-          theta_comparison = ksTest,
+          theta_comparison = thetaTest,
           summary = summary(fit),
           message = "Calibration test completed successfully"
         ))
