@@ -1,8 +1,6 @@
 # Integration tests for kaefa Shiny application
 # Tests UI structure, server logic, and data processing
 
-context("Shiny App Integration Tests")
-
 library(shiny)
 
 # Helper function to get app directory
