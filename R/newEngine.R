@@ -1,6 +1,10 @@
 # newEngine.R
 #' estimate full-information item factor analysis models with combinating random effects
 #'
+#' This function uses a greedy search algorithm to estimate and compare multiple model configurations,
+#' including various item response models and random effect structures. The algorithm evaluates candidates
+#' in parallel and selects globally-optimal combinations based on model fit criteria.
+#'
 #' @importFrom utils combn
 #' @import future
 #' @import listenv

@@ -6,6 +6,23 @@ kaefa
 
 The goal of kaefa is to improving research capability to identify unexplained factor structure with complexly cross-classified multilevel structured data in R environment with automated exploratory factor analysis (aefa) framework
 
+Algorithm
+---------
+
+The automated exploratory factor analysis (aefa) framework implements a **greedy search algorithm** to find the global-optimal model configuration. The algorithm iteratively:
+
+1. Evaluates multiple model candidates with different factor structures and item response models
+2. Selects the best model based on information criteria (DIC, AIC, BIC, etc.)
+3. Assesses item fit and removes poorly fitting items one at a time
+4. Re-estimates the model until convergence to an optimal solution
+
+This greedy approach enables efficient exploration of the model space while seeking globally-optimal solutions. The method is inspired by research on globally-optimal greedy algorithms in tracking and optimization problems (Pirsiavash, Ramanan, & Fowlkes, 2011).
+
+**References:**
+
+- Pirsiavash, H., Ramanan, D., & Fowlkes, C. C. (2011, June). Globally-optimal greedy algorithms for tracking a variable number of objects. In Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference on (pp. 1201-1208). IEEE.
+- Wikipedia: [Greedy Algorithm (탐욕 알고리즘)](https://ko.m.wikipedia.org/wiki/탐욕_알고리즘)
+
 Installation
 ------------
 
