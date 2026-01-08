@@ -1,79 +1,91 @@
-# Tests for kaefa Package
+# Test Suite for kaefa Package
 
-This directory contains comprehensive unit tests for the kaefa package, focusing on validating the spelling corrections and documentation quality improvements made in the recent commit.
+## Overview
+
+This test suite provides coverage for spelling/documentation quality checks and the aefaInit/detectOS refactor.
 
 ## Test Structure
 
-The test suite is organized into the following files:
+The tests are organized into the following files:
 
-### Core Test Files
+### Spelling and documentation tests
 
 1. **`testthat.R`** - Main test runner that loads testthat and executes all tests
 
-2. **`testthat/test-wordlist.R`** (10 tests)
+2. **`testthat/test-wordlist.R`**
    - Validates the `inst/WORDLIST` file format and content
    - Ensures technical terms and specialized vocabulary are properly documented
    - Verifies alphabetical sorting and uniqueness of entries
    - Checks for IRT, psychometric, and rotation method terminology
 
-3. **`testthat/test-description.R`** (8 tests)
+3. **`testthat/test-description.R`**
    - Validates the DESCRIPTION file structure and required fields
    - Verifies spelling corrections (e.g., "parallelised" vs "pallelise")
    - Ensures British English (en-GB) language setting
    - Checks package dependencies and metadata
 
-4. **`testthat/test-documentation.R`** (7 tests)
+4. **`testthat/test-documentation.R`**
    - Validates `.Rd` documentation files for correct spelling
    - Checks for common typos that were corrected
    - Ensures British English consistency
    - Verifies documentation quality and completeness
 
-5. **`testthat/test-spelling-comprehensive.R`** (5 tests)
+5. **`testthat/test-spelling-comprehensive.R`**
    - Comprehensive spelling validation across all documentation
    - Checks for specific typos corrected in this commit
    - Validates technical term consistency
    - Ensures WORDLIST coverage of specialized terms
 
-6. **`testthat/test-wordlist-integrity.R`** (8 tests)
+6. **`testthat/test-wordlist-integrity.R`**
    - Additional integrity checks for WORDLIST
    - Validates file format (no trailing whitespace, proper line endings)
    - Checks for appropriate case sensitivity
    - Ensures package-specific terminology is included
 
-## Running the Tests
+### aefaInit / detectOS tests
 
-### Run all tests:
+1. **`testthat/test-aefaInit.R`**
+   - detectOS helper function behavior
+   - SSH key path handling
+   - Remote cluster handling
+   - Load percentage parameter validation
+   - Debug mode behavior
+   - Error handling and edge cases
+   - OS-specific command construction
+
+2. **`testthat/test-detectOS-logic.R`**
+   - Pattern matching logic (Ubuntu, Debian, CentOS, RHEL)
+   - Column number logic (8 vs 11)
+   - Edge cases and boundary conditions
+   - SSH command construction
+   - Key file detection logic
+   - Return value validation
+
+3. **`testthat/test-integration.R`**
+   - End-to-end workflow tests
+   - System compatibility scenarios
+   - Cluster detection/status checks
+   - Error recovery cases
+   - Regression checks for refactoring behavior
+   - Performance validation (no unnecessary delays)
+
+## Running the Tests
 
 ```r
 library(testthat)
 library(kaefa)
+
+# Run all tests
 test_check("kaefa")
-```
 
-### Run specific test file:
-
-```r
+# Run specific test files
 test_file("tests/testthat/test-wordlist.R")
+test_file("tests/testthat/test-aefaInit.R")
 ```
-
-### Run with detailed output:
-
-```r
-test_check("kaefa", reporter = "progress")
-```
-
-## Test Coverage
-
-The test suite provides comprehensive coverage for:
-
-- **Documentation Quality**: 38 test cases validating spelling, consistency, and completeness
-- **WORDLIST Management**: 18 test cases ensuring proper vocabulary management
-- **DESCRIPTION Integrity**: 8 test cases validating package metadata
-- **Language Consistency**: Multiple tests ensuring British English compliance
 
 ## Spelling Corrections Validated
 
-These tests specifically validate the following spelling corrections made in this commit:
+These tests validate the following spelling corrections:
 
 | Old (Incorrect) | New (Correct) | Occurrences |
 |----------------|---------------|-------------|
@@ -91,28 +103,45 @@ These tests specifically validate the following spelling corrections made in thi
 
 ## WORDLIST Additions
 
-The test suite validates that the new `inst/WORDLIST` file includes:
+The test suite validates that `inst/WORDLIST` includes:
 
-- **90 technical terms** properly whitelisted for spell checking
-- IRT model abbreviations (2PL, 3PL, 4PL, Rasch, etc.)
+- Technical terms and abbreviations (2PL, 3PL, 4PL, Rasch, etc.)
 - Rotation methods (bifactorQ, geominQ, quartimax, etc.)
 - Statistical abbreviations (AICc, saBIC, DIC, MHRM, etc.)
 - Author and reference names (Bentler, Jennrich, Schmid, etc.)
 - Package-specific terms (aefa, mirt, kwangwoon, etc.)
 
-## Test Philosophy
+## aefaInit/detectOS Coverage Highlights
 
-These tests follow R package testing best practices:
+Key changes tested for the refactor include:
 
-1. **Comprehensive Coverage**: Tests validate not just that code works, but that documentation is accurate and consistent
-2. **Regression Prevention**: Tests ensure spelling corrections remain in place
-3. **Quality Assurance**: Tests validate documentation quality standards
-4. **Language Consistency**: Tests enforce British English (en-GB) as specified in DESCRIPTION
-5. **Edge Case Handling**: Tests cover edge cases like file formatting, whitespace, and special characters
+- Adds `detectOS` helper function to detect operating system before parsing uptime output
+- Eliminates retry logic that re-parsed different uptime columns
+- Removes Sys.sleep delays used for retries
+- Improves grepl usage for pem/key detection
+- Simplifies conditional logic for SSH command construction
 
-## Continuous Integration
+Coverage areas include:
 
-These tests are designed to run in CI/CD pipelines (Travis CI, AppVeyor, GitHub Actions) to ensure ongoing quality.
+- Happy paths (localhost and remote clusters, default parameters)
+- Edge cases (empty cluster list, unknown OS, NULL/NA key paths)
+- Error conditions (SSH failures, invalid parameters, command failures)
+- Performance checks (no hanging operations)
+
+## Skip Conditions
+
+Some tests are conditionally skipped to avoid issues in CI/CD environments:
+
+- `skip_on_cran()`
+- `skip_on_ci()`
+- `skip_if_not(interactive())`
+
+## Dependencies
+
+The test suite requires:
+
+- `testthat` (>= 2.0.0)
+- `tools` (for some advanced checks)
 
 ## Contributing
 
@@ -123,10 +152,17 @@ When adding new technical terms or making documentation changes:
 3. Verify British English spelling is used consistently
 4. Update tests if new validation rules are needed
 
-## Dependencies
+## Maintenance Notes
 
-The test suite requires:
-- `testthat` (>= 2.0.0)
-- `tools` (for some advanced checks)
+- Integration tests may take longer due to system calls
+- Some tests are environment-specific (Linux-only features)
+- Tests use `tryCatch` to handle system-dependent behavior
 
-These are listed in the `Suggests` field of DESCRIPTION.
+## Future Enhancements
+
+Potential areas for additional testing:
+
+1. Mock system calls for more deterministic tests
+2. Add tests for concurrent aefaInit calls
+3. Add property-based testing for command construction
+4. Benchmark against old implementation for performance comparison
