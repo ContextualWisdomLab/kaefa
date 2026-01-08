@@ -170,14 +170,29 @@ server <- function(input, output, session) {
     req(input$dataFile)
     
     tryCatch({
-      ext <- tools::file_ext(input$dataFile$name)
+      ext <- tolower(tools::file_ext(input$dataFile$name))
       
       if (ext == "csv") {
         values$data <- read.csv(input$dataFile$datapath, 
                                 header = input$hasHeader,
                                 stringsAsFactors = FALSE)
-      } else if (ext %in% c("rds", "RDS")) {
-        values$data <- readRDS(input$dataFile$datapath)
+      } else if (ext == "rds") {
+        showNotification(
+          "RDS uploads are not supported for security reasons. Please upload a CSV file instead.",
+          type = "error",
+          duration = 10
+        )
+        values$data <- NULL
+        values$analysisComplete <- FALSE
+        values$results <- NULL
+        return()
+      } else {
+        showNotification(paste("Unsupported file type:", ext), 
+                         type = "error", duration = 10)
+        values$data <- NULL
+        values$analysisComplete <- FALSE
+        values$results <- NULL
+        return()
       }
       
       values$analysisComplete <- FALSE
