@@ -1,8 +1,6 @@
 # Additional WORDLIST integrity tests
 # Edge cases and comprehensive validation
 
-context("WORDLIST integrity and edge cases")
-
 test_that("WORDLIST has no trailing whitespace", {
   wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
