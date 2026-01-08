@@ -50,6 +50,8 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
         }
 
         # Fallback for unknown distributions by sampling uptime output
+        warning(paste0("Could not detect OS from /etc/os-release for ", serverName,
+          ". Falling back to uptime sampling."))
         uptimeOut <- runCmd("uptime")
         if (length(uptimeOut) > 0) {
             fields <- strsplit(gsub(",", "", uptimeOut[1]), "\\s+")[[1]]
@@ -61,6 +63,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
             }
         }
 
+        warning(paste0("Using default uptime column (11) for ", serverName))
         return(11)
     }
 
