@@ -411,9 +411,18 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
     RemoteClusters = getOption("kaefaServers"), sshKeyPath = NULL, GenRandomPars = T, NCYCLES = 4000,
     BURNIN = 1500, SEMCYCLES = 1000, covdata = NULL,
     fixed = kaefa:::.covdataFixedEffectComb(covdata),
-    random = lapply(c(c(kaefa:::.covdataClassifieder(covdata)$random, 'items'),
-                      if(length(kaefa:::.covdataClassifieder(covdata)$random) != 0) paste0(kaefa:::.covdataClassifieder(covdata)$random, ':items')),
-                    FUN = function(X){eval(parse(text = paste0('as.formula(',paste0('~1|',X), ')')))}),
+    random = lapply(
+      c(c(kaefa:::.covdataClassifieder(covdata)$random, 'items'),
+        if (length(kaefa:::.covdataClassifieder(covdata)$random) != 0) {
+          paste0(kaefa:::.covdataClassifieder(covdata)$random, ':items')
+        }),
+      FUN = function(X) {
+        if (!grepl("^[A-Za-z.][A-Za-z0-9._]*(:[A-Za-z.][A-Za-z0-9._]*)*$", X)) {
+          stop("Invalid covariate name for random effects: ", X)
+        }
+        stats::as.formula(paste0("~1|", X))
+      }
+    ),
     key = NULL, accelerate = "squarem", symmetric = F, saveModelHistory = T,
     filename = "aefa.RDS", printItemFit = T, rotate = c("bifactorQ","geominQ", "geominT", "bentlerQ", "bentlerT",
                                                         "oblimin", "simplimax", "tandemII",
