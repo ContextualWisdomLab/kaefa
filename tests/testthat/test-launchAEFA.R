@@ -1,8 +1,6 @@
 # Tests for launchAEFA function
 # Testing the interactive Shiny interface launcher
 
-context("launchAEFA function")
-
 test_that("launchAEFA function exists and is exported", {
   expect_true(exists("launchAEFA"))
   expect_true("launchAEFA" %in% getNamespaceExports("kaefa"))
