@@ -16,12 +16,12 @@ The automated exploratory factor analysis (aefa) framework implements a **greedy
 3. Assesses item fit and removes poorly fitting items one at a time
 4. Re-estimates the model until convergence to a locally optimal solution
 
-This greedy approach enables efficient exploration of the model space while seeking improved solutions through iterative refinement. The method is inspired by research on greedy algorithms in tracking and optimization problems (Pirsiavash, Ramanan, & Fowlkes, 2011), which have shown that greedy methods can approach globally optimal solutions under certain conditions.
+This greedy approach enables efficient exploration of the model space while seeking improved solutions through iterative refinement. The method aligns with model selection and exploratory factor analysis research (Preacher, Zhang, Kim, & Mels, 2013; Jennrich & Bentler, 2011).
 
 **References:**
 
-- Pirsiavash, H., Ramanan, D., & Fowlkes, C. C. (2011, June). Globally-optimal greedy algorithms for tracking a variable number of objects. In Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference on (pp. 1201-1208). IEEE.
-- Wikipedia: [Greedy Algorithm (탐욕 알고리즘)](https://ko.m.wikipedia.org/wiki/탐욕_알고리즘)
+- Preacher, K. J., Zhang, G., Kim, C., & Mels, G. (2013). Choosing the optimal number of factors in exploratory factor analysis: A model selection perspective. Multivariate Behavioral Research, 48(1), 28-56. https://doi.org/10.1080/00273171.2012.710386
+- Jennrich, R. I., & Bentler, P. M. (2011). Exploratory bi-factor analysis. Psychometrika, 76(4), 537-549. https://doi.org/10.1007/s11336-011-9218-4
 
 Installation
 ------------
