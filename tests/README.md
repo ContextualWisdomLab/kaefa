@@ -2,259 +2,161 @@
 
 ## Overview
 
-This test suite provides comprehensive coverage for the `kaefa` package, with special focus on the recently refactored `aefaInit` function and its internal `detectOS` helper function.
+This test suite provides coverage for spelling/documentation quality checks and the aefaInit/detectOS refactor.
 
 ## Test Structure
 
-The test suite consists of **72 unit tests** across **3 test files**, totaling over **1,200 lines** of test code:
+The tests are organized into the following files:
 
-### 1. `test-aefaInit.R` (30 tests, 517 lines)
+### Spelling and documentation tests
 
-Main functionality tests for the `aefaInit` function, covering:
+1. **`testthat.R`** - Main test runner that loads testthat and executes all tests
 
-- **detectOS Helper Function** (4 tests)
-  - Valid column number returns (8 or 11)
-  - Ubuntu/Debian system handling (column 11)
-  - CentOS/RHEL system handling (column 8)
-  - Unknown distribution fallback (column 8)
+2. **`testthat/test-wordlist.R`**
+   - Validates the `inst/WORDLIST` file format and content
+   - Ensures technical terms and specialized vocabulary are properly documented
+   - Verifies alphabetical sorting and uniqueness of entries
+   - Checks for IRT, psychometric, and rotation method terminology
 
-- **SSH Key Path Handling** (3 tests)
-  - .pem file detection
-  - .key file detection
-  - NULL key path handling
+3. **`testthat/test-description.R`**
+   - Validates the DESCRIPTION file structure and required fields
+   - Verifies spelling corrections (e.g., "parallelised" vs "pallelise")
+   - Ensures British English (en-GB) language setting
+   - Checks package dependencies and metadata
 
-- **Remote Cluster Handling** (3 tests)
-  - Localhost as cluster
-  - Multiple remote clusters
-  - getOption for default clusters
+4. **`testthat/test-documentation.R`**
+   - Validates `.Rd` documentation files for correct spelling
+   - Checks for common typos that were corrected
+   - Ensures British English consistency
+   - Verifies documentation quality and completeness
 
-- **Load Percentage Parameter** (2 tests)
-  - Valid load percentage values (10, 25, 50, 75, 90)
-  - Extreme load percentage values (1, 99)
+5. **`testthat/test-spelling-comprehensive.R`**
+   - Comprehensive spelling validation across all documentation
+   - Checks for specific typos corrected in this commit
+   - Validates technical term consistency
+   - Ensures WORDLIST coverage of specialized terms
 
-- **Debug Mode** (2 tests)
-  - Debug mode enabled
-  - Debug mode disabled
+6. **`testthat/test-wordlist-integrity.R`**
+   - Additional integrity checks for WORDLIST
+   - Validates file format (no trailing whitespace, proper line endings)
+   - Checks for appropriate case sensitivity
+   - Ensures package-specific terminology is included
 
-- **Error Handling and Edge Cases** (3 tests)
-  - Empty cluster list
-  - Invalid cluster names
-  - Mixed valid/invalid SSH key paths
+### aefaInit / detectOS tests
 
-- **OS Detection Logic** (2 tests)
-  - Correct uptime column usage
-  - OS identification from /etc/os-release
+1. **`testthat/test-aefaInit.R`**
+   - detectOS helper function behavior
+   - SSH key path handling
+   - Remote cluster handling
+   - Load percentage parameter validation
+   - Debug mode behavior
+   - Error handling and edge cases
+   - OS-specific command construction
 
-- **Regression Tests** (3 tests)
-  - Elimination of unnecessary retries
-  - grepl pattern matching for pem/key files
-  - paste0 awk command construction
+2. **`testthat/test-detectOS-logic.R`**
+   - Pattern matching logic (Ubuntu, Debian, CentOS, RHEL)
+   - Column number logic (8 vs 11)
+   - Edge cases and boundary conditions
+   - SSH command construction
+   - Key file detection logic
+   - Return value validation
 
-- **Integration Tests** (1 test)
-  - assignClusterNodes parameter passing
-
-- **Parameter Validation** (3 tests)
-  - Boolean parameter handling
-  - Numeric parameter handling
-  - Character vector parameter handling
-
-- **OS-Specific Command Construction** (3 tests)
-  - Localhost commands (no SSH)
-  - Remote server commands (with SSH)
-  - SSH commands with key paths
-
-- **Memory and Resource Management** (1 test)
-  - No hanging connections
-
-### 2. `test-detectOS-logic.R` (26 tests, 403 lines)
-
-Pure logic tests for detectOS functionality, covering:
-
-- **Pattern Matching Logic** (4 tests)
-  - Ubuntu detection patterns
-  - Debian detection patterns
-  - CentOS detection patterns
-  - RHEL/Red Hat detection patterns
-
-- **Column Number Logic** (3 tests)
-  - Column 11 for Ubuntu/Debian
-  - Column 8 for CentOS/RHEL
-  - Column 8 default for unknown distributions
-  - Column 8 default for empty OS info
-
-- **Edge Cases and Boundary Conditions** (4 tests)
-  - Case sensitivity handling
-  - Partial match handling
-  - Multiple OS names in string
-  - Empty vector length check
-
-- **SSH Command Construction** (3 tests)
-  - Localhost commands (no SSH)
-  - Remote server commands (with SSH)
-  - SSH commands with key paths
-
-- **Key File Detection Logic** (4 tests)
-  - .pem file identification
-  - .key file identification
-  - Combined pem/key detection
-  - NULL and NA handling
-
-- **Error Handling** (1 test)
-  - tryCatch returns empty string on error
-
-- **Uptime Command Construction** (2 tests)
-  - Correct awk commands for different columns
-  - Complex system command construction
-
-- **Return Value Validation** (2 tests)
-  - Valid integer returns (8 or 11)
-  - Numeric type verification
-
-- **Comparison with Old Implementation** (2 tests)
-  - Avoids retry logic
-  - Eliminates Sys.sleep delays
-
-### 3. `test-integration.R` (16 tests, 307 lines)
-
-Integration and system-level tests, covering:
-
-- **Complete Workflow Tests** (2 tests)
-  - No hanging on localhost
-  - Multiple sequential calls
-
-- **System Compatibility** (2 tests)
-  - Systems with /etc/os-release
-  - Systems without /etc/os-release
-
-- **Cluster Detection and Status** (1 test)
-  - Status list population
-
-- **Error Recovery** (1 test)
-  - Transient failure recovery
-
-- **Refactoring Validation** (2 tests)
-  - Same results as old code
-  - No redundant system calls
-
-- **Real-World Scenarios** (3 tests)
-  - Ubuntu system configuration
-  - CentOS system configuration
-  - Debian system configuration
-
-- **Performance Validation** (1 test)
-  - Acceptable performance (no 10-second delays)
-
-- **Backward Compatibility** (2 tests)
-  - Function signature compatibility
-  - Default parameter values
-
-- **Documentation and Exports** (2 tests)
-  - Proper function export
-  - Minimal argument calls
-
-## Key Changes Tested
-
-The test suite focuses on validating the refactored code that:
-
-1. **Adds `detectOS` helper function** - Detects operating system before attempting to parse uptime output
-2. **Eliminates retry logic** - Old code tried column 8, then retried with column 11 if it detected "load" or "average"
-3. **Removes Sys.sleep delays** - Old code had 10-second and 5-second delays for retries
-4. **Improves grepl usage** - Uses `grepl("pem", path)` instead of `length(grep("pem", path)) > 0`
-5. **Simplifies conditional logic** - Uses `||` for OR conditions instead of checking `length(grep()) > 0`
+3. **`testthat/test-integration.R`**
+   - End-to-end workflow tests
+   - System compatibility scenarios
+   - Cluster detection/status checks
+   - Error recovery cases
+   - Regression checks for refactoring behavior
+   - Performance validation (no unnecessary delays)
 
 ## Running the Tests
 
 ```r
-# Install testthat if not already installed
-install.packages("testthat")
-
-# Run all tests
 library(testthat)
 library(kaefa)
+
+# Run all tests
 test_check("kaefa")
 
-# Run specific test file
+# Run specific test files
+test_file("tests/testthat/test-wordlist.R")
 test_file("tests/testthat/test-aefaInit.R")
-test_file("tests/testthat/test-detectOS-logic.R")
-test_file("tests/testthat/test-integration.R")
 ```
 
-## Test Categories
+## Spelling Corrections Validated
 
-### Unit Tests
+These tests validate the following spelling corrections:
 
-- Pure function logic tests
-- Pattern matching validation
-- Command construction verification
-- Parameter validation
+| Old (Incorrect) | New (Correct) | Occurrences |
+|----------------|---------------|-------------|
+| historys | histories | Multiple .Rd files |
+| critera | criteria | Multiple .Rd files |
+| messeages | messages | aefa.Rd, engineAEFA.Rd |
+| avaliable | available | aefa.Rd, engineAEFA.Rd |
+| combinating | combining | engineAEFA.Rd |
+| informaiton | information | aefaInit.Rd |
+| initalise | initialise | aefaInit.Rd |
+| Initalize | Initialise | aefaInit.Rd |
+| devide | divide | recursiveFormula.Rd |
+| Speicfy | Specify | aefaInit.Rd |
+| pallelise | parallelised | DESCRIPTION |
 
-### Integration Tests
+## WORDLIST Additions
 
-- System-level behavior
-- Complete workflow validation
-- Real-world scenario testing
-- Performance benchmarking
+The test suite validates that `inst/WORDLIST` includes:
 
-### Regression Tests
+- Technical terms and abbreviations (2PL, 3PL, 4PL, Rasch, etc.)
+- Rotation methods (bifactorQ, geominQ, quartimax, etc.)
+- Statistical abbreviations (AICc, saBIC, DIC, MHRM, etc.)
+- Author and reference names (Bentler, Jennrich, Schmid, etc.)
+- Package-specific terms (aefa, mirt, kwangwoon, etc.)
 
-- Verify refactored code maintains behavior
-- Ensure performance improvements
-- Validate elimination of retry logic
+## aefaInit/detectOS Coverage Highlights
+
+Key changes tested for the refactor include:
+
+- Adds `detectOS` helper function to detect operating system before parsing uptime output
+- Eliminates retry logic that re-parsed different uptime columns
+- Removes Sys.sleep delays used for retries
+- Improves grepl usage for pem/key detection
+- Simplifies conditional logic for SSH command construction
+
+Coverage areas include:
+
+- Happy paths (localhost and remote clusters, default parameters)
+- Edge cases (empty cluster list, unknown OS, NULL/NA key paths)
+- Error conditions (SSH failures, invalid parameters, command failures)
+- Performance checks (no hanging operations)
 
 ## Skip Conditions
 
 Some tests are conditionally skipped to avoid issues in CI/CD environments:
 
-- `skip_on_cran()` - Skips tests on CRAN checks
-- `skip_on_ci()` - Skips tests in CI environments
-- `skip_if_not(interactive())` - Skips tests requiring interactive sessions
+- `skip_on_cran()`
+- `skip_on_ci()`
+- `skip_if_not(interactive())`
 
-## Coverage Areas
+## Dependencies
 
-### Happy Paths
-- ✅ Localhost cluster initialization
-- ✅ Remote cluster initialization
-- ✅ SSH key path handling
-- ✅ OS detection (Ubuntu, Debian, CentOS, RHEL)
-- ✅ Default parameter values
-- ✅ Debug mode operation
+The test suite requires:
 
-### Edge Cases
-- ✅ Empty cluster list
-- ✅ Invalid cluster names
-- ✅ Unknown OS distributions
-- ✅ Missing /etc/os-release file
-- ✅ NULL and NA key paths
-- ✅ Mixed valid/invalid inputs
-- ✅ Extreme load percentage values
+- `testthat` (>= 2.0.0)
+- `tools` (for some advanced checks)
 
-### Error Conditions
-- ✅ System command failures
-- ✅ SSH connection failures
-- ✅ Invalid parameter types
-- ✅ Network timeouts
-- ✅ Resource cleanup
+## Contributing
 
-### Performance
-- ✅ No hanging operations
-- ✅ Reasonable execution time
-- ✅ No memory leaks
-- ✅ Efficient system calls
+When adding new technical terms or making documentation changes:
 
-## Test Principles
-
-1. **Bias for Action** - Comprehensive test coverage even for well-tested code
-2. **Pure Function Testing** - Isolate and test logic without side effects
-3. **Integration Validation** - Verify complete workflows work correctly
-4. **Graceful Degradation** - Handle errors without crashes
-5. **Backward Compatibility** - Maintain existing API contracts
+1. Add technical terms to `inst/WORDLIST`
+2. Run tests to ensure no new typos are introduced
+3. Verify British English spelling is used consistently
+4. Update tests if new validation rules are needed
 
 ## Maintenance Notes
 
-- Tests use `tryCatch` extensively to handle system-dependent behavior
 - Integration tests may take longer due to system calls
 - Some tests are environment-specific (Linux-only features)
-- Mock objects are not used to test real system integration
+- Tests use `tryCatch` to handle system-dependent behavior
 
 ## Future Enhancements
 
@@ -262,15 +164,5 @@ Potential areas for additional testing:
 
 1. Mock system calls for more deterministic tests
 2. Add tests for concurrent aefaInit calls
-3. Test network failure scenarios more thoroughly
-4. Add property-based testing for command construction
-5. Benchmark against old implementation for performance comparison
-
-## Contributing
-
-When adding new tests:
-1. Follow the existing naming convention
-2. Use descriptive test names that explain what is being tested
-3. Group related tests under appropriate contexts
-4. Add skip conditions for environment-specific tests
-5. Document any new test patterns in this README
+3. Add property-based testing for command construction
+4. Benchmark against old implementation for performance comparison

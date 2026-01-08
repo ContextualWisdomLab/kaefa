@@ -1227,10 +1227,11 @@ aefaResults <- function(mirtModel, rotate = NULL, suppress = 0, which.inspect = 
 #'
 #' @param mirtModel estimated aefa model
 #' @param mins logical; include the minimum value constants in the dataset. If FALSE, the expected values for each item are determined from the scoring 0:(ncat-1)
-#' @param devide logical; devide into the number of items. default is FALSE.
+#' @param divide logical; divide into the number of items. default is FALSE.
 #' @param rotate rotation method. Default is NULL, kaefa will be automatically select the rotation criteria using aefa calibrated model.
 #' @param individual logical; return tracelines for individual items?
 #' @param extractThetaOnly logical; return the theta only without recursive score? if TRUE, theta will return.
+#' @param ... additional arguments (unused).
 #' @return recursively expected test score
 #' @export
 #'
@@ -1240,7 +1241,21 @@ aefaResults <- function(mirtModel, rotate = NULL, suppress = 0, which.inspect = 
 #' aefaResults(testMod1)
 #' recursiveScore <- recursiveFormula(testMod1)
 #' }
-recursiveFormula <- function(mirtModel, mins = F, devide = F, rotate = NULL, individual = F, extractThetaOnly = F){
+recursiveFormula <- function(mirtModel, mins = F, divide = F, rotate = NULL, individual = F, extractThetaOnly = F, ...){
+  extra_args <- list(...)
+  if ("devide" %in% names(extra_args)) {
+    if (missing(divide)) {
+      warning("`devide` is deprecated; use `divide`.", call. = FALSE)
+      divide <- extra_args$devide
+    } else {
+      warning("Ignoring deprecated `devide` because `divide` was supplied.", call. = FALSE)
+    }
+    extra_args$devide <- NULL
+  }
+  if (length(extra_args)) {
+    stop("Unused argument(s): ", paste(names(extra_args), collapse = ", "))
+  }
+
   if (class(mirtModel) == "aefa") {
 
     if(is.null(rotate)){
@@ -1273,7 +1288,7 @@ recursiveFormula <- function(mirtModel, mins = F, devide = F, rotate = NULL, ind
     resultRecursive <- tryCatch(mirt::expected.test(mirtModel, ThetaExpected, mins = mins, individual = individual), error = function(e) {NULL})
 
     if(exists('resultRecursive') && !is.null(resultRecursive)){
-      if(devide){
+      if(divide){
         ret <- resultRecursive / ncol(mirtModel@Data$data)
       } else {
         ret <- resultRecursive

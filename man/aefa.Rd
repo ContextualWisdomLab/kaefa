@@ -66,21 +66,21 @@ aefa(data, model = NULL, minExtraction = 1, maxExtraction = if
 
 \item{symmetric}{force S-EM/Oakes information matrix to be symmetric? Default is FALSE to detect solutions that have not reached the ML estimate.}
 
-\item{saveModelHistory}{Will you save the model calibration historys? default is TRUE}
+\item{saveModelHistory}{Will you save the model calibration histories? default is TRUE}
 
-\item{filename}{If you want to save the model calibration historys, Which one want you save file name? default is aefa.RDS, However can change this.}
+\item{filename}{If you want to save the model calibration histories, Which one want you save file name? default is aefa.RDS, However can change this.}
 
 \item{printItemFit}{Will you printing item fit indices during the calibrations? default is TRUE.}
 
-\item{rotate}{set the rotate critera if mirt model is exploratory model. default is bifactorQ, however you can change this what you want to, like 'geominQ', 'bifactorT', 'geominT'. In current, Target rotation not supporting.}
+\item{rotate}{set the rotate criteria if mirt model is exploratory model. default is bifactorQ, however you can change this what you want to, like 'geominQ', 'bifactorT', 'geominT'. In current, Target rotation not supporting.}
 
 \item{resampling}{Do you want to do resampling with replace? default is TRUE and activate nrow is over samples argument.}
 
 \item{samples}{Specify the number samples with resampling. default is 5000.}
 
-\item{printDebugMsg}{Do you want to see the debugging messeages? default is FALSE}
+\item{printDebugMsg}{Do you want to see the debugging messages? default is FALSE}
 
-\item{modelSelectionCriteria}{Which critera want to use model selection work? 'DIC' (default), 'AIC', 'AICc', 'BIC', 'saBIC' available. AIC and DIC will be identical when no prior parameter distributions are included.}
+\item{modelSelectionCriteria}{Which criteria want to use model selection work? 'DIC' (default), 'AIC', 'AICc', 'BIC', 'saBIC' available. AIC and DIC will be identical when no prior parameter distributions are included.}
 
 \item{saveRawEstModels}{Do you want to save raw estimated models before model selection work? default is FALSE}
 
@@ -90,7 +90,7 @@ aefa(data, model = NULL, minExtraction = 1, maxExtraction = if
 
 \item{PV_Q1}{Do you want to get PV_Q1 (Chalmers & Ng, 2017) if can get it? default is TRUE.}
 
-\item{tryLCA}{Do you want to try calibrate LCA model if avaliable? default is TRUE}
+\item{tryLCA}{Do you want to try calibrate LCA model if available? default is TRUE}
 
 \item{forcingQMC}{Do you want to forcing the use QMC estimation instead MHRM? default is FALSE}
 

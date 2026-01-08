@@ -2,9 +2,9 @@
 % Please edit documentation in R/kaefa.R
 \name{aefaInit}
 \alias{aefaInit}
-\title{Initalize aefa engine,
-This function initalise the aefa cluster.
-If someone have Remote Cluster informaiton with SSH, put the information in the argument.}
+\title{Initialise aefa engine,
+This function initialises the aefa cluster.
+If someone have Remote Cluster information with SSH, put the information in the argument.}
 \usage{
 aefaInit(RemoteClusters = getOption("kaefaServers"), debug = F,
   sshKeyPath = NULL, loadPercentage = 50)
@@ -16,15 +16,15 @@ aefaInit(RemoteClusters = getOption("kaefaServers"), debug = F,
 
 \item{sshKeyPath}{provide the SSH key path, NA is the placeholder.}
 
-\item{loadPercentage}{Speicfy the load level when you want to use remote clusters.}
+\item{loadPercentage}{Specify the load level when you want to use remote clusters.}
 }
 \value{
 nothing to return, just hidden variable to set to run parallelism.
 }
 \description{
-Initalize aefa engine,
-This function initalise the aefa cluster.
-If someone have Remote Cluster informaiton with SSH, put the information in the argument.
+Initialise aefa engine,
+This function initialises the aefa cluster.
+If someone have Remote Cluster information with SSH, put the information in the argument.
 }
 \examples{
 \dontrun{
