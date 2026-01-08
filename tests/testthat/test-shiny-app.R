@@ -26,6 +26,11 @@ load_app_components <- function() {
   return(list(ui = app_env$ui, server = app_env$server))
 }
 
+get_server_code <- function() {
+  app_components <- load_app_components()
+  deparse(app_components$server)
+}
+
 test_that("Shiny app loads without errors", {
   appDir <- get_app_dir()
   appFile <- file.path(appDir, "app.R")
@@ -219,14 +224,8 @@ test_that("Server function is properly defined", {
 
 test_that("App validates factor range inputs", {
   # This tests the validation logic in the server
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  
   # Check that validation logic exists in the server function
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   expect_true(
     any(grepl("minFactors.*maxFactors", server_code)),
     info = "Server should validate factor range"
@@ -234,12 +233,7 @@ test_that("App validates factor range inputs", {
 })
 
 test_that("App handles CSV data loading", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for CSV reading logic
   expect_true(
@@ -249,12 +243,7 @@ test_that("App handles CSV data loading", {
 })
 
 test_that("App handles RDS data loading", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for RDS reading logic
   expect_true(
@@ -264,12 +253,7 @@ test_that("App handles RDS data loading", {
 })
 
 test_that("App calls kaefa::aefa function", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check that aefa is called
   expect_true(
@@ -279,12 +263,7 @@ test_that("App calls kaefa::aefa function", {
 })
 
 test_that("App has error handling for data loading", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for tryCatch blocks
   expect_true(
@@ -294,12 +273,7 @@ test_that("App has error handling for data loading", {
 })
 
 test_that("App has error handling for analysis execution", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for error callbacks
   expect_true(
@@ -309,12 +283,7 @@ test_that("App has error handling for analysis execution", {
 })
 
 test_that("App provides user notifications", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for notification calls
   expect_true(
@@ -324,12 +293,7 @@ test_that("App provides user notifications", {
 })
 
 test_that("App has download handlers", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for download handlers
   expect_true(
@@ -344,12 +308,7 @@ test_that("App has download handlers", {
 })
 
 test_that("App uses reactive values correctly", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for reactiveValues usage
   expect_true(
@@ -445,12 +404,7 @@ test_that("App sidebar has proper width", {
 })
 
 test_that("App handles file extensions correctly", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check for file extension handling
   expect_true(
@@ -460,12 +414,7 @@ test_that("App handles file extensions correctly", {
 })
 
 test_that("App configures aefa parameters correctly", {
-  appDir <- get_app_dir()
-  appFile <- file.path(appDir, "app.R")
-  
-  app_env <- new.env()
-  source(appFile, local = app_env)
-  server_code <- deparse(app_env$server)
+  server_code <- get_server_code()
   
   # Check that key aefa parameters are passed
   expect_true(
