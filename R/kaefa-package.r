@@ -119,5 +119,4 @@
 #' Sharpe, D. (2013). Why the resistance to statistical innovations?
 #' Bridging the communication gap. \emph{Psychological Methods, 18}(4), 572–582.
 #' \doi{10.1037/a0034177}
-#' @docType package
 NULL

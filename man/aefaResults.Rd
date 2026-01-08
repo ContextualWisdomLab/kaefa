@@ -4,9 +4,15 @@
 \alias{aefaResults}
 \title{summarise AEFA results}
 \usage{
-aefaResults(mirtModel, rotate = NULL, suppress = 0,
-  which.inspect = NULL, printRawCoefs = F, simplifyRawCoefs = T,
-  returnModel = F)
+aefaResults(
+  mirtModel,
+  rotate = NULL,
+  suppress = 0,
+  which.inspect = NULL,
+  printRawCoefs = F,
+  simplifyRawCoefs = T,
+  returnModel = F
+)
 }
 \arguments{
 \item{mirtModel}{estimated aefa model}
