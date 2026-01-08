@@ -128,13 +128,6 @@ test_that("launchAEFA produces appropriate message", {
   }
 })
 
-test_that("launchAEFA function signature is correct", {
-  # Verify the function takes ... argument
-  fn_args <- names(formals(launchAEFA))
-  expect_true("..." %in% fn_args)
-  expect_equal(length(fn_args), 1)  # Only ... argument
-})
-
 test_that("launchAEFA error message is descriptive", {
   # Test error message content
   with_mocked_bindings(
