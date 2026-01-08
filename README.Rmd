@@ -37,6 +37,29 @@ mod1 <- kaefa::aefa(mirt::Science)
 mod1
 ```
 
+## New Feature: fitdistrplus Integration for Theta Priors
+
+kaefa now supports setting theta priors based on empirical raw score distributions using the `fitdistrplus` package. This feature allows you to:
+
+1. Fit distributions to raw scores to inform theta priors
+2. Test if calibration works for non-nominal models
+3. Validate model calibration against empirical distributions
+
+Example usage:
+
+```{r fitdistrplus-example, eval = FALSE}
+# Fit a distribution to raw scores
+fit <- fitThetaPrior(mirt::Science, dist = "norm")
+
+# Test calibration with distribution fit
+testResult <- testThetaPriorCalibration(mirt::Science, dist = "norm")
+
+# Apply theta prior during calibration
+model <- applyThetaPrior(mirt::Science, fit, minExtraction = 1, maxExtraction = 1)
+```
+
+For more examples and detailed documentation, see the `examples/` directory.
+
 ## software quality information
 
 ### ubuntu and mac environment
