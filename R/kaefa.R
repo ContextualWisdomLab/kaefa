@@ -446,6 +446,19 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
     }
   }
 
+  if (!is.numeric(minExtraction) || length(minExtraction) != 1 || is.na(minExtraction)) {
+    stop("minExtraction must be a single numeric value.")
+  }
+  if (!is.numeric(maxExtraction) || length(maxExtraction) != 1 || is.na(maxExtraction)) {
+    stop("maxExtraction must be a single numeric value.")
+  }
+  if (minExtraction < 1) {
+    stop("minExtraction must be >= 1.")
+  }
+  if (maxExtraction < minExtraction) {
+    stop("maxExtraction must be >= minExtraction.")
+  }
+
     TimeStart <- Sys.time()
     options(future.globals.maxSize = 500 * 1024^3)
 
