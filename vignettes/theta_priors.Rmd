@@ -1,0 +1,254 @@
+---
+title: "Setting Theta Priors with fitdistrplus"
+author: "kaefa package"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Setting Theta Priors with fitdistrplus}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Introduction
+
+The kaefa package now integrates with the fitdistrplus package to provide empirical theta prior estimation based on raw score distributions. This vignette demonstrates how to use this functionality to improve IRT model calibration, especially for non-nominal models.
+
+## Background
+
+In Item Response Theory (IRT), the latent ability parameter (theta, θ) represents the underlying trait being measured. Traditionally, theta is assumed to follow a standard normal distribution N(0,1). However, in practice, the empirical distribution of abilities may differ from this assumption, particularly when:
+
+1. The sample comes from a selected or non-representative population
+2. The test is designed for a specific ability range
+3. The response patterns suggest non-standard ability distributions
+
+The fitdistrplus integration allows you to:
+- Empirically estimate the distribution of latent abilities from raw scores
+- Validate that model calibration is appropriate for the data
+- Document the empirical distribution for reproducibility
+
+## Basic Usage
+
+### Step 1: Fit Distribution to Raw Scores
+
+First, we fit a distribution to the sum of raw scores across items:
+
+```{r fit-distribution, eval=FALSE}
+library(kaefa)
+library(mirt)
+
+# Load example data
+data(Science, package = "mirt")
+
+# Fit a normal distribution to raw scores
+fit <- fitThetaPrior(Science, dist = "norm", method = "mle")
+
+# View the results
+summary(fit)
+plot(fit)
+```
+
+The `fitThetaPrior()` function:
+- Computes raw scores by summing responses across items
+- Fits the specified distribution using maximum likelihood estimation (MLE)
+- Returns a fitdist object that can be examined and plotted
+
+### Step 2: Test Calibration
+
+Next, we can test whether the calibration works properly for non-nominal models:
+
+```{r test-calibration, eval=FALSE}
+# Test distribution fit without a model
+testResult <- testThetaPriorCalibration(Science, dist = "norm")
+
+# View results
+print(testResult$message)
+print(testResult$gofstat)
+```
+
+The `testThetaPriorCalibration()` function:
+- Fits the distribution to raw scores
+- Performs goodness-of-fit tests
+- Optionally compares with theta estimates from a calibrated model
+
+### Step 3: Apply During Calibration
+
+Finally, we can apply the fitted distribution during model calibration:
+
+```{r apply-prior, eval=FALSE}
+# Fit distribution
+fit <- fitThetaPrior(Science, dist = "norm")
+
+# Calibrate model with theta prior information
+model <- applyThetaPrior(Science, fit, 
+                        minExtraction = 1, 
+                        maxExtraction = 1)
+
+# Check theta prior information
+print(model$thetaPrior)
+```
+
+The `applyThetaPrior()` function:
+- Validates the data follows the assumed distribution
+- Calibrates the IRT model using aefa
+- Attaches distribution parameters to the model for documentation
+
+## Advanced Usage
+
+### Testing Different Distributions
+
+You can test various distributions to find the best fit:
+
+```{r test-distributions, eval=FALSE}
+# Test normal distribution
+fit_norm <- fitThetaPrior(Science, dist = "norm")
+
+# Test other distributions (if raw scores are positive)
+# Note: Some distributions require positive values
+rawScores <- rowSums(Science, na.rm = TRUE)
+if(min(rawScores) > 0) {
+  fit_gamma <- fitThetaPrior(Science, dist = "gamma")
+  fit_lnorm <- fitThetaPrior(Science, dist = "lnorm")
+}
+
+# Compare fits using AIC/BIC
+# The fitdistrplus package provides comparison tools
+```
+
+### Validating Model Calibration
+
+To validate that the calibrated model properly captures the empirical distribution:
+
+```{r validate-model, eval=FALSE}
+# Calibrate a model first
+model <- aefa(Science, minExtraction = 1, maxExtraction = 1)
+
+# Test against raw score distribution
+validation <- testThetaPriorCalibration(Science, 
+                                        mirtModel = model, 
+                                        dist = "norm")
+
+# Check theta comparison
+if(!is.null(validation$theta_comparison)) {
+  print(validation$theta_comparison)
+  # A non-significant KS test suggests good agreement
+  # between raw scores and theta estimates
+}
+```
+
+## Interpretation
+
+### Goodness-of-Fit Statistics
+
+The `gofstat()` function from fitdistrplus provides several statistics:
+
+- **Kolmogorov-Smirnov (KS)**: Tests if the empirical distribution differs from the fitted distribution
+- **Cramer-von Mises (CvM)**: Another measure of distributional difference
+- **Anderson-Darling (AD)**: Gives more weight to tail differences
+- **AIC/BIC**: For comparing different distribution fits
+
+Lower values generally indicate better fit, but the interpretation depends on sample size.
+
+### Theta Comparison
+
+When comparing raw scores with theta estimates:
+
+- **High correlation**: Suggests the IRT model captures the ability distribution well
+- **Non-significant KS test**: Indicates the distributions are similar
+- **Significant differences**: May suggest model misspecification or non-nominal response patterns
+
+## Use Cases
+
+### 1. Non-Representative Samples
+
+When working with selected samples (e.g., high-achievers, clinical populations):
+
+```{r non-rep-sample, eval=FALSE}
+# Fit distribution to understand the actual ability distribution
+fit <- fitThetaPrior(data, dist = "norm")
+
+# If mean is far from 0 or SD from 1, document this
+print(fit$estimate)
+# This information can inform interpretation
+```
+
+### 2. Adaptive Testing
+
+For computerized adaptive tests where certain ability ranges are over-sampled:
+
+```{r adaptive, eval=FALSE}
+# The empirical distribution might be bimodal or non-normal
+# Test different distributions
+fit_norm <- fitThetaPrior(data, dist = "norm")
+fit_mix <- fitThetaPrior(data, dist = "gamma")  # As an alternative
+
+# Use AIC to compare
+# Lower AIC suggests better fit
+```
+
+### 3. Model Diagnostics
+
+As part of model validation:
+
+```{r diagnostics, eval=FALSE}
+# After calibration, check if assumptions hold
+model <- aefa(data, minExtraction = 1, maxExtraction = 1)
+validation <- testThetaPriorCalibration(data, mirtModel = model)
+
+# Large discrepancies might indicate:
+# - Model misspecification
+# - Non-nominal response patterns
+# - Need for multidimensional model
+```
+
+## Technical Notes
+
+### Raw Score Computation
+
+Raw scores are computed as the sum of item responses for each person:
+
+```{r raw-score, eval=FALSE}
+rawScore_i = sum(X_i1, X_i2, ..., X_ij)
+```
+
+where X_ij is person i's response to item j.
+
+### Distribution Fitting
+
+The package uses `fitdistrplus::fitdist()` with the following methods:
+
+- **MLE (Maximum Likelihood)**: Default method, optimal for large samples
+- **MME (Method of Moments)**: Used as fallback, works with smaller samples
+
+### Limitations
+
+1. **Prior Setting**: mirt doesn't directly support custom theta priors via parameters. This integration serves primarily for validation and documentation.
+
+2. **Raw Score Limitations**: Raw scores are not sufficient statistics for most IRT models (except Rasch). They provide an approximation of the ability distribution.
+
+3. **Sample Size**: Distribution fitting requires adequate sample size (typically n > 30).
+
+## References
+
+- Delignette-Muller, M. L., & Dutang, C. (2015). fitdistrplus: An R Package for Fitting Distributions. *Journal of Statistical Software, 64*(4), 1-34.
+
+- Chalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory Package for the R Environment. *Journal of Statistical Software, 48*(6), 1-29.
+
+## Summary
+
+The fitdistrplus integration in kaefa provides tools for:
+
+1. **Empirical prior estimation**: Fit distributions to raw scores
+2. **Model validation**: Test if calibration works properly
+3. **Documentation**: Store distribution parameters with models
+4. **Diagnostics**: Compare raw scores with theta estimates
+
+These tools enhance the transparency and validity of IRT analyses, especially when working with non-standard populations or non-nominal models.
