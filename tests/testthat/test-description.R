@@ -15,7 +15,7 @@ test_that("DESCRIPTION file exists and is readable", {
 })
 
 test_that("DESCRIPTION contains required fields", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -31,7 +31,7 @@ test_that("DESCRIPTION contains required fields", {
 })
 
 test_that("DESCRIPTION spelling is correct (British English)", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc_content <- paste(readLines(desc_path, warn = FALSE), collapse = " ")
@@ -45,7 +45,7 @@ test_that("DESCRIPTION spelling is correct (British English)", {
 })
 
 test_that("DESCRIPTION Language field is set correctly", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -58,7 +58,7 @@ test_that("DESCRIPTION Language field is set correctly", {
 })
 
 test_that("DESCRIPTION package dependencies are specified", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -78,7 +78,7 @@ test_that("DESCRIPTION package dependencies are specified", {
 })
 
 test_that("DESCRIPTION suggests testthat for testing", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -93,7 +93,7 @@ test_that("DESCRIPTION suggests testthat for testing", {
 })
 
 test_that("DESCRIPTION has valid URL and BugReports", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -113,7 +113,7 @@ test_that("DESCRIPTION has valid URL and BugReports", {
 })
 
 test_that("DESCRIPTION version follows semantic versioning", {
-  desc_path <- system.file("..", "DESCRIPTION", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
