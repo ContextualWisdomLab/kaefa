@@ -1,8 +1,6 @@
 # Comprehensive spelling validation test suite
 # This file performs thorough spelling checks across the package
 
-context("Comprehensive spelling validation")
-
 test_that("no common typos in documentation", {
   skip_if_not_installed("tools")
   
