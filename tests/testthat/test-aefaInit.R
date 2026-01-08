@@ -11,19 +11,14 @@ test_that("detectOS returns valid column numbers", {
   # We'll test this by mocking the system calls
   
   skip_on_cran()
+  skip_on_ci()
   skip_if_not(interactive(), "Requires interactive session for system commands")
   
-  # Test that the function handles localhost properly
-  # Since we can't directly access detectOS, we test via aefaInit behavior
-  # This is an integration-style test
-  expect_silent({
-    # The function should not error when called with default parameters
-    # Note: This will try to connect, so we catch any errors gracefully
-    tryCatch(
-      aefaInit(RemoteClusters = NULL, debug = FALSE),
-      error = function(e) NULL
-    )
-  })
+  plan_before <- future::plan("list")
+  aefaInit(RemoteClusters = NULL, debug = FALSE)
+  plan_after <- future::plan("list")
+  expect_true(is.list(plan_after))
+  expect_true(length(plan_after) >= 1)
 })
 
 test_that("detectOS handles Ubuntu/Debian systems correctly", {
