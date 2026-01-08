@@ -130,10 +130,12 @@ test_that("documentation cross-references are valid", {
       for (rd_file in rd_files) {
         content <- paste(readLines(rd_file, warn = FALSE), collapse = " ")
         
-        if (grepl("\\\\code\\{", content)) {
-          expect_false(grepl("\\\\code\\{\\s*\\}", content),
-                       info = paste(basename(rd_file), 
-                                   "should not have empty \\code{} references"))
+        empty_tags <- c("\\\\code\\{\\s*\\}", "\\\\link\\{\\s*\\}",
+                        "\\\\emph\\{\\s*\\}", "\\\\strong\\{\\s*\\}")
+        for (tag_pattern in empty_tags) {
+          expect_false(grepl(tag_pattern, content),
+                       info = paste(basename(rd_file),
+                                   "should not have empty markup tags"))
         }
       }
     }
