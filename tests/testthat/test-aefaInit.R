@@ -512,6 +512,6 @@ test_that("aefaInit doesn't leave hanging connections", {
   after_conns <- length(getAllConnections())
   
   # Connection count shouldn't grow indefinitely
-  expect_true(after_conns - before_conns < 100,
+  expect_true(after_conns - before_conns < 10,
               info = paste("Connection difference:", after_conns - before_conns))
 })
