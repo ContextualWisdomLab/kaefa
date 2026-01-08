@@ -27,8 +27,8 @@ test_that("aefaInit respects debug parameter", {
   result2 <- try(aefaInit(RemoteClusters = NULL, debug = TRUE), silent = TRUE)
   
   # Both should complete
-  expect_true(!is.null(result1) || is.null(result1))
-  expect_true(!is.null(result2) || is.null(result2))
+  expect_true(!inherits(result1, "try-error") || is.null(result1))
+  expect_true(!inherits(result2, "try-error") || is.null(result2))
 })
 
 # ============================================================
