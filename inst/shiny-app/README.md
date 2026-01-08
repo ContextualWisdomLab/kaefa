@@ -17,8 +17,8 @@ launchAEFA()
 
 ### Using the Interface
 
-1. **Upload Data**: Click "Choose CSV/RDS File" to upload your item response data
-   - CSV files should have items as columns and respondents as rows
+1. **Upload Data**: Click "Choose CSV File" to upload your item response data
+   - CSV files should have items as columns and respondents as rows (RDS files are not supported for security reasons)
    - First row should contain item names (header)
    - An example file (`example_data.csv`) is included in this directory
 
@@ -47,7 +47,7 @@ launchAEFA()
 - **Comprehensive**: Access to all major kaefa features
 - **Interactive**: Real-time data preview and validation
 - **Professional**: Publication-ready results and reports
-- **Flexible**: Support for various data formats and analysis options
+- **Flexible**: Support for various analysis options
 
 ## Requirements
 
