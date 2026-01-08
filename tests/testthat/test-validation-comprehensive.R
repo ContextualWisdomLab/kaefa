@@ -98,9 +98,11 @@ test_that("test suite enforces British English consistency", {
       expect_equal(language, "en-GB",
                    info = "Test suite enforces en-GB language setting")
       
-      # This enables all our British English spelling checks
-      expect_true(TRUE, 
-                  info = "British English tests are active due to en-GB setting")
+      desc_content <- paste(readLines(desc_path, warn = FALSE), collapse = " ")
+      expect_true(grepl("parallelised", desc_content, ignore.case = TRUE),
+                  info = "DESCRIPTION should use British spelling 'parallelised'")
+      expect_false(grepl("parallelized", desc_content, ignore.case = TRUE),
+                   info = "DESCRIPTION should not use American spelling 'parallelized'")
     }
   }
 })
