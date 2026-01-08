@@ -112,11 +112,21 @@ test_that("README includes algorithm references", {
   
   if (readme_exists) {
     readme_content <- readLines("../../README.md")
-    readme_text <- paste(readme_content, collapse = "\n")
+    readme_text <- paste(readme_content, collapse = " ")
     
     # Check for reference to research
-    expect_true(grepl("Pirsiavash", readme_text) || 
-                  grepl("reference", readme_text, ignore.case = TRUE))
+    has_pirsiavash <- grepl("Pirsiavash", readme_text)
+    has_reference <- has_pirsiavash || grepl("reference", readme_text, ignore.case = TRUE)
+    expect_true(has_reference, info = "README should include algorithm references")
+
+    if (has_pirsiavash) {
+      has_cv_context <- grepl("computer vision|object tracking|CVPR", readme_text,
+                              ignore.case = TRUE)
+      has_psych_context <- grepl("exploratory factor analysis|EFA|psychometrics|kaefa",
+                                 readme_text, ignore.case = TRUE)
+      expect_true(has_cv_context || has_psych_context,
+                  info = "Pirsiavash reference should include domain context or EFA/psychometrics terms")
+    }
   }
 })
 
