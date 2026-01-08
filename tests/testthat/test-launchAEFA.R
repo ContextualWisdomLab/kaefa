@@ -60,15 +60,9 @@ test_that("launchAEFA app directory contains required files", {
 })
 
 test_that("launchAEFA accepts additional arguments", {
-  # Test that function signature accepts ... arguments
-  expect_error(
-    {
-      # Get function formals to check signature
-      fn_formals <- formals(launchAEFA)
-      "..." %in% names(fn_formals)
-    },
-    NA
-  )
+  # Verify function signature accepts ... arguments
+  fn_formals <- formals(launchAEFA)
+  expect_true("..." %in% names(fn_formals))
 })
 
 test_that("launchAEFA validates app.R syntax", {
