@@ -169,11 +169,27 @@ test_that("tests prevent regression of corrected typos", {
                info = paste("Test suite prevents regression of", 
                            length(typos_prevented), "corrected typos"))
   
-  # Verify our test logic works
+  content_chunks <- character()
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
+  if (file.exists(desc_path)) {
+    content_chunks <- c(content_chunks, readLines(desc_path, warn = FALSE))
+  }
+
+  man_dir <- system.file("man", package = "kaefa")
+  if (dir.exists(man_dir)) {
+    rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
+    for (rd_file in rd_files) {
+      content_chunks <- c(content_chunks, readLines(rd_file, warn = FALSE))
+    }
+  }
+
+  if (length(content_chunks) == 0) {
+    skip("No documentation content found to scan for typos")
+  }
+
+  all_text <- paste(content_chunks, collapse = " ")
   for (typo in typos_prevented) {
-    # Create a test string without the typo
-    test_string <- "This is a test string with correct spelling"
-    expect_false(grepl(typo, test_string, fixed = TRUE),
-                 info = paste("Test logic correctly detects absence of typo:", typo))
+    expect_false(grepl(typo, all_text, fixed = TRUE),
+                 info = paste("Documentation should not contain typo:", typo))
   }
 })
