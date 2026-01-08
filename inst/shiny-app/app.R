@@ -179,6 +179,27 @@ server <- function(input, output, session) {
     results = NULL,
     analysisComplete = FALSE
   )
+
+  select_model_index <- function(results) {
+    if (!inherits(results, "aefa")) {
+      return(NULL)
+    }
+
+    if (sum(sapply(results$itemFitTrials, function(x) {
+      "RMSEA.S_X2" %in% colnames(x)
+    })) == NROW(results$itemFitTrials)) {
+      inspectModelNumber <- which.min(sapply(results$itemFitTrials, function(x) {
+        if (mean(x$RMSEA.S_X2) >= 0) {
+          return(mean(x$RMSEA.S_X2))
+        }
+        return(NA)
+      }))
+    } else {
+      inspectModelNumber <- NROW(results$estModelTrials)
+    }
+
+    inspectModelNumber
+  }
   
   # Load and preview data
   observeEvent(input$dataFile, {
@@ -359,8 +380,10 @@ server <- function(input, output, session) {
       cat("Total computation time:", 
           format(values$results$TimeTotal), "\n\n")
       
-      # Get the final model
-      finalModel <- values$results$estModelTrials[[length(values$results$estModelTrials)]]
+      # Get the selected model
+      selected_index <- select_model_index(values$results)
+      req(selected_index)
+      finalModel <- values$results$estModelTrials[[selected_index]]
       cat("Final model information:\n")
       cat("Number of factors:", finalModel@Model$nfact, "\n")
       cat("Number of items:", ncol(finalModel@Data$data), "\n")
@@ -374,7 +397,13 @@ server <- function(input, output, session) {
     
     if (inherits(values$results, "aefa") && 
         length(values$results$itemFitTrials) > 0) {
-      itemFit <- values$results$itemFitTrials[[length(values$results$itemFitTrials)]]
+      selected_index <- select_model_index(values$results)
+      req(selected_index)
+      if (length(values$results$itemFitTrials) >= selected_index) {
+        itemFit <- values$results$itemFitTrials[[selected_index]]
+      } else {
+        itemFit <- values$results$itemFitTrials[[length(values$results$itemFitTrials)]]
+      }
       req(itemFit)
       datatable(itemFit, 
                 options = list(pageLength = 20, scrollX = TRUE),
@@ -404,7 +433,9 @@ server <- function(input, output, session) {
     req(values$results)
     
     if (inherits(values$results, "aefa")) {
-      finalModel <- values$results$estModelTrials[[length(values$results$estModelTrials)]]
+      selected_index <- select_model_index(values$results)
+      req(selected_index)
+      finalModel <- values$results$estModelTrials[[selected_index]]
       
       cat("Model Fit Information:\n")
       cat("======================\n\n")
@@ -462,7 +493,9 @@ server <- function(input, output, session) {
             length(values$results$estModelTrials), "\n")
         cat("Total computation time:", format(values$results$TimeTotal), "\n\n")
         
-        finalModel <- values$results$estModelTrials[[length(values$results$estModelTrials)]]
+        selected_index <- select_model_index(values$results)
+        req(selected_index)
+        finalModel <- values$results$estModelTrials[[selected_index]]
         cat("Final Model:\n")
         cat("- Number of factors:", finalModel@Model$nfact, "\n")
         cat("- Number of items:", ncol(finalModel@Data$data), "\n")
@@ -476,7 +509,11 @@ server <- function(input, output, session) {
         if (length(values$results$itemFitTrials) > 0) {
           cat("Item Fit Statistics:\n")
           cat("--------------------\n")
-          itemFit <- values$results$itemFitTrials[[length(values$results$itemFitTrials)]]
+          if (length(values$results$itemFitTrials) >= selected_index) {
+            itemFit <- values$results$itemFitTrials[[selected_index]]
+          } else {
+            itemFit <- values$results$itemFitTrials[[length(values$results$itemFitTrials)]]
+          }
           print(itemFit)
           cat("\n")
         }
