@@ -84,8 +84,8 @@ test_that("WORDLIST entries follow naming conventions", {
   if (file.exists(wordlist_path)) {
     wordlist_content <- readLines(wordlist_path, warn = FALSE)
     
-    # Check that entries don't contain special characters (except allowed ones)
-    invalid_entries <- grep("[^A-Za-z0-9_-]", wordlist_content, value = TRUE)
+    # Only allow letters, numbers, underscores, and hyphens in entries.
+    invalid_entries <- wordlist_content[!grepl("^[A-Za-z0-9_-]+$", wordlist_content)]
     
     expect_equal(length(invalid_entries), 0,
                  info = paste("WORDLIST contains entries with invalid characters:",
