@@ -4,8 +4,8 @@
 context("engineAEFA Greedy Search Algorithm")
 
 # Helper functions
-create_simple_irt_data <- function(n_items = 8, n_obs = 200) {
-  set.seed(234)
+create_simple_irt_data <- function(n_items = 8, n_obs = 200, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
   data <- data.frame(matrix(
     sample(1:4, n_items * n_obs, replace = TRUE),
     nrow = n_obs,
@@ -15,8 +15,8 @@ create_simple_irt_data <- function(n_items = 8, n_obs = 200) {
   return(data)
 }
 
-create_binary_irt_data <- function(n_items = 8, n_obs = 200) {
-  set.seed(345)
+create_binary_irt_data <- function(n_items = 8, n_obs = 200, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
   data <- data.frame(matrix(
     sample(0:1, n_items * n_obs, replace = TRUE),
     nrow = n_obs,
