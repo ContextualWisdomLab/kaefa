@@ -90,6 +90,10 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
                   statusList$localhost <- tryCatch(system(paste0("uptime | awk '{print $", uptimeCol, "}' &&",
                     "cat /proc/cpuinfo | grep processor | wc -l &&", "free | grep Mem | awk '{print $4/$2 * 100}'"),
                     intern = TRUE), error = function(e) {
+                    if (isTRUE(debug)) {
+                      message("Error getting localhost status: ", e$message)
+                    }
+                    rep(NA_character_, 3)
                   })
                 } else {
                   # SSH side if key is provided
