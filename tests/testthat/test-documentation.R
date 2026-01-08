@@ -1,8 +1,6 @@
 # Test suite for documentation (.Rd) file validation
 # This file tests spelling consistency and documentation quality
 
-context("Documentation validation")
-
 test_that("man directory exists and contains .Rd files", {
   man_path <- system.file("help", package = "kaefa")
   
