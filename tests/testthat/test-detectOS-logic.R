@@ -391,13 +391,5 @@ test_that("New implementation avoids retry logic", {
 })
 
 test_that("New implementation eliminates Sys.sleep delays", {
-  # The old code had Sys.sleep(10) and Sys.sleep(5) calls
-  # The new code should not have these delays
-  # We can't directly test this, but we verify the logic doesn't require it
-  
-  # Old code flow: try -> check for error patterns -> sleep -> retry
-  # New code flow: detect OS -> use correct column
-  
-  # This is a documentation test to ensure we understand the improvement
-  expect_true(TRUE)  # Placeholder to document the improvement
+  skip("Documentation only; timing is validated in test-integration.R")
 })
