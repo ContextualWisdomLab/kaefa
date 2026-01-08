@@ -6,8 +6,7 @@ context("Comprehensive spelling validation")
 test_that("no common typos in documentation", {
   skip_if_not_installed("tools")
   
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -41,8 +40,7 @@ test_that("no common typos in documentation", {
 })
 
 test_that("technical terms are consistently spelled", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -81,12 +79,11 @@ test_that("technical terms are consistently spelled", {
 test_that("WORDLIST covers all technical terms in documentation", {
   skip_if_not_installed("tools")
   
-  pkg_root <- system.file("..", package = "kaefa")
-  wordlist_path <- file.path(pkg_root, "inst", "WORDLIST")
+  wordlist_path <- system.file("WORDLIST", package = "kaefa")
   
   if (file.exists(wordlist_path)) {
     wordlist <- readLines(wordlist_path, warn = FALSE)
-    man_dir <- file.path(pkg_root, "man")
+    man_dir <- system.file("man", package = "kaefa")
     
     if (dir.exists(man_dir)) {
       rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
@@ -104,9 +101,8 @@ test_that("WORDLIST covers all technical terms in documentation", {
 })
 
 test_that("documentation language consistency", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
-  desc_path <- file.path(pkg_root, "DESCRIPTION")
+  man_dir <- system.file("man", package = "kaefa")
+  desc_path <- system.file("DESCRIPTION", package = "kaefa")
   
   if (file.exists(desc_path)) {
     desc <- read.dcf(desc_path)
@@ -147,8 +143,7 @@ test_that("documentation language consistency", {
 })
 
 test_that("parameter names are spelled correctly across all documentation", {
-  pkg_root <- system.file("..", package = "kaefa")
-  man_dir <- file.path(pkg_root, "man")
+  man_dir <- system.file("man", package = "kaefa")
   
   if (dir.exists(man_dir)) {
     rd_files <- list.files(man_dir, pattern = "\\.Rd$", full.names = TRUE)
