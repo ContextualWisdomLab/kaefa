@@ -429,7 +429,7 @@
     model <- aefa(data, ...)
     
     # Attach distribution info to model
-    if(class(model) == "aefa"){
+    if (inherits(model, "aefa")) {
       model$thetaPrior <- list(
         fit = fit,
         distribution = fit$distname,
