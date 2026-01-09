@@ -53,5 +53,6 @@ This document describes the technical requirements for the kaefa R package, incl
 
 ## Open Technical Questions
 
-- Which default parallel backend should be preferred?
-- What caching strategy best balances reproducibility and runtime?
+- Which default parallel backend should be preferred, given differences in system dependencies and native build requirements that can increase installation time and dependency footprint, and what mitigations (optional backends, safe fallbacks) should we provide?
+- What caching strategy best balances reproducibility and runtime, and how should cache size/retention be managed to avoid increasing storage needs or dependency footprint?
+- Which dependencies can be made optional or replaced to reduce footprint and installation burden without losing core AEFA functionality?
