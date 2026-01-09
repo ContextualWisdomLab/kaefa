@@ -40,6 +40,15 @@ The package exposes a programmatic API and an optional Shiny interface.
 - Parallel configuration: local core counts or remote host list and SSH key paths.
 - Package options: `kaefaServers` option for preconfigured remote hosts.
 
+### Package Options
+
+- `kaefaServers`: Character vector of hostnames used as the default
+  `RemoteClusters` argument for `aefaInit()`.
+  Example:
+  `options(kaefaServers = c("localhost", "node1", "node2"))`.
+  SSH key paths are provided separately via `aefaInit(sshKeyPath = ...)` as a
+  vector aligned with `kaefaServers` (or a named list keyed by host).
+
 ## Outputs
 
 - Selected best-fit model object.
