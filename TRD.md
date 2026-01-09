@@ -48,9 +48,10 @@ The package exposes a programmatic API and an optional Shiny interface.
 
 ## Dependencies
 
-- Core: `mirt`, `psych`, `future`, `progress`, `listenv`, `parallel`.
-- UI: `shiny`, `DT`.
-- Optional: `fitdistrplus` for theta prior calibration.
+- Core: `mirt` (>= 1.27), `psych`, `future`, `progress`, `listenv`, `parallel`,
+  `NCmisc`, `plyr`.
+- UI: `shiny` (>= 1.7.0), `DT` (>= 0.20).
+- Optional: `fitdistrplus` (used for theta prior calibration).
 
 ## Performance Considerations
 
