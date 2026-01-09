@@ -60,7 +60,11 @@ The package exposes a programmatic API and an optional Shiny interface.
   `RemoteClusters` argument for `aefaInit()`.
   Example: `options(kaefaServers = c("localhost", "node1", "node2"))`.
   SSH key paths are provided separately via `aefaInit(sshKeyPath = ...)` as a
-  vector aligned with `kaefaServers` (or a named list keyed by host).
+  vector aligned with `kaefaServers` (or a named list keyed by host). For SSH
+  keys, prefer absolute paths, validate paths before use, restrict file
+  permissions (e.g., `chmod 600`), and keep keys encrypted or in a secrets
+  manager with regular rotation and least-privilege access. See
+  [Security and Privacy](#security-and-privacy).
 
 ## Outputs
 
@@ -93,7 +97,8 @@ The package exposes a programmatic API and an optional Shiny interface.
 
 ## Security and Privacy
 
-- Remote cluster execution uses SSH; users must secure keys and access.
+- Remote cluster execution uses SSH; restrict key permissions, validate paths,
+  and rotate keys regularly (see README for a checklist).
 - No telemetry or external data upload beyond user-controlled Shiny sessions.
 
 ## Release and CI

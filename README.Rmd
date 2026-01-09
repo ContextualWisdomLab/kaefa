@@ -53,6 +53,26 @@ mod1 <- kaefa::aefa(mirt::Science)
 mod1
 ```
 
+## Remote Execution (Optional)
+
+You can preconfigure remote hosts and SSH keys for `aefaInit()`:
+
+```{r remote-ssh, eval = FALSE}
+options(kaefaServers = c("node1", "node2"))
+ssh_keys <- c(
+  normalizePath("~/.ssh/kaefa_node1"),
+  normalizePath("~/.ssh/kaefa_node2")
+)
+init <- aefaInit(sshKeyPath = ssh_keys)
+```
+
+Security checklist:
+
+- Use absolute paths (expand `~` with `normalizePath()`).
+- Restrict key permissions (for example, `chmod 600 ~/.ssh/kaefa_node1`).
+- Store keys in encrypted storage or a secrets manager; never commit them.
+- Rotate keys regularly (for example, quarterly) and limit access to required users or groups.
+
 ## Interactive Shiny Interface
 
 For applied psychologists who prefer a point-and-click interface without writing code, kaefa now includes an interactive Shiny web application:

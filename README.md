@@ -91,6 +91,27 @@ mod1
 #> 4 Benefit 1.9453938 9.971430      11 0.5329589 19.25101 17.43333 0.3409037
 ```
 
+Remote Execution (Optional)
+---------------------------
+
+You can preconfigure remote hosts and SSH keys for `aefaInit()`:
+
+``` r
+options(kaefaServers = c("node1", "node2"))
+ssh_keys <- c(
+  normalizePath("~/.ssh/kaefa_node1"),
+  normalizePath("~/.ssh/kaefa_node2")
+)
+init <- aefaInit(sshKeyPath = ssh_keys)
+```
+
+Security checklist:
+
+-   Use absolute paths (expand `~` with `normalizePath()`).
+-   Restrict key permissions (for example, `chmod 600 ~/.ssh/kaefa_node1`).
+-   Store keys in encrypted storage or a secrets manager; never commit them.
+-   Rotate keys regularly (for example, quarterly) and limit access to required users or groups.
+
 Interactive Shiny Interface
 ----------------------------
 
