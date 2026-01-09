@@ -77,4 +77,10 @@ The package exposes a programmatic API and an optional Shiny interface.
 ## Open Technical Questions
 
 - Define recommended dataset size thresholds for local vs remote execution.
+  Issue #34: https://github.com/seonghobae/kaefa/issues/34.
+  Target: 2026 Q2. Workaround: start locally, then move to remote clusters if
+  runtime or memory use becomes a bottleneck.
 - Document minimal Shiny UI configuration required for advanced models.
+  Issue #35: https://github.com/seonghobae/kaefa/issues/35.
+  Target: 2026 Q3. Workaround: use the R API for advanced settings until the UI
+  guidance is documented.
