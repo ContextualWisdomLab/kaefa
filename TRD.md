@@ -73,7 +73,9 @@ The package exposes a programmatic API and an optional Shiny interface.
 - Core: `mirt` (>= 1.27), `psych`, `future`, `progress`, `listenv`, `parallel`,
   `NCmisc`, `plyr`.
 - UI: `shiny` (>= 1.7.0), `DT` (>= 0.20).
-- Optional: `fitdistrplus` (used for theta prior calibration).
+- Optional: `fitdistrplus` (theta prior calibration), `goftest` (required for
+  `testThetaPriorCalibration()` when using `cvm` or `ad`; `ks` works without
+  `goftest`).
 
 ## Performance Considerations
 
