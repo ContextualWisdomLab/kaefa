@@ -57,7 +57,7 @@ mod1
 
 For applied psychologists who prefer a point-and-click interface without writing code, kaefa now includes an interactive Shiny web application:
 
-```{r shiny-launch, eval=FALSE}
+```{r shiny-launch, eval = FALSE}
 # Launch the interactive interface
 library('kaefa')
 launchAEFA()
