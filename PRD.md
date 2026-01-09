@@ -34,7 +34,7 @@ kaefa is an R package that provides an automated exploratory factor analysis (AE
 - Implement an automated search procedure for factor structures and item models.
 - Provide model fit evaluation and item diagnostics.
 - Support parallel execution (local or networked clusters) when configured.
-- Expose a Shiny interface for interactive runs.
+- Expose an optional Shiny interface for interactive runs.
 - Provide documentation and examples for typical workflows.
 
 ## Success Metrics
