@@ -41,6 +41,23 @@ launchAEFA()
    - Download complete results as RDS file for further analysis
    - Download text report with summary of findings
 
+## Minimal UI Configuration for Advanced Models
+
+If you build a custom Shiny UI to expose advanced model settings, include the
+following inputs and pass them to `aefa()`:
+
+- **Factor range**: numeric inputs for minimum and maximum factors
+  (`minExtraction`, `maxExtraction`).
+- **Rotation method**: select input mapped to `rotate` (e.g., `bifactorQ`,
+  `geominQ`, `oblimin`).
+- **Model selection criteria**: select input mapped to
+  `modelSelectionCriteria` (e.g., `DIC`, `AIC`, `BIC`).
+- **Model history toggle**: checkbox mapped to `saveModelHistory` (recommended
+  for inspecting candidate models).
+
+These controls, along with data upload/validation and a run button, are the
+minimum set needed to surface advanced configuration in a Shiny interface.
+
 ## Features
 
 - **User-Friendly**: No coding required - all operations through intuitive interface
