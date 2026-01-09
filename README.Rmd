@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # kaefa
 
-The goal of kaefa is to improving research capability to identify unexplained factor structure with complexly cross-classified multilevel structured data in R environment with automated exploratory factor analysis (aefa) framework
+The goal of kaefa is to improve researchers' ability to identify unexplained factor structures in complex, cross-classified multilevel data in R. It uses an automated exploratory factor analysis (aefa) framework.
 
 ## Algorithm
 
@@ -37,7 +37,7 @@ This greedy approach enables efficient exploration of the model space while seek
 
 You can install kaefa from github with:
 
-```{r gh-installation, eval = TRUE}
+```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("seonghobae/kaefa")
 ```
@@ -46,7 +46,7 @@ devtools::install_github("seonghobae/kaefa")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example, eval = FALSE}
 ## basic example code
 library('kaefa')
 mod1 <- kaefa::aefa(mirt::Science)
@@ -57,7 +57,7 @@ mod1
 
 For applied psychologists who prefer a point-and-click interface without writing code, kaefa now includes an interactive Shiny web application:
 
-```{r shiny-launch, eval=FALSE}
+```{r shiny-launch, eval = FALSE}
 # Launch the interactive interface
 library('kaefa')
 launchAEFA()
@@ -95,7 +95,7 @@ model <- applyThetaPrior(mirt::Science, fit, minExtraction = 1, maxExtraction = 
 
 For more examples and detailed documentation, see the `examples/` directory.
 
-## software quality information
+## Software Quality Information
 
 ## Continuous Integration (Ubuntu, macOS, Windows)
 [![R-CMD-check](https://github.com/seonghobae/kaefa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/seonghobae/kaefa/actions/workflows/R-CMD-check.yaml)
