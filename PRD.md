@@ -2,7 +2,7 @@
 
 ## Overview
 
-kaefa is an R package that provides an automated exploratory factor analysis (aefa) framework for complex, cross-classified multilevel data. The kaefa package is aimed at applied researchers who need scalable, repeatable factor exploration with optional parallel execution and a point-and-click interface.
+kaefa is an R package that provides an automated exploratory factor analysis (AEFA) framework for complex, cross-classified multilevel data. The kaefa package is aimed at applied researchers who need scalable, repeatable factor exploration with optional parallel execution and a point-and-click interface.
 
 ## Goals
 
@@ -15,7 +15,7 @@ kaefa is an R package that provides an automated exploratory factor analysis (ae
 
 - Replace confirmatory factor analysis tooling.
 - Provide a full GUI-first product; the Shiny interface is complementary.
-- Serve as a general-purpose IRT library beyond the aefa workflow.
+- Serve as a general-purpose IRT library beyond the AEFA workflow.
 
 ## Target Users
 
@@ -39,7 +39,7 @@ kaefa is an R package that provides an automated exploratory factor analysis (ae
 
 ## Success Metrics
 
-- Users can run an aefa analysis and obtain stable model summaries without manual tuning.
+- Users can run an AEFA analysis and obtain stable model summaries without manual tuning.
 - Analyses scale to moderate/large datasets using parallel execution when enabled.
 - Clear documentation reduces time-to-first-result for new users.
 
