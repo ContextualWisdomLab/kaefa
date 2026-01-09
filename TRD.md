@@ -8,7 +8,7 @@ This document describes the technical requirements for the kaefa R package, incl
 
 - R package with core analysis functions, helper utilities, and optional Shiny UI.
 - Primary analysis relies on the mirt ecosystem for IRT model estimation.
-- Optional parallel execution via future and related packages.
+- Optional parallel and distributed execution via future and related packages.
 
 ## Key Components
 
@@ -39,7 +39,7 @@ This document describes the technical requirements for the kaefa R package, incl
 
 ## Performance Requirements
 
-- Support parallel execution where configured by the user.
+- Support parallel and distributed execution where configured by the user.
 - Avoid unnecessary recomputation in iterative search loops when possible.
 
 ## Compatibility Requirements

@@ -2,12 +2,18 @@
 
 ## Overview
 
-kaefa is an R package that provides an automated exploratory factor analysis (AEFA) framework for complex, cross-classified multilevel data. The kaefa package is aimed at applied researchers who need scalable, repeatable factor exploration with optional parallel execution and a point-and-click interface.
+kaefa is an R package that provides an automated exploratory factor analysis (AEFA) framework for complex, cross-classified multilevel structures where observations belong to non-nested grouping factors. The kaefa package is aimed at applied researchers who need scalable, repeatable factor exploration with optional parallel and distributed execution and a point-and-click interface.
+
+## Terminology
+
+- Cross-classified multilevel data: observations belong to multiple non-nested grouping factors.
+- Parallel execution: multi-thread or multi-process execution on a single machine/node.
+- Distributed execution: multi-node execution with inter-node coordination.
 
 ## Goals
 
 - Provide an end-to-end workflow for automated exploratory factor analysis in R.
-- Support large and complex datasets with parallel or distributed execution options.
+- Support large and complex datasets with parallel and distributed execution options (single-node and multi-node).
 - Offer both programmatic and interactive (Shiny) access for users with different skill levels.
 - Produce reproducible outputs with clear diagnostics and model-fit summaries.
 
@@ -25,22 +31,22 @@ kaefa is an R package that provides an automated exploratory factor analysis (AE
 
 ## Key Use Cases
 
-- Exploratory analysis of factor structures in complex item response data.
+- Exploratory analysis of factor structures in cross-classified multilevel item response data.
 - Automated model selection across candidate structures and item types.
 - Interactive analysis and visualization through the Shiny UI.
 
 ## Functional Requirements
 
-- Implement an automated search procedure for factor structures and item models.
+- Implement an automated search procedure for factor structures and item models in cross-classified multilevel data.
 - Provide model fit evaluation and item diagnostics.
-- Support parallel execution (local or networked clusters) when configured.
+- Support parallel (single-node) and distributed (multi-node) execution when configured.
 - Expose an optional Shiny interface for interactive runs.
 - Provide documentation and examples for typical workflows.
 
 ## Success Metrics
 
 - Users can run an AEFA analysis and obtain stable model summaries without manual tuning.
-- Analyses scale to moderate/large datasets using parallel execution when enabled.
+- Analyses scale to moderate/large datasets using parallel or distributed execution when enabled.
 - Clear documentation reduces time-to-first-result for new users.
 
 ## Constraints and Assumptions
