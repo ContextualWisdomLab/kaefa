@@ -12,7 +12,7 @@ This document describes the technical requirements for the kaefa R package, incl
 
 ## Key Components
 
-- Core analysis engine implementing the aefa workflow.
+- Core analysis engine implementing the AEFA workflow.
 - Model fit evaluation and item diagnostics.
 - Shiny interface for interactive use.
 - Documentation and examples built with knitr and rmarkdown.
