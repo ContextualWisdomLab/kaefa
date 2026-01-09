@@ -54,6 +54,12 @@ The package exposes a programmatic API and an optional Shiny interface.
   paths.
 - Package options: `kaefaServers` option for preconfigured remote hosts.
 
+### Theta Prior Utilities
+
+- `fitThetaPrior()` requires raw score inputs with at least 3 non-missing
+  numeric observations; it will error if fewer are provided. Data can be
+  supplied as R objects (data frames, matrices) or via CSV/RDS inputs in Shiny.
+
 ### Package Options
 
 - `kaefaServers`: Character vector of hostnames used as the default
