@@ -95,7 +95,7 @@ model <- applyThetaPrior(mirt::Science, fit, minExtraction = 1, maxExtraction = 
 
 For more examples and detailed documentation, see the `examples/` directory.
 
-## software quality information
+## Software Quality Information
 
 ## Continuous Integration (Ubuntu, macOS, Windows)
 [![R-CMD-check](https://github.com/seonghobae/kaefa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/seonghobae/kaefa/actions/workflows/R-CMD-check.yaml)

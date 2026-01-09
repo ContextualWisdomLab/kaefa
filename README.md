@@ -110,7 +110,7 @@ model <- applyThetaPrior(mirt::Science, fit, minExtraction = 1, maxExtraction = 
 For more examples and detailed documentation, see the `examples/`
 directory.
 
-## software quality information
+## Software Quality Information
 
 ## Continuous Integration (Ubuntu, macOS, Windows)
 
