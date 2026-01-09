@@ -2,7 +2,9 @@
 
 ## Architecture Overview
 
-kaefa is an R package that implements an automated exploratory factor analysis (aefa) engine. The core is a greedy search workflow that:
+kaefa is an R package that implements an automated exploratory factor analysis
+(aefa) engine. The core is a greedy search workflow that:
+
 1. Evaluates multiple model candidates.
 2. Selects the best model by information criteria (AIC, BIC, DIC).
 3. Assesses item fit and removes poorly fitting items.
@@ -12,40 +14,50 @@ The package exposes a programmatic API and an optional Shiny interface.
 
 ## Code Structure
 
-- `R/kaefa.R`: Core engine initialization, parallel and remote cluster logic, and primary workflow functions.
-- `R/newEngine.R`: Automated EFA workflow implementation and supporting utilities.
+- `R/kaefa.R`: Core engine initialization, parallel and remote cluster logic,
+  and primary workflow functions.
+- `R/newEngine.R`: Automated EFA workflow implementation and supporting
+  utilities.
 - `R/utils.R`: Helper utilities.
 - `inst/`: Shiny application assets and runtime files.
 - `vignettes/` and `README.Rmd`: User documentation and examples.
 
 ## Key Components
 
-- **Automated EFA Engine**: Runs model search, fit evaluation, and iterative pruning.
-- **Parallel Execution**: Uses `future` and cluster helpers to distribute work across cores or remote nodes.
-- **Remote Cluster Support**: SSH-based host probing with load and memory checks to select nodes.
-- **Shiny UI**: Provides a point-and-click interface for data upload, configuration, and export.
-- **Theta Prior Calibration**: Optional `fitdistrplus` integration for empirical prior estimation.
+- **Automated EFA Engine**: Runs model search, fit evaluation, and iterative
+  pruning.
+- **Parallel Execution**: Uses `future` and cluster helpers to distribute work
+  across cores or remote nodes.
+- **Remote Cluster Support**: SSH-based host probing with load and memory checks
+  to select nodes.
+- **Shiny UI**: Provides a point-and-click interface for data upload,
+  configuration, and export.
+- **Theta Prior Calibration**: Optional `fitdistrplus` integration for
+  empirical prior estimation.
 
 ## Public Interfaces
 
 - **Primary API**: `aefa()` (automated exploratory factor analysis workflow).
 - **Cluster Setup**: `aefaInit()` for local or remote cluster configuration.
 - **Shiny UI**: `launchAEFA()` to start the interactive application.
-- **Theta Prior Utilities**: `fitThetaPrior()`, `testThetaPriorCalibration()`, `applyThetaPrior()`.
+- **Theta Prior Utilities**: `fitThetaPrior()`, `testThetaPriorCalibration()`,
+  `applyThetaPrior()`.
 
 ## Configuration and Inputs
 
-- Data inputs: item response data in R objects (e.g., data frames, matrices) and optional CSV/RDS via Shiny.
-- Model configuration: factor extraction counts, rotation methods, and criteria selection.
-- Parallel configuration: local core counts or remote host list and SSH key paths.
+- Data inputs: item response data in R objects (e.g., data frames, matrices)
+  and optional CSV/RDS via Shiny.
+- Model configuration: factor extraction counts, rotation methods, and criteria
+  selection.
+- Parallel configuration: local core counts or remote host list and SSH key
+  paths.
 - Package options: `kaefaServers` option for preconfigured remote hosts.
 
 ### Package Options
 
 - `kaefaServers`: Character vector of hostnames used as the default
   `RemoteClusters` argument for `aefaInit()`.
-  Example:
-  `options(kaefaServers = c("localhost", "node1", "node2"))`.
+  Example: `options(kaefaServers = c("localhost", "node1", "node2"))`.
   SSH key paths are provided separately via `aefaInit(sshKeyPath = ...)` as a
   vector aligned with `kaefaServers` (or a named list keyed by host).
 
@@ -64,9 +76,11 @@ The package exposes a programmatic API and an optional Shiny interface.
 
 ## Performance Considerations
 
-- Model search complexity scales with the number of candidate factor structures and items.
+- Model search complexity scales with the number of candidate factor structures
+  and items.
 - Parallel execution is recommended for moderate to large datasets.
-- Remote cluster selection uses load and memory thresholds to reduce resource contention.
+- Remote cluster selection uses load and memory thresholds to reduce resource
+  contention.
 
 ## Testing and Validation
 
@@ -87,10 +101,10 @@ The package exposes a programmatic API and an optional Shiny interface.
 ## Open Technical Questions
 
 - Define recommended dataset size thresholds for local vs remote execution.
-  Issue #34: https://github.com/seonghobae/kaefa/issues/34.
+  Issue: https://github.com/seonghobae/kaefa/issues/34.
   Target: 2026 Q2. Workaround: start locally, then move to remote clusters if
   runtime or memory use becomes a bottleneck.
 - Document minimal Shiny UI configuration required for advanced models.
-  Issue #35: https://github.com/seonghobae/kaefa/issues/35.
+  Issue: https://github.com/seonghobae/kaefa/issues/35.
   Target: 2026 Q3. Workaround: use the R API for advanced settings until the UI
   guidance is documented.
