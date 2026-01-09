@@ -53,7 +53,7 @@ kaefa is an R package that provides an automated exploratory factor analysis (AE
 
 - Long runtimes for exhaustive search spaces.
 - Heavy dependency footprint for full functionality.
-- Installation hurdles for users without compiler toolchains.
+- Installation hurdles for users without compiler toolchains, given C/C++ dependencies (e.g., mirt >= 1.27) and CRAN distribution; mitigate via CRAN Windows/macOS binaries, prebuilt release artifacts, README links for Rtools/Xcode Command Line Tools setup, and optional Docker/conda alternatives.
 
 ## Open Questions
 
