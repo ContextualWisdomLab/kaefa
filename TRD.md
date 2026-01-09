@@ -41,8 +41,11 @@ The package exposes a programmatic API and an optional Shiny interface.
 - **Primary API**: `aefa()` (automated exploratory factor analysis workflow).
 - **Cluster Setup**: `aefaInit()` for local or remote cluster configuration.
 - **Shiny UI**: `launchAEFA()` to start the interactive application.
-- **Theta Prior Utilities**: `fitThetaPrior()`, `testThetaPriorCalibration()`,
-  `applyThetaPrior()`.
+- **Theta Prior Utilities**: `fitThetaPrior()` estimates distribution
+  parameters, `testThetaPriorCalibration()` evaluates calibration, and
+  `applyThetaPrior()` attaches the estimated parameters as metadata (it does
+  not inject priors into mirt's calibration). Automatic application to mirt
+  would require future configuration or upgraded support.
 
 ## Configuration and Inputs
 
