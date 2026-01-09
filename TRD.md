@@ -32,9 +32,10 @@ This document describes the technical requirements for the kaefa R package, incl
 
 ## CI and Testing
 
-- R CMD check via GitHub Actions.
-- Unit tests via testthat (when present).
-- Documentation generation via knitr/rmarkdown.
+- R CMD check must run and pass in GitHub Actions on R >= 4.0 across ubuntu-latest, macos-latest, and windows-latest (plus devel/oldrel on ubuntu where available).
+- Unit tests are mandatory for new or modified functionality; the testthat suite must run in CI and pass with no errors or failures.
+- Coverage target: >= 80% for new or modified code, tracked with covr when configured.
+- Documentation generation via knitr/rmarkdown must succeed in CI.
 
 ## Performance Requirements
 
