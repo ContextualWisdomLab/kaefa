@@ -16,6 +16,7 @@ The package exposes a programmatic API and an optional Shiny interface.
 
 - `R/kaefa.R`: Core engine initialization, parallel and remote cluster logic,
   and primary workflow functions.
+- `R/kaefa-package.r`: Package-level documentation and namespace imports.
 - `R/newEngine.R`: Automated EFA workflow implementation and supporting
   utilities.
 - `R/utils.R`: Helper utilities.
