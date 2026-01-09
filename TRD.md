@@ -65,6 +65,23 @@ The package exposes a programmatic API and an optional Shiny interface.
   permissions (e.g., `chmod 600`), and keep keys encrypted or in a secrets
   manager with regular rotation and least-privilege access. See
   [Security and Privacy](#security-and-privacy).
+  Example usage with `aefaInit()`:
+  ```r
+  # vector aligned with RemoteClusters
+  aefaInit(
+    RemoteClusters = c("node1", "node2"),
+    sshKeyPath = c("~/.ssh/id_rsa_node1", "~/.ssh/id_rsa_node2")
+  )
+
+  # named list keyed by host
+  aefaInit(
+    RemoteClusters = c("node1", "node2"),
+    sshKeyPath = list(
+      node1 = "~/.ssh/id_rsa_node1",
+      node2 = "~/.ssh/id_rsa_node2"
+    )
+  )
+  ```
 
 ## Outputs
 
