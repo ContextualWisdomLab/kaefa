@@ -57,5 +57,5 @@ kaefa is an R package that provides an automated exploratory factor analysis (AE
 
 ## Open Questions
 
-- What default heuristics yield the best balance of speed and accuracy?
-- Which diagnostic outputs are most valuable to prioritize in the UI?
+- Which default heuristics provide the best speed/accuracy trade-off on benchmark datasets, comparing defined candidates (e.g., heuristic A vs heuristic B) across N repeated runs, with pass criteria such as median runtime < 200 ms and accuracy >= 0.85 while keeping CPU/RAM usage within agreed limits?
+- Which diagnostic outputs should be prioritized in the UI, using measurable criteria such as user survey score >= 4.0/5, top-3 frequency of occurrence, or a demonstrated >= 20% reduction in time to resolution for common workflows?
