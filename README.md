@@ -5,10 +5,10 @@
 
 # kaefa
 
-The goal of kaefa is to improve research capability to identify
-unexplained factor structure with complexly cross-classified multilevel
-structured data in R environment with automated exploratory factor
-analysis (aefa) framework
+The goal of kaefa is to improve researchers’ ability to identify
+unexplained factor structures in complex, cross-classified multilevel
+data in R. It uses an automated exploratory factor analysis (aefa)
+framework.
 
 ## Algorithm
 
