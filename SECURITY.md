@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We currently maintain security fixes for the latest code on the `develop` branch.
+We currently maintain security fixes for the latest code on the repository default branch (currently `develop`).
 Older snapshots are accepted on a best-effort basis.
 
 ## Reporting a Vulnerability
