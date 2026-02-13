@@ -10,7 +10,7 @@ Older snapshots are accepted on a best-effort basis.
 If you discover a potential security issue:
 
 1. Open a private security advisory at:
-   at [GitHub security advisories](https://github.com/seonghobae/kaefa/security/advisories/new).
+   [GitHub security advisories](https://github.com/seonghobae/kaefa/security/advisories/new).
 2. Do not create a public issue before we review and coordinate.
 
 Include: affected version/commit, impact details, reproduction steps,
