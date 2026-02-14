@@ -26,7 +26,7 @@ create_binary_test_data <- function(n_items = 10, n_obs = 100) {
 }
 
 .skip_expensive_ci_calls <- function(function_name) {
-  if (nzchar(Sys.getenv("CI")) && !nzchar(Sys.getenv("RUN_FULL_AEFA_TESTS"))) {
+  if (nzchar(Sys.getenv("CI")) && Sys.getenv("RUN_FULL_AEFA_TESTS") != "1") {
     testthat::skip(
       paste0(
         "Skipping expensive ",
