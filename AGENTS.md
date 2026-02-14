@@ -28,6 +28,7 @@ Use this file as the local operating guide when modifying `kaefa`.
 For every change, run what is relevant to the touched files:
 
 - Markdown docs: `npx -y markdownlint-cli2@0.11.0 <files...>`
+  (requires Node.js and npm)
 - R package checks: required GitHub checks on PR (`R-CMD-check`, `CodeQL`,
   `dependency-review`)
 - Targeted local validation for touched package behavior when applicable
