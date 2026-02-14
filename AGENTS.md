@@ -30,8 +30,7 @@ For every change, run what is relevant to the touched files:
 - Markdown docs: `npx -y markdownlint-cli2@0.20.0 <files...>`
   (requires Node.js and npm)
 - R package checks: required GitHub checks on PR (`R-CMD-check`,
-  `dependency-review`, and `CodeQL` when enabled by repository code scanning
-  setup)
+  `dependency-review`)
 - Targeted local validation for touched package behavior when applicable
 
 ### Optional R Code Validation
