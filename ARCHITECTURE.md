@@ -21,7 +21,6 @@ It provides:
 - `tests/testthat/*.R`: functional, regression, and integration tests.
 - `.github/workflows/R-CMD-check.yaml`: required multi-OS package checks.
 - `.github/workflows/dependency-review.yml`: dependency risk gate.
-- `.github/workflows/codeql.yml`: code scanning / code quality analysis.
 - `README.Rmd` -> `README.md`: source and generated top-level documentation.
 
 ## Runtime Flow
@@ -41,8 +40,9 @@ It provides:
 ## Quality and Security Gates
 
 - PR merge requires review approval and resolved conversations.
-- Required checks include R-CMD-check matrix, dependency review, and CodeQL.
-- Code scanning alerts are tracked via GitHub code scanning APIs.
+- Required checks include R-CMD-check matrix and dependency review.
+- If code scanning is enabled later, alerts can be tracked via GitHub code
+  scanning APIs.
 
 ## Change Rule
 
