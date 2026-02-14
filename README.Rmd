@@ -84,6 +84,10 @@ workstation or a remote server.
 | ~5,000-20,000 respondents or ~60-150 items | About 30-120 minutes | Remote VM/cluster node (16+ CPU threads, 32GB+ RAM) |
 | Over ~20,000 respondents or over ~150 items | Often over 2 hours | Remote cluster/HPC (32+ CPU threads, 64GB+ RAM) |
 
+These are empirical guidelines. Runtime and memory can vary by hardware,
+`aefa()` options (for example, rotation/estimation choices), and parallel job
+count.
+
 Operational notes:
 
 - Prefer local runs for exploratory tuning and small pilot datasets.
