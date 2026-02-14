@@ -63,15 +63,24 @@ following inputs and pass them to `aefa()`:
 These UI components are the minimum set needed to surface advanced
 configuration in a Shiny interface:
 
-- file upload control and data preview controls in the UI,
+- file upload input (and optionally a preview table showing first rows of the
+  uploaded CSV),
 - factor/model controls listed above,
 - run-analysis button in the UI.
 
 Data validation should run in server logic before calling `aefa()`. At a
-minimum, validate CSV schema and types, detect missing values, and confirm
-item-response format expectations. This minimal UI does not expose a separate
-missing-value policy control; missing handling follows current `aefa()` package
-defaults unless you add a custom policy input in your own app.
+minimum, verify:
+
+- CSV column names and column types (for example, all item-response columns are
+  numeric),
+- item-response value ranges (for example, expected scale bounds such as 1-5),
+- missing-value count (NA or empty cells) with a clear warning message that
+  reports the count,
+- item-response layout (rows are respondents, columns are items).
+
+This minimal UI does not expose a separate missing-value policy control.
+Missing-value handling follows current `aefa()` package defaults unless you add
+a custom policy input in your own app.
 
 ## Features
 
