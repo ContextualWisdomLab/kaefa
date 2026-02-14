@@ -74,10 +74,36 @@ init <- aefaInit(sshKeyPath = ssh_keys)
 
 Security checklist:
 
--   Use absolute paths (expand `~` with `normalizePath()`).
--   Restrict key permissions (for example, `chmod 600 ~/.ssh/kaefa_node1`).
--   Store keys in encrypted storage or a secrets manager; never commit them.
--   Rotate keys regularly (for example, quarterly) and limit access to required users or groups.
+- Use absolute paths (expand `~` with `normalizePath()`).
+- Restrict key permissions (for example,
+  `chmod 600 ~/.ssh/kaefa_node1`).
+- Store keys in encrypted storage or a secrets manager; never commit
+  them.
+- Rotate keys regularly (for example, quarterly) and limit access to
+  required users or groups.
+
+## Local vs Remote Execution Sizing Guide
+
+Use these default thresholds when deciding whether to run `aefa()` on a
+local workstation or a remote server.
+
+| Workload profile | Suggested runtime | Recommended environment |
+|----|----|----|
+| Up to ~5,000 respondents and up to ~60 items | Usually under 30 minutes | Local machine (8+ CPU threads, 16GB+ RAM) |
+| ~5,000-20,000 respondents or ~60-150 items | About 30-120 minutes | Remote VM/cluster node (16+ CPU threads, 32GB+ RAM) |
+| Over ~20,000 respondents or over ~150 items | Often over 2 hours | Remote cluster/HPC (32+ CPU threads, 64GB+ RAM) |
+
+These are empirical guidelines. Runtime and memory can vary by hardware,
+`aefa()` options (for example, rotation/estimation choices), and
+parallel job count.
+
+Operational notes:
+
+- Prefer local runs for exploratory tuning and small pilot datasets.
+- Prefer remote runs when model-search cycles are long, memory usage
+  spikes, or multiple analyses must run in parallel.
+- If you see repeated slow convergence, monitor RAM/CPU and move the
+  workload to remote infrastructure before increasing model complexity.
 
 ## Interactive Shiny Interface
 
