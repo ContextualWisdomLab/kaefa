@@ -2,7 +2,10 @@
 
 ## Overview
 
-This Shiny application provides an interactive, point-and-click interface for performing automated exploratory factor analysis (aefa) using the kaefa package. It is designed for applied psychologists who want to conduct robust factor analyses without writing code.
+This Shiny application provides an interactive, point-and-click interface for
+performing automated exploratory factor analysis (aefa) using the kaefa
+package. It is designed for applied psychologists who want to conduct robust
+factor analyses without writing code.
 
 ## Usage
 
@@ -18,7 +21,8 @@ launchAEFA()
 ### Using the Interface
 
 1. **Upload Data**: Click "Choose CSV File" to upload your item response data
-   - CSV files should have items as columns and respondents as rows (RDS files are not supported for security reasons)
+   - CSV files should have items as columns and respondents as rows
+     (RDS files are not supported for security reasons)
    - First row should contain item names (header)
    - An example file (`example_data.csv`) is included in this directory
 
@@ -26,6 +30,7 @@ launchAEFA()
    - Set minimum and maximum number of factors to explore
    - Choose rotation method (bifactorQ recommended for most cases)
    - Select model selection criteria (DIC is default)
+   - Optionally enable model history saving to inspect candidate models
 
 3. **Run Analysis**: Click the "Run Analysis" button
    - Analysis may take several minutes depending on data size
@@ -51,12 +56,20 @@ following inputs and pass them to `aefa()`:
 - **Rotation method**: select input mapped to `rotate` (e.g., `bifactorQ`,
   `geominQ`, `oblimin`).
 - **Model selection criteria**: select input mapped to
-  `modelSelectionCriteria` (e.g., `DIC`, `AIC`, `BIC`).
+  `modelSelectionCriteria` (e.g., `DIC`, `AIC`, `AICc`, `BIC`, `saBIC`).
 - **Model history toggle**: checkbox mapped to `saveModelHistory` (recommended
   for inspecting candidate models).
 
-These controls, along with data upload/validation and a run button, are the
-minimum set needed to surface advanced configuration in a Shiny interface.
+These UI components are the minimum set needed to surface advanced
+configuration in a Shiny interface:
+
+- file upload control and data preview controls in the UI,
+- factor/model controls listed above,
+- run-analysis button in the UI.
+
+Data validation should run in server logic before calling `aefa()`. At a
+minimum, validate CSV schema and types, handle missing values according to the
+selected policy, and confirm item-response format expectations.
 
 ## Features
 
@@ -68,7 +81,9 @@ minimum set needed to surface advanced configuration in a Shiny interface.
 
 ## Requirements
 
-The following R packages are required (installed as dependencies when you install kaefa):
+The following R packages are required (installed as dependencies when you
+install kaefa):
+
 - shiny
 - DT
 - mirt
@@ -76,14 +91,17 @@ The following R packages are required (installed as dependencies when you instal
 
 ## Example Data
 
-The `example_data.csv` file contains sample item response data with 10 items and 29 respondents. You can use this to test the application.
+The `example_data.csv` file contains sample item response data with 10 items
+and 29 respondents. You can use this to test the application.
 
 ## Support
 
 For issues or questions:
+
 - [GitHub Issues](https://github.com/seonghobae/kaefa/issues)
 - [Documentation](https://github.com/seonghobae/kaefa)
 
 ## Citation
 
-If you use this application in your research, please cite the kaefa package appropriately.
+If you use this application in your research, please cite the kaefa package
+appropriately.
