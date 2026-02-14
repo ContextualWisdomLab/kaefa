@@ -68,8 +68,10 @@ configuration in a Shiny interface:
 - run-analysis button in the UI.
 
 Data validation should run in server logic before calling `aefa()`. At a
-minimum, validate CSV schema and types, handle missing values according to the
-selected policy, and confirm item-response format expectations.
+minimum, validate CSV schema and types, detect missing values, and confirm
+item-response format expectations. This minimal UI does not expose a separate
+missing-value policy control; missing handling follows current `aefa()` package
+defaults unless you add a custom policy input in your own app.
 
 ## Features
 
