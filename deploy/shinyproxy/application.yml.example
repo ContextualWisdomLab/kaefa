@@ -1,0 +1,20 @@
+proxy:
+  title: kaefa Studio
+  port: 8080
+  authentication: simple
+  users:
+    - name: analyst
+      password: change-this-password
+      groups: kaefa-users
+  specs:
+    - id: kaefa-studio
+      display-name: kaefa Studio
+      description: Automated exploratory factor analysis workspace
+      container-image: kaefa-studio:local
+      container-network: kaefa-net
+      access-groups: [kaefa-users]
+      container-volumes: []
+      container-memory-request: 4g
+      container-memory-limit: 8g
+      container-cpu-request: 2
+      container-cpu-limit: 4
