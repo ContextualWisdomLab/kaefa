@@ -103,7 +103,8 @@ Revisit the decision when one or more of these becomes true:
 
 1. Keep the monorepo while closing the current buyer evidence gaps.
 2. Make `kaefa-core` boundaries explicit in tests, benchmarks, and examples.
-3. Add a package-level public API contract before moving engine code.
+3. Maintain the package-level public API contract in
+   `docs/product/kaefa-core-api-contract.md` before moving engine code.
 4. Split `kaefa-studio` only after it needs independent deployment or auth.
 5. Split `kaefa-runner` only after it operates as a service boundary.
 6. Use a submodule only for a buyer-required vendored integration.

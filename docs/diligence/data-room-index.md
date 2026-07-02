@@ -9,6 +9,9 @@ from decisions that still need owner, legal, or customer input.
 - Product scope:
   `docs/product/kaefa-studio-requirements.md`.
   Status: ready for pilot review.
+- Core API contract:
+  `docs/product/kaefa-core-api-contract.md`.
+  Status: pilot-facing API documented; separate package split still deferred.
 - Internal boundaries:
   `ARCHITECTURE.md`, `TRD.md`.
   Status: monorepo boundaries documented.
