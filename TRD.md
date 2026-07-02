@@ -75,6 +75,7 @@ The package exposes a programmatic API and an optional Shiny interface.
   manager with regular rotation and least-privilege access. See
   [Security and Privacy](#security-and-privacy).
   Example usage with `aefaInit()`:
+
   ```r
   # vector aligned with RemoteClusters
   aefaInit(
@@ -120,6 +121,26 @@ The package exposes a programmatic API and an optional Shiny interface.
 - R CMD check on Windows, macOS, and Linux in CI.
 - Unit tests in `tests/` for core logic and regressions.
 - Example workflows in README and vignettes for smoke validation.
+- Fast PR tests should validate metadata, documentation, and lightweight
+  behavior without requiring heavy model-fitting runs.
+- Release benchmark tests should validate selected datasets from
+  `inst/benchmarks/manifest.csv` before tagged releases or buyer-facing
+  diligence packages.
+- Private benchmark tests should run outside public CI when datasets are
+  restricted, with only reviewed aggregate evidence committed back to docs.
+
+## Productization Boundaries
+
+- `kaefa-core`: R package APIs, statistical engine, benchmark evidence, and
+  reproducible result objects.
+- `kaefa-studio`: bundled Shiny UI, report export, user-facing validation, and
+  future hosted product workflow.
+- `kaefa-runner`: future container, ShinyProxy, remote execution, monitoring,
+  and scheduled benchmark operations.
+
+Keep these as documented boundaries before splitting repositories. Split only
+when release cadence, runtime dependencies, or buyer deployment requirements
+make a separate package or repository materially simpler.
 
 ## Security and Privacy
 

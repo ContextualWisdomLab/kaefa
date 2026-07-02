@@ -11,6 +11,23 @@ It provides:
 - optional remote worker initialization (`aefaInit`),
 - an interactive Shiny UI (`launchAEFA`).
 
+## Productization Boundaries
+
+The repository remains a monorepo until the product surface has independent
+release or deployment needs. Use these boundaries when planning sale-readiness
+work:
+
+- `kaefa-core`: the R/statistical engine boundary around `aefa()`,
+  `engineAEFA()`, model selection, item-fit evaluation, theta-prior utilities,
+  and benchmark evidence.
+- `kaefa-studio`: the buyer-facing UI boundary around `launchAEFA()` and
+  `inst/shiny-app/app.R`.
+- `kaefa-runner`: the future deployment and execution boundary for container,
+  hosted, remote, or scheduled analysis workflows.
+
+Do not introduce a git submodule unless a downstream buyer or deployment model
+explicitly requires vendored source integration.
+
 ## Repository Layout
 
 - `R/kaefa.R`: public orchestration entry points and exported runtime behavior.
