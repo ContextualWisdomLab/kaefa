@@ -13,10 +13,12 @@ repo_file <- function(...) {
 }
 
 namespace_exports <- function() {
-  namespace_path <- repo_file("NAMESPACE")
-  namespace_lines <- readLines(namespace_path, warn = FALSE)
-  export_lines <- grep("^export\\(", namespace_lines, value = TRUE)
-  sub("^export\\((.*)\\)$", "\\1", export_lines)
+  if (!requireNamespace("kaefa", quietly = TRUE)) {
+    testthat::fail("kaefa namespace not available")
+    return(character())
+  }
+
+  getNamespaceExports("kaefa")
 }
 
 api_contract_lines <- function() {
