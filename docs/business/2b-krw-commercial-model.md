@@ -18,6 +18,30 @@ valuation claim.
 The practical target is 400M-700M KRW ARR unless the buyer is acquiring
 strategic statistical capability rather than recurring revenue.
 
+## Source Separation
+
+Use this model as an operating target, not as a standalone appraisal.
+
+Public-market assumptions:
+
+- ARR multiple ranges must be refreshed from current SaaS/software valuation
+  sources before buyer use. The working 3x-5x ARR range is a conservative
+  planning proxy until an owner-approved valuation memo cites the exact source
+  date, cohort, revenue scale, growth, margin, and retention basis.
+- Strategic-IP value is allowed only when the buyer thesis is about statistical
+  capability, validation evidence, and integration leverage rather than current
+  recurring revenue.
+
+Repository-backed evidence:
+
+- `docs/diligence/data-room-index.md` lists the current buyer evidence package.
+- `docs/diligence/contextualwisdomlab-resource-map.md` separates adjacent
+  ContextualWisdomLab assets from kaefa-owned evidence.
+- `docs/validation/benchmark-protocol.md` and `inst/benchmarks/manifest.csv`
+  define the first validation evidence path.
+- `docs/product/kaefa-studio-requirements.md` defines the current Studio
+  product scope and split criteria.
+
 ## Pricing Paths
 
 ### Annual Institution License

@@ -31,6 +31,8 @@ Actions, FigJam/Figma diagrams without Figma Code Connect.
 - Treat review approval as non-blocking for this roadmap. Treat broken CI,
   failing reproducible tests, missing legal/license authority, or unavailable
   runtime dependencies as real blockers.
+- Treat queued GitHub checks as monitoring state, not a blocker. Do not bypass
+  a failed required check.
 - Do not use Figma Code Connect for this work.
 
 ---
@@ -57,6 +59,11 @@ Actions, FigJam/Figma diagrams without Figma Code Connect.
   because `mirt` is GPL (>= 3).
 - Figma output: FigJam roadmap created at
   <https://www.figma.com/board/yGly1YSL1InCPRUrBW2p03?utm_source=codex&utm_content=edit_in_figjam&oai_id=&request_id=3fe47445-60f9-4008-ac4d-21e45def1572>.
+- Continued Figma output: secondary scratch FigJam board created at
+  <https://www.figma.com/board/02hAgJCOReK0KIAfi5u6zV>.
+- ContextualWisdomLab organization resources reviewed: `.github`, `aFIPC`,
+  `fast-mlsirm`, `nonnest2`, `noema`, `appguardrail`, and other active product
+  repositories. See `docs/diligence/contextualwisdomlab-resource-map.md`.
 
 ## Product Decision
 
@@ -97,6 +104,11 @@ The practical target is one of:
 The revenue-multiple path is the cleanest buyer story. The strategic-IP path is
 the fallback if the market is specialized but the algorithmic validation is
 strong.
+
+Public-market multiple sources and repository evidence must stay separate:
+`docs/business/2b-krw-commercial-model.md` owns valuation assumptions, while
+`docs/diligence/contextualwisdomlab-resource-map.md` owns adjacent organization
+asset evidence.
 
 ## KPI Framework
 

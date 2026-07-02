@@ -21,7 +21,11 @@ from decisions that still need owner, legal, or customer input.
 
 - Acquisition case:
   `docs/business/2b-krw-commercial-model.md`.
-  Status: target model documented.
+  Status: target model documented; public-market assumptions are separated
+  from repository-backed evidence.
+- Organization resource map:
+  `docs/diligence/contextualwisdomlab-resource-map.md`.
+  Status: live ContextualWisdomLab repository and PR resources reviewed.
 - Pilot scoring:
   `docs/business/pilot-scorecard.md`.
   Status: scorecard ready.
@@ -76,6 +80,10 @@ from decisions that still need owner, legal, or customer input.
 - Visual roadmap:
   FigJam roadmap: <https://www.figma.com/board/yGly1YSL1InCPRUrBW2p03>.
   Status: created without Figma Code Connect.
+- Planning scratch board:
+  FigJam board: <https://www.figma.com/board/02hAgJCOReK0KIAfi5u6zV>.
+  Status: created without Figma Code Connect; use as a working board if the
+  primary roadmap board needs a clean follow-up surface.
 
 ## Missing Before Sale Claim
 
