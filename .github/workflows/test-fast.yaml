@@ -25,6 +25,12 @@ jobs:
           extra-packages: any::testthat
           needs: check
 
-      - name: Run fast manifest tests
+      - name: Run fast productization tests
         run: |
-          Rscript -e 'testthat::test_file("tests/testthat/test-benchmark-manifest.R")'
+          Rscript - <<'RSCRIPT'
+          reporter <- testthat::StopReporter$new()
+          testthat::test_file("tests/testthat/test-benchmark-manifest.R",
+                              reporter = reporter)
+          testthat::test_file("tests/testthat/test-shiny-product-surface.R",
+                              reporter = reporter)
+          RSCRIPT
