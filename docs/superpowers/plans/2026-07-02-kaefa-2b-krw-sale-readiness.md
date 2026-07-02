@@ -546,12 +546,11 @@ Guardrails:
 
 ## Current Blockers
 
-- Earlier PR evidence included a containerized Studio smoke test that returned
-  `HTTP/1.1 200 OK`. After the Dockerfile dependency-resolver change, the
-  current-head image build reached the new `remotes::install_deps()` path and
-  CRAN source compilation, then was interrupted because the clean build was
-  taking too long. Current-head container build and smoke evidence must be
-  rerun to completion before making a buyer-facing hosted-runtime claim.
+- Current-head container build and local Shiny smoke evidence was captured on
+  2026-07-03 KST for commit `b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`.
+  `podman build -t kaefa-studio:local .` completed with exit code 0, produced
+  image `04840d3aa188`, and `curl http://127.0.0.1:3838/` returned HTTP 200,
+  12,017 bytes, and title `kaefa: Automated Exploratory Factor Analysis`.
 - Direct host-R Shiny runs still depend on the host installing `shiny`, `DT`,
   and `fitdistrplus`.
 - CodeGraph tools were not available for this execution environment's R source

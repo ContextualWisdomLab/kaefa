@@ -2,9 +2,9 @@
 
 ## Local Container Smoke Test
 
-These commands define the evaluation smoke path. After dependency installation
-changes in PR `#61`, do not treat earlier smoke output as current-head evidence;
-rerun the build and launch steps before a buyer-facing hosted-runtime claim.
+These commands define the evaluation smoke path. Current-head evidence for PR
+`#61` was captured on 2026-07-03 KST at commit
+`b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`.
 
 Build the local image:
 
@@ -26,6 +26,16 @@ http://localhost:3838
 
 Docker can be used instead of Podman with the same `build` and `run`
 arguments.
+
+Current evidence:
+
+- `podman build -t kaefa-studio:local .` completed with exit code 0 and
+  produced image `04840d3aa188`.
+- `podman run --rm -d --name kaefa-studio-smoke -p 127.0.0.1:3838:3838
+  kaefa-studio:local` launched the app.
+- `curl http://127.0.0.1:3838/` returned HTTP 200 with 12,017 bytes and title
+  `kaefa: Automated Exploratory Factor Analysis`.
+- Container logs included `Listening on http://0.0.0.0:3838`.
 
 ## ShinyProxy Example
 

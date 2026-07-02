@@ -60,10 +60,10 @@ from decisions that still need owner, legal, or customer input.
 
 - Studio runtime:
   `Dockerfile`, `docs/operations/deployment.md`.
-  Status: evaluation Dockerfile documented. Earlier PR evidence included a
-  local container smoke test, but the current-head image must be rebuilt and
-  smoke tested again after the Dockerfile dependency-resolver change before a
-  buyer-facing hosted-runtime claim.
+  Status: current-head container build and local Shiny smoke captured on
+  2026-07-03 KST for commit `b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`.
+  `curl http://127.0.0.1:3838/` returned HTTP 200, 12,017 bytes, and title
+  `kaefa: Automated Exploratory Factor Analysis`.
 - Hosted deployment example:
   `deploy/shinyproxy/application.yml.example`.
   Status: evaluation example ready.
