@@ -5,6 +5,7 @@ enterprise pilot, or 2B KRW acquisition candidate.
 
 ## Product Scope
 
+- Data room index points to current evidence and unresolved decisions.
 - Current public APIs are listed and intentionally preserved.
 - `kaefa-core`, `kaefa-studio`, and `kaefa-runner` boundaries are documented.
 - Known out-of-scope features are named.
