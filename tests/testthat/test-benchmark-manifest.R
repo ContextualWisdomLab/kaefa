@@ -44,6 +44,8 @@ test_that("benchmark manifest has required columns", {
   expect_true(all(manifest$rows > 0))
   expect_true(all(manifest$items > 0))
   expect_true(all(manifest$expected_factor_min >= 1))
+  expect_true(all(manifest$expected_factor_min <= manifest$items))
   expect_true(all(manifest$expected_factor_max >= manifest$expected_factor_min))
+  expect_true(all(manifest$expected_factor_max <= manifest$items))
   expect_true(all(manifest$expected_runtime_seconds > 0))
 })

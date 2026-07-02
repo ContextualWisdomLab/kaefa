@@ -25,6 +25,9 @@ jobs:
           extra-packages: any::testthat
           needs: check
 
+      - name: Install kaefa package for fast tests
+        run: R CMD INSTALL .
+
       - name: Run fast productization tests
         run: |
           Rscript - <<'RSCRIPT'

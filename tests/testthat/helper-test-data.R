@@ -28,8 +28,6 @@
   invisible(TRUE)
 }
 
-.ensure_kaefa_namespace()
-
 create_test_data <- function(n_items = 10, n_obs = 100) {
   set.seed(123)
   data <- data.frame(matrix(
@@ -71,6 +69,7 @@ create_binary_test_data <- function(n_items = 10, n_obs = 100) {
 
 aefa <- function(...) {
   .skip_expensive_ci_calls("aefa")
+  .ensure_kaefa_namespace()
   defaults <- list(
     NCYCLES = 120,
     BURNIN = 40,
@@ -88,6 +87,7 @@ efa <- aefa
 
 engineAEFA <- function(...) {
   .skip_expensive_ci_calls("engineAEFA")
+  .ensure_kaefa_namespace()
   defaults <- list(
     NCYCLES = 120,
     BURNIN = 40,

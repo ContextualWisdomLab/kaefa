@@ -348,7 +348,7 @@ server <- function(input, output, session) {
     tryCatch({
       values$runOptions <- list(
         packageVersion = as.character(utils::packageVersion("kaefa")),
-        startedAt = format(Sys.time(), "%Y-%m-%d %H:%M:%S"),
+        startedAt = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
         rows = nrow(values$data),
         items = ncol(values$data),
         minFactors = input$minFactors,

@@ -15,7 +15,9 @@ RUN apt-get update \
       xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-RUN Rscript -e 'install.packages(c("future", "mirt", "psych", "plyr", "listenv", "NCmisc", "progress", "shiny", "DT", "fitdistrplus"), repos = Sys.getenv("R_REPOS"))'
+COPY DESCRIPTION /opt/kaefa/DESCRIPTION
+
+RUN Rscript -e 'desc <- read.dcf("DESCRIPTION"); deps <- unique(unlist(strsplit(paste(desc[1, c("Depends", "Imports")], collapse = ","), ",", fixed = TRUE))); deps <- trimws(deps); deps <- sub("[[:space:]].*$", "", deps); deps <- setdiff(deps[nzchar(deps)], c("R", "parallel")); install.packages(deps, repos = Sys.getenv("R_REPOS"))'
 
 COPY . /opt/kaefa
 
