@@ -60,10 +60,11 @@ from decisions that still need owner, legal, or customer input.
 
 - Studio runtime:
   `Dockerfile`, `docs/operations/deployment.md`.
-  Status: current-head container build and local Shiny smoke captured on
+  Status: runtime-code container build and local Shiny smoke captured on
   2026-07-03 KST for commit `b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`.
   `curl http://127.0.0.1:3838/` returned HTTP 200, 12,017 bytes, and title
-  `kaefa: Automated Exploratory Factor Analysis`.
+  `kaefa: Automated Exploratory Factor Analysis`. Rerun after runtime,
+  Dockerfile, or package dependency changes.
 - Hosted deployment example:
   `deploy/shinyproxy/application.yml.example`.
   Status: evaluation example ready.

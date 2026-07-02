@@ -2,9 +2,10 @@
 
 ## Local Container Smoke Test
 
-These commands define the evaluation smoke path. Current-head evidence for PR
+These commands define the evaluation smoke path. Runtime-code evidence for PR
 `#61` was captured on 2026-07-03 KST at commit
-`b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`.
+`b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`. Rerun this path after changes to
+`Dockerfile`, `DESCRIPTION`, `R/`, or `inst/shiny-app/`.
 
 Build the local image:
 

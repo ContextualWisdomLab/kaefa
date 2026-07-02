@@ -546,11 +546,12 @@ Guardrails:
 
 ## Current Blockers
 
-- Current-head container build and local Shiny smoke evidence was captured on
+- Runtime-code container build and local Shiny smoke evidence was captured on
   2026-07-03 KST for commit `b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`.
   `podman build -t kaefa-studio:local .` completed with exit code 0, produced
   image `04840d3aa188`, and `curl http://127.0.0.1:3838/` returned HTTP 200,
   12,017 bytes, and title `kaefa: Automated Exploratory Factor Analysis`.
+  Rerun after runtime, Dockerfile, or package dependency changes.
 - Direct host-R Shiny runs still depend on the host installing `shiny`, `DT`,
   and `fitdistrplus`.
 - CodeGraph tools were not available for this execution environment's R source
