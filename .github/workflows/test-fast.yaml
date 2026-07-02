@@ -36,4 +36,6 @@ jobs:
                               reporter = reporter)
           testthat::test_file("tests/testthat/test-shiny-product-surface.R",
                               reporter = reporter)
+          testthat::test_file("tests/testthat/test-core-api-contract.R",
+                              reporter = reporter)
           RSCRIPT
