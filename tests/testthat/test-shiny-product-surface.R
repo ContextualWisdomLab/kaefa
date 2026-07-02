@@ -1,4 +1,14 @@
 shiny_app_path <- function() {
+  installed_path <- system.file(
+    "shiny-app",
+    "app.R",
+    package = "kaefa"
+  )
+
+  if (nzchar(installed_path) && file.exists(installed_path)) {
+    return(installed_path)
+  }
+
   app_paths <- c(
     file.path("inst", "shiny-app", "app.R"),
     file.path("..", "..", "inst", "shiny-app", "app.R")
@@ -6,7 +16,8 @@ shiny_app_path <- function() {
   app_path <- app_paths[file.exists(app_paths)][1]
 
   if (is.na(app_path) || !nzchar(app_path)) {
-    testthat::skip("Shiny app source file not found")
+    testthat::fail("Shiny app source file not found")
+    return(invisible(NULL))
   }
 
   app_path
