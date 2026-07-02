@@ -60,7 +60,10 @@ from decisions that still need owner, legal, or customer input.
 
 - Studio runtime:
   `Dockerfile`, `docs/operations/deployment.md`.
-  Status: local container smoke tested.
+  Status: evaluation Dockerfile documented. Earlier PR evidence included a
+  local container smoke test, but the current-head image must be rebuilt and
+  smoke tested again after the Dockerfile dependency-resolver change before a
+  buyer-facing hosted-runtime claim.
 - Hosted deployment example:
   `deploy/shinyproxy/application.yml.example`.
   Status: evaluation example ready.
@@ -89,7 +92,8 @@ from decisions that still need owner, legal, or customer input.
   Status: execution checklist current.
 - Visual roadmap:
   FigJam roadmap: <https://www.figma.com/board/yGly1YSL1InCPRUrBW2p03>.
-  Status: created without Figma Code Connect.
+  Status: created and extended with the productization architecture flow
+  without Figma Code Connect.
 - Planning scratch board:
   FigJam board: <https://www.figma.com/board/02hAgJCOReK0KIAfi5u6zV>.
   Status: created without Figma Code Connect; use as a working board if the

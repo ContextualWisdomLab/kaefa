@@ -2,6 +2,10 @@
 
 ## Local Container Smoke Test
 
+These commands define the evaluation smoke path. After dependency installation
+changes in PR `#61`, do not treat earlier smoke output as current-head evidence;
+rerun the build and launch steps before a buyer-facing hosted-runtime claim.
+
 Build the local image:
 
 ```bash

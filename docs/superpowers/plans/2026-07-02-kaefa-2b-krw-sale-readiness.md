@@ -546,9 +546,14 @@ Guardrails:
 
 ## Current Blockers
 
-- The containerized Studio runtime now builds and returns `HTTP/1.1 200 OK`
-  locally; direct host-R Shiny runs still depend on the host installing
-  `shiny`, `DT`, and `fitdistrplus`.
+- Earlier PR evidence included a containerized Studio smoke test that returned
+  `HTTP/1.1 200 OK`. After the Dockerfile dependency-resolver change, the
+  current-head image build reached the new `remotes::install_deps()` path and
+  CRAN source compilation, then was interrupted because the clean build was
+  taking too long. Current-head container build and smoke evidence must be
+  rerun to completion before making a buyer-facing hosted-runtime claim.
+- Direct host-R Shiny runs still depend on the host installing `shiny`, `DT`,
+  and `fitdistrplus`.
 - CodeGraph tools were not available for this execution environment's R source
   analysis, so R implementation checks used native file reads.
 - Legal/license posture still needs owner/legal confirmation before changing

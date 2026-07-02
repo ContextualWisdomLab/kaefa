@@ -9,13 +9,18 @@ are integrated, licensed, and validated.
 
 - Organization: `ContextualWisdomLab`.
 - Scan method: `gh repo list ContextualWisdomLab --no-archived` plus per-repo
-  `gh pr list` for open pull requests.
-- Scan time: 2026-07-02 UTC.
+  `gh pr list`, `gh search prs --owner ContextualWisdomLab`, and
+  `gh search issues --owner ContextualWisdomLab`.
+- Scan time: 2026-07-02 22:20 UTC / 2026-07-03 KST.
 - `kaefa` default branch: `develop`.
 - `kaefa` open PRs: `#61` sale-readiness roadmap plus Dependabot PRs `#55`,
   `#57`, `#58`, `#59`, and `#60`.
 - `kaefa` open issues: GPU integration `#49`, `nonnest2` model comparison
   `#48`, benchmark calibration `#46`, and broad lint/refactor `#45`.
+- Related organization resources include `noema` issue `#5` for 20억 readiness
+  evidence, `noema` PRs `#6` and `#7` for data-room and evidence preflight
+  work, and adjacent statistical assets in `fast-mlsirm`, `nonnest2`, and
+  `aFIPC`.
 
 GitHub review state and queued checks are not product blockers by themselves.
 Failed CI, broken tests, security findings, license/IP uncertainty, and missing
@@ -85,6 +90,6 @@ For `kaefa`, the immediate action is narrower:
 - Secondary scratch board created for continued planning:
   <https://www.figma.com/board/02hAgJCOReK0KIAfi5u6zV>.
 - Figma Code Connect was not used.
-- If `use_figma` becomes available in the environment, fill the FigJam board
-  with the same sections as this data-room map: valuation model, product
-  boundaries, validation gates, buyer evidence, and org-adjacent resources.
+- The primary board now includes a `kaefa 2B KRW Productization Architecture`
+  flow that connects repository boundaries, validation gates, buyer evidence,
+  adjacent organization assets, and remaining sale-claim blockers.
