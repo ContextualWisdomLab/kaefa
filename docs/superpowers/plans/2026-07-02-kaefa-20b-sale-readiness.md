@@ -137,18 +137,18 @@ Guardrails:
 - Produces: a buyer-readable license/IP note and a corrected repository license
   posture.
 
-- [ ] **Step 1: Decide sale posture**
+- [x] **Step 1: Decide sale posture**
 
   Record whether the sellable asset remains GPL-only, becomes dual-licensed, or
   separates open-source core from commercial UI/support. If no legal authority
   is available, mark this task blocked on owner/legal input instead of guessing.
 
-- [ ] **Step 2: Fix the license file**
+- [x] **Step 2: Fix the license file**
 
   If GPL-3 remains the current posture, replace `LICENSE` with the full GPL-3
   text or the correct CRAN-compatible license file expected by R packaging.
 
-- [ ] **Step 3: Document dependency license implications**
+- [x] **Step 3: Document dependency license implications**
 
   Create `docs/diligence/license-and-ip.md` with:
 
@@ -180,7 +180,7 @@ Guardrails:
   - Confirm buyer deliverables: source sale, hosted service, or support contract.
   ```
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
   Run:
 
@@ -194,9 +194,9 @@ Guardrails:
 
 **Files:**
 
-- Modify: `.github/workflows/R-CMD-check.yaml`
+- Preserve: `.github/workflows/R-CMD-check.yaml`
 - Create: `.github/workflows/test-fast.yaml`
-- Modify: `tests/README_TESTS.md`
+- Create: `tests/FAST_TESTS.md`
 
 **Interfaces:**
 
@@ -204,12 +204,12 @@ Guardrails:
 - Produces: a PR-required fast test gate that does not depend on full benchmark
   runtime.
 
-- [ ] **Step 1: Keep R CMD check but stop pretending it runs tests**
+- [x] **Step 1: Keep R CMD check but stop pretending it runs tests**
 
   Leave `R-CMD-check` as package-install validation if runtime is too heavy, but
   add a separate workflow named `test-fast` that runs explicit targeted tests.
 
-- [ ] **Step 2: Add fast workflow**
+- [x] **Step 2: Add fast workflow**
 
   Create `.github/workflows/test-fast.yaml`:
 
@@ -242,17 +242,17 @@ Guardrails:
             Rscript -e 'testthat::test_dir("tests/testthat", filter = "description|documentation|validation|wordlist|example-data|launchAEFA")'
   ```
 
-- [ ] **Step 3: Document heavy suite policy**
+- [x] **Step 3: Document heavy suite policy**
 
-  Update `tests/README_TESTS.md` to state which tests are fast PR gates and
+  Create `tests/FAST_TESTS.md` to state which tests are fast PR gates and
   which tests are scheduled/release benchmark gates.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
   Run:
 
   ```bash
-  npx -y markdownlint-cli2@0.20.0 tests/README_TESTS.md
+  npx -y markdownlint-cli2@0.20.0 tests/FAST_TESTS.md
   ```
 
   Expected: no markdownlint errors.
@@ -271,7 +271,7 @@ Guardrails:
 - Consumes: current `aefa()` and `engineAEFA()` APIs.
 - Produces: a repeatable evidence base for buyer diligence.
 
-- [ ] **Step 1: Define benchmark manifest**
+- [x] **Step 1: Define benchmark manifest**
 
   Create `inst/benchmarks/manifest.csv` with columns:
 
@@ -280,7 +280,7 @@ Guardrails:
   science,mirt::Science,mirt,392,4,mixed,1,2,120,Smoke
   ```
 
-- [ ] **Step 2: Add manifest test**
+- [x] **Step 2: Add manifest test**
 
   Create `tests/testthat/test-benchmark-manifest.R`:
 
@@ -296,7 +296,7 @@ Guardrails:
   })
   ```
 
-- [ ] **Step 3: Write protocol**
+- [x] **Step 3: Write protocol**
 
   `docs/validation/benchmark-protocol.md` must define:
 
@@ -306,7 +306,7 @@ Guardrails:
   - acceptable failure categories,
   - release-signoff requirements.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
   Run:
 
@@ -328,13 +328,13 @@ Guardrails:
 - Consumes: existing Shiny app and `launchAEFA()`.
 - Produces: a clear `kaefa-studio` product surface without splitting repos yet.
 
-- [ ] **Step 1: Document buyer-facing UI workflow**
+- [x] **Step 1: Document buyer-facing UI workflow**
 
   Create `docs/product/kaefa-studio-requirements.md` with the minimum workflow:
   upload numeric CSV, validate items, choose factor range, run analysis, inspect
   progress, export report, export reproducibility bundle.
 
-- [ ] **Step 2: Add failure-state requirements**
+- [x] **Step 2: Add failure-state requirements**
 
   Specify copy and behavior for:
 
@@ -344,7 +344,7 @@ Guardrails:
   - long-running model timeout,
   - model convergence failure.
 
-- [ ] **Step 3: Defer repo split**
+- [x] **Step 3: Defer repo split**
 
   Add a section named `Split Criteria`:
 
@@ -352,7 +352,7 @@ Guardrails:
     build tooling;
   - do not use a submodule unless a downstream buyer requires vendored source.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
   Run:
 
@@ -375,30 +375,32 @@ Guardrails:
 - Consumes: `launchAEFA()` and `inst/shiny-app/app.R`.
 - Produces: an enterprise-evaluable runtime path.
 
-- [ ] **Step 1: Package the app**
+- [x] **Step 1: Package the app**
 
   Add a Dockerfile that installs package dependencies and runs the Shiny app.
 
-- [ ] **Step 2: Add ShinyProxy example**
+- [x] **Step 2: Add ShinyProxy example**
 
   Add a ShinyProxy `application.yml.example` that documents image name, app
   port, authentication placeholder, resource limits, and no bundled secrets.
 
-- [ ] **Step 3: Document local smoke test**
+- [x] **Step 3: Document local smoke test**
 
   `docs/operations/deployment.md` must include:
 
   ```bash
-  docker build -t kaefa-studio:local .
-  docker run --rm -p 3838:3838 kaefa-studio:local
+  podman build -t kaefa-studio:local .
+  podman run --rm -p 3838:3838 kaefa-studio:local
   ```
 
-- [ ] **Step 4: Verify**
+  Docker can use the same arguments where Docker is the available runtime.
+
+- [x] **Step 4: Verify**
 
   Run:
 
   ```bash
-  docker build -t kaefa-studio:local .
+  podman build -t kaefa-studio:local .
   ```
 
   Expected: image builds without missing R package dependencies.
@@ -415,7 +417,7 @@ Guardrails:
 - Consumes: KPI framework in this plan.
 - Produces: buyer-readable revenue proof targets and pilot acceptance criteria.
 
-- [ ] **Step 1: Write commercial model**
+- [x] **Step 1: Write commercial model**
 
   Create `docs/business/20b-krw-commercial-model.md` with three pricing paths:
 
@@ -423,7 +425,7 @@ Guardrails:
   - hosted assessment analytics workspace,
   - validation/reporting services attached to product subscription.
 
-- [ ] **Step 2: Set 2B KRW thresholds**
+- [x] **Step 2: Set 2B KRW thresholds**
 
   Include this table:
 
@@ -436,7 +438,7 @@ Guardrails:
   | Strategic IP sale | Lower ARR possible with stronger benchmark evidence |
   ```
 
-- [ ] **Step 3: Write pilot scorecard**
+- [x] **Step 3: Write pilot scorecard**
 
   `docs/business/pilot-scorecard.md` must score each pilot on:
 
@@ -448,7 +450,7 @@ Guardrails:
   - renewal or expansion path,
   - security/privacy constraints.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
   Run:
 
@@ -471,7 +473,7 @@ Guardrails:
 - Consumes: all prior tasks.
 - Produces: a concise buyer due-diligence package.
 
-- [ ] **Step 1: Add checklist**
+- [x] **Step 1: Add checklist**
 
   Create `docs/diligence/release-diligence-checklist.md` with sections:
 
@@ -483,17 +485,17 @@ Guardrails:
   - revenue and pilots,
   - known limitations.
 
-- [ ] **Step 2: Update architecture**
+- [x] **Step 2: Update architecture**
 
   Update `ARCHITECTURE.md` with the internal boundaries:
   `kaefa-core`, `kaefa-studio`, and `kaefa-runner`.
 
-- [ ] **Step 3: Update TRD**
+- [x] **Step 3: Update TRD**
 
   Update `TRD.md` with the CI/test-gate distinction:
   fast PR gate, scheduled benchmark gate, release diligence gate.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
   Run:
 
@@ -521,14 +523,13 @@ Guardrails:
 
 ## Current Blockers
 
-- `shiny`, `DT`, and `fitdistrplus` are not installed in the current local R
-  environment, so local Shiny smoke testing and theta-prior runtime testing
-  cannot be completed until dependencies are installed.
-- The Figma CodeGraph MCP tools are not available in this session, and the
-  generated CodeGraph index did not index R source files. Use native file reads
-  for R code until CodeGraph supports this repository's source types here.
-- Legal/license posture needs owner/legal confirmation before changing away from
-  GPL or claiming proprietary sale rights.
+- The containerized Studio runtime now builds and returns `HTTP/1.1 200 OK`
+  locally; direct host-R Shiny runs still depend on the host installing
+  `shiny`, `DT`, and `fitdistrplus`.
+- CodeGraph tools were not available for this execution environment's R source
+  analysis, so R implementation checks used native file reads.
+- Legal/license posture still needs owner/legal confirmation before changing
+  away from GPL or claiming proprietary sale rights.
 
 ## References
 

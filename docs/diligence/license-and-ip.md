@@ -8,30 +8,27 @@
 License: GPL-3 + file LICENSE
 ```
 
-The repository `LICENSE` file currently contains only:
+The repository `LICENSE` file now begins:
 
 ```text
-NA
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
 ```
 
-That mismatch is a sale-readiness risk. A buyer cannot rely on the current
-repository alone to understand the exact license grant, redistribution terms, or
-commercial packaging constraints.
+The prior placeholder `LICENSE` file has been replaced with the GPL-3 text
+distributed with the local R runtime. This resolves the repository-file
+mismatch, but it does not resolve ownership, contributor-rights, or commercial
+redistribution decisions.
 
 ## Dependency Constraints
 
-The local R environment confirmed these dependency license facts where the
-packages were installed:
+The containerized Studio runtime confirmed these dependency license facts:
 
 - `mirt`: GPL (>= 3)
 - `future`: LGPL (>= 2.1)
-
-The package also imports these runtime dependencies, but they were not installed
-in the local audit environment:
-
-- `shiny`: required for the bundled UI runtime
-- `DT`: required for Shiny table rendering
-- `fitdistrplus`: required for theta-prior utilities
+- `shiny`: MIT + file LICENSE
+- `DT`: MIT + file LICENSE
+- `fitdistrplus`: GPL (>= 2)
 
 ## Working Commercial Posture
 
@@ -56,8 +53,9 @@ until copyright ownership and GPL dependency implications are reviewed.
   embedding.
 - Decide whether the buyer receives source code, hosted service rights,
   support/maintenance rights, or a mixed package.
-- Replace the placeholder `LICENSE` file with the legally selected license text
-  or CRAN-compatible license file.
+- Confirm whether `License: GPL-3 + file LICENSE` should remain as-is or be
+  simplified for CRAN/package convention while preserving the repository GPL-3
+  notice.
 
 ## Recommended Next Decision
 
