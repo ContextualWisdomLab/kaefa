@@ -1,4 +1,35 @@
 # Shared helpers for test data generation.
+.find_kaefa_root <- function() {
+  candidates <- unique(c(
+    getwd(),
+    testthat::test_path("../.."),
+    testthat::test_path("..")
+  ))
+
+  for (candidate in candidates) {
+    if (file.exists(file.path(candidate, "DESCRIPTION"))) {
+      return(normalizePath(candidate, mustWork = TRUE))
+    }
+  }
+
+  stop("Cannot locate kaefa package root for test bootstrap.", call. = FALSE)
+}
+
+.ensure_kaefa_namespace <- function() {
+  if (requireNamespace("kaefa", quietly = TRUE)) {
+    return(invisible(TRUE))
+  }
+
+  if (!requireNamespace("pkgload", quietly = TRUE)) {
+    testthat::skip("kaefa is not installed and pkgload is unavailable")
+  }
+
+  pkgload::load_all(.find_kaefa_root(), export_all = FALSE, quiet = TRUE)
+  invisible(TRUE)
+}
+
+.ensure_kaefa_namespace()
+
 create_test_data <- function(n_items = 10, n_obs = 100) {
   set.seed(123)
   data <- data.frame(matrix(
