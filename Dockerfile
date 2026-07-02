@@ -17,7 +17,7 @@ RUN apt-get update \
 
 COPY DESCRIPTION /opt/kaefa/DESCRIPTION
 
-RUN Rscript -e 'desc <- read.dcf("DESCRIPTION"); deps <- unique(unlist(strsplit(paste(desc[1, c("Depends", "Imports")], collapse = ","), ",", fixed = TRUE))); deps <- trimws(deps); deps <- sub("[[:space:]].*$", "", deps); deps <- setdiff(deps[nzchar(deps)], c("R", "parallel")); install.packages(deps, repos = Sys.getenv("R_REPOS"))'
+RUN Rscript -e 'install.packages("remotes", repos = Sys.getenv("R_REPOS")); remotes::install_deps(dependencies = c("Depends", "Imports", "LinkingTo"), repos = Sys.getenv("R_REPOS"), upgrade = "never")'
 
 COPY . /opt/kaefa
 

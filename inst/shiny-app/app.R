@@ -181,6 +181,15 @@ server <- function(input, output, session) {
     analysisComplete = FALSE
   )
 
+  clearAnalysisState <- function(clear_data = FALSE) {
+    if (clear_data) {
+      values$data <- NULL
+    }
+    values$results <- NULL
+    values$runOptions <- NULL
+    values$analysisComplete <- FALSE
+  }
+
   select_model_index <- function(results) {
     if (!inherits(results, "aefa")) {
       return(NULL)
@@ -214,10 +223,7 @@ server <- function(input, output, session) {
         type = "error",
         duration = 10
       )
-      values$data <- NULL
-      values$analysisComplete <- FALSE
-      values$results <- NULL
-      values$runOptions <- NULL
+      clearAnalysisState(clear_data = TRUE)
       return()
     }
     
@@ -228,25 +234,14 @@ server <- function(input, output, session) {
         values$data <- read.csv(input$dataFile$datapath, 
                                 header = input$hasHeader,
                                 stringsAsFactors = FALSE)
-        numeric_columns <- sapply(values$data, is.numeric)
-        if (!all(numeric_columns)) {
-          invalid_columns <- names(values$data)[!numeric_columns]
-          invalid_preview <- paste(head(invalid_columns, 8), collapse = ", ")
-          if (length(invalid_columns) > 8) {
-            invalid_preview <- paste0(invalid_preview, ", ...")
-          }
+        invalid_columns <- kaefa:::.kaefaStudioInvalidColumns(values$data)
+        if (length(invalid_columns) > 0) {
           showNotification(
-            paste0(
-              "All item columns must be numeric for factor analysis. ",
-              "Non-numeric columns: ", invalid_preview, "."
-            ),
+            kaefa:::.kaefaStudioInvalidColumnMessage(invalid_columns),
             type = "error",
             duration = 10
           )
-          values$data <- NULL
-          values$analysisComplete <- FALSE
-          values$results <- NULL
-          values$runOptions <- NULL
+          clearAnalysisState(clear_data = TRUE)
           return()
         }
       } else if (ext == "rds") {
@@ -255,24 +250,16 @@ server <- function(input, output, session) {
           type = "error",
           duration = 10
         )
-        values$data <- NULL
-        values$analysisComplete <- FALSE
-        values$results <- NULL
-        values$runOptions <- NULL
+        clearAnalysisState(clear_data = TRUE)
         return()
       } else {
         showNotification(paste("Unsupported file type:", ext), 
                          type = "error", duration = 10)
-        values$data <- NULL
-        values$analysisComplete <- FALSE
-        values$results <- NULL
-        values$runOptions <- NULL
+        clearAnalysisState(clear_data = TRUE)
         return()
       }
       
-      values$analysisComplete <- FALSE
-      values$results <- NULL
-      values$runOptions <- NULL
+      clearAnalysisState(clear_data = FALSE)
       
       showNotification("Data loaded successfully!", type = "message")
       
@@ -346,17 +333,7 @@ server <- function(input, output, session) {
                      duration = NULL, id = "analysisProgress", type = "message")
     
     tryCatch({
-      values$runOptions <- list(
-        packageVersion = as.character(utils::packageVersion("kaefa")),
-        startedAt = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
-        rows = nrow(values$data),
-        items = ncol(values$data),
-        minFactors = input$minFactors,
-        maxFactors = input$maxFactors,
-        rotation = input$rotation,
-        modelSelection = input$modelSelection,
-        saveHistory = input$saveHistory
-      )
+      values$runOptions <- kaefa:::.kaefaStudioRunOptions(values$data, input)
 
       # Run aefa analysis
       values$results <- kaefa::aefa(
@@ -383,7 +360,7 @@ server <- function(input, output, session) {
       removeNotification(id = "analysisProgress")
       showNotification(paste("Error during analysis:", e$message), 
                        type = "error", duration = 15)
-      values$analysisComplete <- FALSE
+      clearAnalysisState(clear_data = FALSE)
     })
   })
   
@@ -510,37 +487,21 @@ server <- function(input, output, session) {
       sink(file)
       on.exit(sink(), add = TRUE)
       run_options <- values$runOptions
-      option_value <- function(name, fallback) {
-        if (!is.null(run_options[[name]])) {
-          return(run_options[[name]])
-        }
-        fallback
-      }
 
       cat("kaefa: Automated Exploratory Factor Analysis\n")
       cat("=============================================\n\n")
       cat("Report generated:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n")
-      cat("Run Metadata:\n")
-      cat("-------------\n")
-      cat("kaefa package version:",
-          option_value("packageVersion",
-                       as.character(utils::packageVersion("kaefa"))), "\n")
-      cat("Analysis started:", option_value("startedAt", "not recorded"), "\n")
-      cat("Data shape:",
-          option_value("rows", nrow(values$data)),
-          "rows x",
-          option_value("items", ncol(values$data)),
-          "items\n")
-      cat("Selected options:\n")
-      cat("- Minimum factors:",
-          option_value("minFactors", input$minFactors), "\n")
-      cat("- Maximum factors:",
-          option_value("maxFactors", input$maxFactors), "\n")
-      cat("- Rotation:", option_value("rotation", input$rotation), "\n")
-      cat("- Model selection:",
-          option_value("modelSelection", input$modelSelection), "\n")
-      cat("- Save model history:",
-          option_value("saveHistory", input$saveHistory), "\n\n")
+      cat(
+        paste(
+          kaefa:::.kaefaStudioReportMetadataLines(
+            run_options,
+            values$data,
+            input
+          ),
+          collapse = "\n"
+        ),
+        "\n\n"
+      )
       
       if (inherits(values$results, "aefa")) {
         cat("Analysis Summary:\n")
