@@ -1,4 +1,4 @@
-# kaefa 20B KRW Sale Readiness Plan
+# kaefa 2B KRW Sale Readiness Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:subagent-driven-development (recommended) or
@@ -7,7 +7,8 @@
 
 **Goal:** Turn `kaefa` from a research-grade R package plus bundled Shiny app
 into a diligence-ready product candidate that can support a 2B KRW acquisition
-case.
+case. In Korean valuation terms this is the 20억 KRW target from the request,
+not a 20B KRW target.
 
 **Architecture:** Keep one repository for the next execution phase, but enforce
 clear package boundaries: `kaefa-core` as the R/statistical engine boundary,
@@ -76,7 +77,7 @@ Use this staged boundary instead:
    `kaefa-runner` as a separate service or deployment package, not a submodule,
    unless a buyer specifically requires source-vendored integration.
 
-## 20B KRW Valuation Frame
+## 2B KRW Valuation Frame
 
 This plan treats 2B KRW as an acquisition value target, not as a claim that the
 current repository is worth 2B KRW today.
@@ -213,6 +214,8 @@ Guardrails:
 
   Create `.github/workflows/test-fast.yaml`:
 
+  <!-- markdownlint-disable MD013 -->
+
   ```yaml
   name: test-fast
 
@@ -229,18 +232,26 @@ Guardrails:
     test-fast:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v6
-        - uses: r-lib/actions/setup-r@v2
+        - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
           with:
             use-public-rspm: true
-        - uses: r-lib/actions/setup-r-dependencies@v2
+        - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
           with:
-            extra-packages: any::testthat, any::rcmdcheck
+            extra-packages: any::testthat
             needs: check
-        - name: Run fast tests
+        - name: Run fast productization tests
           run: |
-            Rscript -e 'testthat::test_dir("tests/testthat", filter = "description|documentation|validation|wordlist|example-data|launchAEFA")'
+            Rscript - <<'RSCRIPT'
+            reporter <- testthat::StopReporter$new()
+            testthat::test_file("tests/testthat/test-benchmark-manifest.R",
+                                reporter = reporter)
+            testthat::test_file("tests/testthat/test-shiny-product-surface.R",
+                                reporter = reporter)
+            RSCRIPT
   ```
+
+  <!-- markdownlint-enable MD013 -->
 
 - [x] **Step 3: Document heavy suite policy**
 
@@ -409,7 +420,7 @@ Guardrails:
 
 **Files:**
 
-- Create: `docs/business/20b-krw-commercial-model.md`
+- Create: `docs/business/2b-krw-commercial-model.md`
 - Create: `docs/business/pilot-scorecard.md`
 
 **Interfaces:**
@@ -419,7 +430,7 @@ Guardrails:
 
 - [x] **Step 1: Write commercial model**
 
-  Create `docs/business/20b-krw-commercial-model.md` with three pricing paths:
+  Create `docs/business/2b-krw-commercial-model.md` with three pricing paths:
 
   - annual institution license,
   - hosted assessment analytics workspace,
@@ -455,7 +466,7 @@ Guardrails:
   Run:
 
   ```bash
-  npx -y markdownlint-cli2@0.20.0 docs/business/20b-krw-commercial-model.md docs/business/pilot-scorecard.md
+  npx -y markdownlint-cli2@0.20.0 docs/business/2b-krw-commercial-model.md docs/business/pilot-scorecard.md
   ```
 
   Expected: no markdownlint errors.

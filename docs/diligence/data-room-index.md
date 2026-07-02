@@ -20,13 +20,13 @@ from decisions that still need owner, legal, or customer input.
 ## Commercial Evidence
 
 - Acquisition case:
-  `docs/business/20b-krw-commercial-model.md`.
+  `docs/business/2b-krw-commercial-model.md`.
   Status: target model documented.
 - Pilot scoring:
   `docs/business/pilot-scorecard.md`.
   Status: scorecard ready.
 - Missing revenue proof:
-  `docs/business/20b-krw-commercial-model.md`.
+  `docs/business/2b-krw-commercial-model.md`.
   Status: paid pilots and ARR evidence needed.
 
 ## Validation And Quality
@@ -71,7 +71,7 @@ from decisions that still need owner, legal, or customer input.
 ## Design And Roadmap
 
 - Productization roadmap:
-  `docs/superpowers/plans/2026-07-02-kaefa-20b-sale-readiness.md`.
+  `docs/superpowers/plans/2026-07-02-kaefa-2b-krw-sale-readiness.md`.
   Status: execution checklist current.
 - Visual roadmap:
   FigJam roadmap: <https://www.figma.com/board/yGly1YSL1InCPRUrBW2p03>.

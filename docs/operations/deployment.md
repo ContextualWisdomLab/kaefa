@@ -31,8 +31,7 @@ It relies on the Dockerfile `CMD` for the app startup command.
 
 Before using it outside a local pilot:
 
-- replace the example password,
-- move credentials to the deployment secret manager,
+- set `KAEFA_SHINYPROXY_ANALYST_PASSWORD` from the deployment secret manager,
 - set memory and CPU limits from measured benchmark runs,
 - decide whether uploaded data must stay local-only,
 - add HTTPS and organization authentication.

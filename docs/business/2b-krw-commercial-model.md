@@ -1,9 +1,10 @@
-# 20B KRW Commercial Model
+# 2B KRW Commercial Model
 
 ## Purpose
 
 This model defines what must become true for `kaefa` to support a 2B KRW
-acquisition case. It is not a present-day valuation claim.
+acquisition case, equivalent to a 20억 KRW sale target. It is not a present-day
+valuation claim.
 
 ## Valuation Threshold
 

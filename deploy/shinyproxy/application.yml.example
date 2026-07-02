@@ -4,7 +4,7 @@ proxy:
   authentication: simple
   users:
     - name: analyst
-      password: change-this-password
+      password: ${KAEFA_SHINYPROXY_ANALYST_PASSWORD}
       groups: kaefa-users
   specs:
     - id: kaefa-studio
