@@ -29,6 +29,9 @@ from decisions that still need owner, legal, or customer input.
 - Pilot scoring:
   `docs/business/pilot-scorecard.md`.
   Status: scorecard ready.
+- Pilot evidence template:
+  `docs/diligence/pilot-evidence-template.md`.
+  Status: ready for first paid or strategic pilot.
 - Missing revenue proof:
   `docs/business/2b-krw-commercial-model.md`.
   Status: paid pilots and ARR evidence needed.
@@ -45,6 +48,9 @@ from decisions that still need owner, legal, or customer input.
 - Release checks:
   `docs/diligence/release-diligence-checklist.md`.
   Status: checklist ready.
+- Release evidence log:
+  `docs/diligence/release-evidence-log.md`.
+  Status: ready for buyer-facing release evidence capture.
 
 ## Deployment And Operations
 

@@ -25,6 +25,8 @@ enterprise pilot, or 2B KRW acquisition candidate.
 - Expected factor-count ranges are reviewed.
 - Runtime measurements name hardware or CI runner class.
 - Heavy benchmarks are separated from fast PR tests.
+- Buyer-facing release evidence is recorded in
+  `docs/diligence/release-evidence-log.md`.
 
 ## Security And Privacy
 
@@ -45,6 +47,8 @@ enterprise pilot, or 2B KRW acquisition candidate.
 
 - Pricing path is selected.
 - Paid pilots are scored with a consistent scorecard.
+- Each pilot has a filled evidence note based on
+  `docs/diligence/pilot-evidence-template.md`.
 - ARR needed for 2B KRW valuation is stated.
 - Renewal, expansion, or strategic buyer path is documented.
 
