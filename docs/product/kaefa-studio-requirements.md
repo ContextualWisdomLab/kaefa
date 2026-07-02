@@ -65,6 +65,8 @@ variance items, or switching to a smaller pilot dataset.
 ## Split Criteria
 
 Do not split `kaefa-studio` into a separate repository yet.
+The repository-level decision is recorded in
+`docs/diligence/repository-boundary-decision.md`.
 
 Split it only when at least one of these is true:
 

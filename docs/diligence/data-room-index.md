@@ -13,9 +13,10 @@ from decisions that still need owner, legal, or customer input.
   `ARCHITECTURE.md`, `TRD.md`.
   Status: monorepo boundaries documented.
 - Repository split decision:
+  `docs/diligence/repository-boundary-decision.md`,
   `docs/product/kaefa-studio-requirements.md`.
-  Status: defer until auth, tenancy, independent deployment, non-R frontend,
-  or buyer requirement.
+  Status: keep one repository with explicit `kaefa-core`, `kaefa-studio`, and
+  `kaefa-runner` boundaries until split triggers are met.
 
 ## Commercial Evidence
 
