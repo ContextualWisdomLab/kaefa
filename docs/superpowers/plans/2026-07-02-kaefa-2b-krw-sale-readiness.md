@@ -40,7 +40,9 @@ Actions, FigJam/Figma diagrams without Figma Code Connect.
 ## Evidence Snapshot
 
 - Repository: `ContextualWisdomLab/kaefa`, public, default branch `develop`.
-- Current head audited: `334a5484c5e1d0c35e3f8e575f0dc6eb29c39da0`.
+- Initial baseline head audited:
+  `334a5484c5e1d0c35e3f8e575f0dc6eb29c39da0`. Current release-candidate
+  evidence is tracked in `docs/diligence/release-evidence-log.md` and PR `#61`.
 - Live open PRs: Dependabot updates `#55`, `#57`, `#58`, `#59`, `#60`; all
   blocked by review requirement, not by a proven technical failure.
 - Live open issues relevant to productization: GPU integration `#49`, model
@@ -49,8 +51,9 @@ Actions, FigJam/Figma diagrams without Figma Code Connect.
 - Product surface today: R package API, bundled Shiny app in
   `inst/shiny-app/app.R`, documentation in `PRD.md`, `TRD.md`,
   `ARCHITECTURE.md`, README/vignettes, and a broad test suite.
-- Local validation today: R 4.6.0 is available; `mirt` and `testthat` are
-  installed; `shiny`, `DT`, and `fitdistrplus` are not installed locally.
+- Initial local validation snapshot: R 4.6.0 was available; `mirt` and
+  `testthat` were installed; host-R Shiny dependencies needed explicit
+  installation outside the container/runtime path.
 - CI gap today: `.github/workflows/R-CMD-check.yaml` runs
   `check-r-package` with `args: 'c("--no-manual", "--no-tests")'`, so the large
   test suite is not currently a required package-check gate.
@@ -551,7 +554,8 @@ Guardrails:
   `podman build -t kaefa-studio:local .` completed with exit code 0, produced
   image `04840d3aa188`, and `curl http://127.0.0.1:3838/` returned HTTP 200,
   12,017 bytes, and title `kaefa: Automated Exploratory Factor Analysis`.
-  Rerun after runtime, Dockerfile, or package dependency changes.
+  Rerun for release-candidate signoff and after runtime, Dockerfile, or package
+  dependency changes.
 - Direct host-R Shiny runs still depend on the host installing `shiny`, `DT`,
   and `fitdistrplus`.
 - CodeGraph tools were not available for this execution environment's R source

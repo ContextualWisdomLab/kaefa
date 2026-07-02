@@ -4,8 +4,9 @@
 
 These commands define the evaluation smoke path. Runtime-code evidence for PR
 `#61` was captured on 2026-07-03 KST at commit
-`b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`. Rerun this path after changes to
-`Dockerfile`, `DESCRIPTION`, `R/`, or `inst/shiny-app/`.
+`b5bfdb8b509eb8ec06f143c6435f880eda3d2e20`. Rerun this path for release-candidate
+signoff and after changes to `Dockerfile`, `DESCRIPTION`, `R/`, or
+`inst/shiny-app/`.
 
 Build the local image:
 
@@ -28,7 +29,7 @@ http://localhost:3838
 Docker can be used instead of Podman with the same `build` and `run`
 arguments.
 
-Current evidence:
+Runtime-code evidence:
 
 - `podman build -t kaefa-studio:local .` completed with exit code 0 and
   produced image `04840d3aa188`.

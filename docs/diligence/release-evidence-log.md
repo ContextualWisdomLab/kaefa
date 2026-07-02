@@ -18,12 +18,12 @@ chat summary.
 
 | Area | Required evidence | Current evidence link | Status |
 | --- | --- | --- | --- |
-| Package install | `R CMD INSTALL .` on target branch | Dockerfile step 8 at `b5bfdb8b509eb8ec06f143c6435f880eda3d2e20` completed `* DONE (kaefa)` during `podman build -t kaefa-studio:local .` on 2026-07-03 KST. | captured |
+| Package install | `R CMD INSTALL .` on target branch | Runtime-code evidence: Dockerfile step 8 at `b5bfdb8b509eb8ec06f143c6435f880eda3d2e20` completed `* DONE (kaefa)` during `podman build -t kaefa-studio:local .` on 2026-07-03 KST. | captured |
 | Fast PR gate | `test-fast` check on current head |  | missing |
 | R CMD check | Required R-CMD-check matrix on current head |  | missing |
 | Benchmark manifest | `test-benchmark-manifest.R` result |  | missing |
 | Shiny surface | `test-shiny-product-surface.R` result |  | missing |
-| Container | Container build and launch smoke test | `podman build -t kaefa-studio:local .` produced image `04840d3aa188`; local run on `127.0.0.1:3838` returned HTTP 200, 12,017 bytes, title `kaefa: Automated Exploratory Factor Analysis`, and log `Listening on http://0.0.0.0:3838`. | captured |
+| Container | Container build and launch smoke test | Runtime-code evidence: `podman build -t kaefa-studio:local .` produced image `04840d3aa188`; local run on `127.0.0.1:3838` returned HTTP 200, 12,017 bytes, title `kaefa: Automated Exploratory Factor Analysis`, and log `Listening on http://0.0.0.0:3838`. Rerun on the target release commit before buyer handoff. | captured |
 | Report export | Human-readable report generated |  | missing |
 | Runtime | Time-to-report measurement for benchmark class |  | missing |
 | License/IP | Owner/legal posture reviewed |  | missing |
