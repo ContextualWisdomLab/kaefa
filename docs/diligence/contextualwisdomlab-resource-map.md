@@ -11,15 +11,15 @@ are integrated, licensed, and validated.
 - Scan method: `gh repo list ContextualWisdomLab --no-archived` plus per-repo
   `gh pr list`, `gh search prs --owner ContextualWisdomLab`, and
   `gh search issues --owner ContextualWisdomLab`.
-- Scan time: 2026-07-02 22:20 UTC / 2026-07-03 KST.
+- Scan time: 2026-07-03 00:04 UTC / 2026-07-03 KST.
 - `kaefa` default branch: `develop`.
 - `kaefa` open PRs: `#61` sale-readiness roadmap plus Dependabot PRs `#55`,
   `#57`, `#58`, `#59`, and `#60`.
 - `kaefa` open issues: GPU integration `#49`, `nonnest2` model comparison
   `#48`, benchmark calibration `#46`, and broad lint/refactor `#45`.
 - Related organization resources include `noema` issue `#5` for 20억 readiness
-  evidence, `noema` PRs `#6` and `#7` for data-room and evidence preflight
-  work, and adjacent statistical assets in `fast-mlsirm`, `nonnest2`, and
+  evidence, open `noema` PR `#6` for data-room manifest evidence, and adjacent
+  statistical assets with live PR queues in `fast-mlsirm`, `nonnest2`, and
   `aFIPC`.
 
 GitHub review state and queued checks are not product blockers by themselves.
