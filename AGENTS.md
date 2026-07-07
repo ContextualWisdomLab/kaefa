@@ -39,6 +39,41 @@ For every change, run what is relevant to the touched files:
 - Shiny smoke run (optional): launch `launchAEFA()` for UI-touching changes.
 - Tests (optional): run `devtools::test()` or targeted `testthat` files.
 
+<!-- BEGIN cwl-agent-guidance -->
+## Agent guidance (CWL governance)
+
+Cross-agent conventions for any agent (Claude, Codex, Cursor, opencode, ...)
+working on this repo. Keep this block; re-runs replace it in place.
+
+### Security & review gate
+
+- Every PR runs a central **Security Scan** required gate: `osv-scan` +
+  `dependency-review` (diff-scoped) and `trivy-fs` (repo-wide, CRITICAL/HIGH,
+  fixable only). It runs against every PR base, **including stacked PRs**.
+- A failing `trivy-fs` is a **REAL finding, not a flake.** Read the job log
+  (it prints each finding's rule id / severity / file) or the run's SARIF
+  results, then **remediate** — do not weaken or disable the gate.
+- This is an **R package** (deps in `DESCRIPTION` under `Imports:`); there is no
+  Dockerfile or k8s manifest. So findings will typically be a vulnerable
+  dependency (bump the version / constraint in `DESCRIPTION`) or a leaked secret
+  or misconfig in a checked-in file. For a genuine false positive, add a narrow,
+  documented entry to `.trivyignore(.yaml)` at the repo root — never a blanket
+  ignore.
+- Reproduce locally with a fresh DB and the merge ref, not just the PR head:
+  `trivy --download-db-only` first, then `trivy fs .` (a stale DB misses findings).
+- The org `code_scanning` ruleset is intentionally **CodeQL-only** (multiple
+  code-scanning tools can't converge on one PR ref). Gating is by the Security
+  Scan **job result**, not the `code_scanning` rule — don't add tools to that rule.
+
+### Code exploration
+
+- There is currently **no `.codegraph/` index** at the repo root, so use normal
+  search (grep/find, ripgrep) to locate and understand code. If a `.codegraph/`
+  index is later added, prefer CodeGraph first (`codegraph explore "<query>"`,
+  or the code-review-graph MCP tools) before grep/find — it surfaces
+  callers/callees/impact that text search misses.
+<!-- END cwl-agent-guidance -->
+
 ## Review and Merge
 
 - Resolve all review threads.
