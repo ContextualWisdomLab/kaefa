@@ -852,7 +852,12 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                       }
 
                       # estimate item fit measures
-                      if(sum(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh +abs(qnorm(.025)) < qnorm(fitIndicesCutOff/2)) > 0){
+                      # NOTE: restore the small-sample correction 1.96/sqrt(n) on the Zh
+                      # misfit-count rule so it matches the two sibling occurrences of the
+                      # same decision (steps 2 and the final ZhCond check). The /sqrt(nrow(data))
+                      # divisor was accidentally dropped in a 2019 "debug purpose" commit,
+                      # leaving this copy adding a full 1.96 instead of 1.96/sqrt(n).
+                      if(sum(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh +abs(qnorm(.025))/sqrt(nrow(data)) < qnorm(fitIndicesCutOff/2)) > 0){
                         estItemFit <- estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]
                       } else {
                         estItemFit <- tryCatch(evaluateItemFit(estModel, RemoteClusters = RemoteClusters,
