@@ -265,24 +265,6 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
     }
 }
 
-#' assessment of fit indices of the calibrated model
-#'
-#' @param mirtModel insert estimated \code{mirt::mirt} or \code{mirt::mixedmirt} model.
-#' @param RemoteClusters insert google computing engine virtual machine information.
-#' @param rotate set the rotate critera if mirt model is exploratory model. default is bifactorQ
-#' @param PV_Q1 Do you want to get PV_Q1 (Chalmers & Ng, 2017) if can get it? default is TRUE.
-#' @param S_X2 Do you want to get S_X2 if can get it? default is TRUE.
-#'
-#' @return return item fit estimates
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' testModel1 <- engineAEFA(mirt::Science)
-#' testItemFit1 <- evaluateItemFit(testModel1)
-#' }
-NULL
-
 # Canonical Zh item-misfit decision rule (single source of truth).
 #
 # An item is flagged as misfitting when the standardised log-likelihood person/item
@@ -312,6 +294,22 @@ NULL
     sum(Zh + abs(qnorm(.025)) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm)
 }
 
+#' assessment of fit indices of the calibrated model
+#'
+#' @param mirtModel insert estimated \code{mirt::mirt} or \code{mirt::mixedmirt} model.
+#' @param RemoteClusters insert google computing engine virtual machine information.
+#' @param rotate set the rotate critera if mirt model is exploratory model. default is bifactorQ
+#' @param PV_Q1 Do you want to get PV_Q1 (Chalmers & Ng, 2017) if can get it? default is TRUE.
+#' @param S_X2 Do you want to get S_X2 if can get it? default is TRUE.
+#'
+#' @return return item fit estimates
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' testModel1 <- engineAEFA(mirt::Science)
+#' testItemFit1 <- evaluateItemFit(testModel1)
+#' }
 evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactorQ",
     PV_Q1 = T, S_X2 = T) {
     # if (is.null(getOption('aefaConn'))) { getOption('aefaConn',
