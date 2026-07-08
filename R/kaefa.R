@@ -281,6 +281,37 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 #' testModel1 <- engineAEFA(mirt::Science)
 #' testItemFit1 <- evaluateItemFit(testModel1)
 #' }
+NULL
+
+# Canonical Zh item-misfit decision rule (single source of truth).
+#
+# An item is flagged as misfitting when the standardised log-likelihood person/item
+# fit statistic Zh satisfies
+#
+#     Zh + qnorm(0.975) / sqrt(n)  <  qnorm(fitIndicesCutOff / 2)
+#
+# i.e. a one-sided lower-tail test at level fitIndicesCutOff/2 with a 1.96/sqrt(n)
+# small-sample correction (qnorm(0.975) == abs(qnorm(.025))). This rule is applied
+# at three decision sites inside evaluateItemFit() (the rotation scan, the
+# best-candidate check, and the final ZhCond gate) and MUST stay identical in all
+# three, otherwise the model search selects rotations/models under inconsistent
+# misfit thresholds. Centralising the arithmetic here removes the drift risk that
+# previously let a 2019 "debug purpose" commit drop the /sqrt(n) divisor from one
+# copy. `na.rm` is exposed because the rotation-scan site deliberately keeps NA
+# candidate counts (so a candidate whose Zh contains NA is later excluded by the
+# is.finite() filter), whereas the two boolean gates drop NAs.
+#
+# @param Zh numeric vector of Zh item-fit statistics.
+# @param n integer sample size used for the 1.96/sqrt(n) small-sample correction.
+# @param fitIndicesCutOff two-sided significance level for the misfit test.
+# @param na.rm whether to drop NA Zh values before counting (default TRUE).
+# @return integer count of items flagged as misfitting.
+# @keywords internal
+# @noRd
+.zhMisfitCount <- function(Zh, n, fitIndicesCutOff, na.rm = TRUE) {
+    sum(Zh + abs(qnorm(.025)) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm)
+}
+
 evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactorQ",
     PV_Q1 = T, S_X2 = T) {
     # if (is.null(getOption('aefaConn'))) { getOption('aefaConn',
@@ -818,8 +849,9 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                       for(countZh_iter in estItemFitRotationSearch){
                         if(!is.null(countZh_iter)){
-                          countZh[length(countZh) + 1] <- sum((countZh_iter$Zh)+abs(qnorm(.025))/sqrt(nrow(data)) <
-                                                                qnorm(fitIndicesCutOff/2))
+                          # na.rm = FALSE: an NA count keeps this candidate out of the
+                          # is.finite() selection below (step 3), preserving prior behaviour.
+                          countZh[length(countZh) + 1] <- .zhMisfitCount(countZh_iter$Zh, nrow(data), fitIndicesCutOff, na.rm = FALSE)
                         } else {
                           countZh[length(countZh) + 1] <- NA
                         }
@@ -857,7 +889,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                       # same decision (steps 2 and the final ZhCond check). The /sqrt(nrow(data))
                       # divisor was accidentally dropped in a 2019 "debug purpose" commit,
                       # leaving this copy adding a full 1.96 instead of 1.96/sqrt(n).
-                      if(sum(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh +abs(qnorm(.025))/sqrt(nrow(data)) < qnorm(fitIndicesCutOff/2)) > 0){
+                      if(.zhMisfitCount(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh, nrow(data), fitIndicesCutOff) > 0){
                         estItemFit <- estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]
                       } else {
                         estItemFit <- tryCatch(evaluateItemFit(estModel, RemoteClusters = RemoteClusters,
@@ -896,8 +928,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                   # checkup conditions
                   if ("Zh" %in% colnames(estItemFit)) {
-                    ZhCond <- sum(estItemFit$Zh+abs(qnorm(.025))/sqrt(nrow(data)) < qnorm(fitIndicesCutOff/2), na.rm = T) !=
-                      0  # p < .005
+                    ZhCond <- .zhMisfitCount(estItemFit$Zh, nrow(data), fitIndicesCutOff) != 0  # p < .005
                   } else {
                     ZhCond <- FALSE
                   }
