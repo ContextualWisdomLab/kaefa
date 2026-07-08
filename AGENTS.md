@@ -72,6 +72,34 @@ working on this repo. Keep this block; re-runs replace it in place.
   index is later added, prefer CodeGraph first (`codegraph explore "<query>"`,
   or the code-review-graph MCP tools) before grep/find — it surfaces
   callers/callees/impact that text search misses.
+
+### This repo's role in the ecosystem
+
+- **kaefa** is an R IRT package: item-fit-based optimal-model search; feeds
+  fast-mlsirm's psychometrics.
+- The org is an ecosystem around **naruon** (the hub: an email/PIM client that
+  DOM-decomposes emails and files into a persisted knowledge graph). Each
+  component is a standalone program that must ALSO work as a git submodule —
+  grown separately and together.
+- Sibling components: **waf-ids-ai-soc** (WAF/IDS/AI SOC/LB/APIM),
+  **clearfolio** (document viewer), **pg-erd-cloud** (ERD tool),
+  **contextual-orchestrator** (LLM cost/perf/upstream-LB gateway, beyond
+  LiteLLM), **codec-carver** (STT/omni-modal speech-video codec),
+  **fast-mlsirm** (LLM-as-a-Judge calibration + evaluation-item quality; uses
+  aFIPC FIPC + kaefa item-fit), **feelanet-adfs** (passwordless SSO —
+  OIDC/SCIM/ADFS/LDAP/FIDO2/OAuth2.1), **newsdom-api** (PDF->DOM sidecar), and
+  **semantic-data-portal** (upper-ontology/catalog/governance plane with its
+  own graph engine).
+
+### Research grounding (attach paper PDFs)
+
+- Substantive feature/process PRs should find the relevant academic papers and
+  **commit their PDFs into the PR** (e.g. a `docs/papers/` or `references/` dir)
+  with full citations, respecting copyright: attach only when redistribution is
+  permissible; otherwise cite + link + a short summary.
+- For this repo, that means the IRT / psychometrics literature underpinning
+  item-fit statistics and optimal-model search (e.g. item-fit indices, model
+  selection, and the aFIPC/FIPC methods kaefa feeds into fast-mlsirm).
 <!-- END cwl-agent-guidance -->
 
 ## Review and Merge
