@@ -291,7 +291,11 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 # @keywords internal
 # @noRd
 .zhMisfitCount <- function(Zh, n, fitIndicesCutOff, na.rm = TRUE) {
-    sum(Zh + abs(qnorm(.025)) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm)
+    # as.integer() makes the return type match the documented integer count and the
+    # expect_identical(..., 2L) tests; sum() over a logical vector is a double. When
+    # na.rm = FALSE and any Zh is NA, sum() yields NA_real_ and as.integer() preserves
+    # it as NA_integer_ (the rotation-scan site relies on this NA propagation).
+    as.integer(sum(Zh + abs(qnorm(.025)) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm))
 }
 
 #' assessment of fit indices of the calibrated model
@@ -887,7 +891,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                       # same decision (steps 2 and the final ZhCond check). The /sqrt(nrow(data))
                       # divisor was accidentally dropped in a 2019 "debug purpose" commit,
                       # leaving this copy adding a full 1.96 instead of 1.96/sqrt(n).
-                      if(.zhMisfitCount(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh, nrow(data), fitIndicesCutOff) > 0){
+                      if(.zhMisfitCount(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh, nrow(data), fitIndicesCutOff, na.rm = TRUE) > 0){
                         estItemFit <- estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]
                       } else {
                         estItemFit <- tryCatch(evaluateItemFit(estModel, RemoteClusters = RemoteClusters,
@@ -926,7 +930,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                   # checkup conditions
                   if ("Zh" %in% colnames(estItemFit)) {
-                    ZhCond <- .zhMisfitCount(estItemFit$Zh, nrow(data), fitIndicesCutOff) != 0  # p < .005
+                    ZhCond <- .zhMisfitCount(estItemFit$Zh, nrow(data), fitIndicesCutOff, na.rm = TRUE) != 0  # p < .005
                   } else {
                     ZhCond <- FALSE
                   }

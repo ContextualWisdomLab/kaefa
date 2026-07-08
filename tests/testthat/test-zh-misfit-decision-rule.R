@@ -57,28 +57,48 @@ test_that("the Zh misfit arithmetic is centralised in one helper, called at exac
   src_path <- candidates[file.exists(candidates)][1]
   skip_if(is.na(src_path), "R/kaefa.R not found from test working directory")
 
-  src <- readLines(src_path, warn = FALSE)
+  # Parse the source into an AST so the drift guard inspects real code tokens
+  # rather than raw lines. This makes it immune to comments, strings, whitespace,
+  # reformatting, and arithmetic spelled with any qnorm(...) variant -- the
+  # brittleness the earlier grep-based guard suffered from.
+  exprs <- parse(src_path, keep.source = TRUE)
 
-  # The correction arithmetic must exist in exactly one place: the helper body.
-  # Any inline re-implementation ("$Zh ... abs(qnorm(.025))") is drift risk and
-  # must be zero now that every decision site delegates to the helper.
-  inline_rule <- grep("\\$Zh.*abs\\(qnorm\\(\\.025\\)\\)", src)
-  expect_identical(length(inline_rule), 0L,
-                   info = paste0("inline Zh misfit arithmetic must be centralised in ",
-                                 ".zhMisfitCount(); found at line(s): ",
-                                 paste(inline_rule, collapse = ", ")))
+  # The canonical helper must be defined exactly once, as a top-level
+  # `.zhMisfitCount <- function(...)` assignment.
+  is_def <- vapply(exprs, function(e) {
+    is.call(e) && length(e) == 3L &&
+      as.character(e[[1L]]) %in% c("<-", "=") &&
+      is.symbol(e[[2L]]) && identical(as.character(e[[2L]]), ".zhMisfitCount") &&
+      is.call(e[[3L]]) && identical(as.character(e[[3L]][[1L]]), "function")
+  }, logical(1L))
+  expect_identical(sum(is_def), 1L,
+                   info = "expected exactly one .zhMisfitCount() definition")
 
-  # The canonical helper is defined exactly once.
-  defn <- grep("^\\s*\\.zhMisfitCount\\s*<-\\s*function", src)
-  expect_identical(length(defn), 1L)
+  # Line span of the helper definition, used to confine the correction arithmetic.
+  def_ref  <- utils::getSrcref(exprs)[[which(is_def)]]
+  def_lines <- def_ref[[1L]]:def_ref[[3L]]
+
+  pd <- utils::getParseData(exprs)
 
   # ... and called at exactly the three decision sites (rotation scan,
-  # best-candidate check, final ZhCond gate). Asserting the exact count -- not
-  # ">= 3" -- makes a 4th accidental copy fail the guard.
-  calls <- grep("\\.zhMisfitCount\\(", src)
-  # one of the matched lines is the definition itself; the rest are call sites.
-  call_sites <- setdiff(calls, defn)
-  expect_identical(length(call_sites), 3L,
+  # best-candidate check, final ZhCond gate). Counting SYMBOL_FUNCTION_CALL
+  # tokens -- not source lines -- ignores the definition, comments and strings,
+  # while still failing if a 4th accidental copy is introduced.
+  call_tokens <- pd[pd$token == "SYMBOL_FUNCTION_CALL" &
+                      pd$text == ".zhMisfitCount", , drop = FALSE]
+  expect_identical(nrow(call_tokens), 3L,
                    info = paste0("expected exactly 3 .zhMisfitCount() call sites; found ",
-                                 length(call_sites)))
+                                 nrow(call_tokens)))
+
+  # The 1.96/sqrt(n) correction arithmetic must live in exactly one place: the
+  # helper body. Every qnorm(...) *call* (in any spelling -- qnorm(.025),
+  # qnorm(0.975), qnorm(fitIndicesCutOff/2), reformatted, renamed) must fall
+  # within the helper's line span. Any inline re-implementation elsewhere is the
+  # drift risk this guard exists to catch.
+  qnorm_tokens <- pd[pd$token == "SYMBOL_FUNCTION_CALL" & pd$text == "qnorm", , drop = FALSE]
+  qnorm_outside <- qnorm_tokens[!(qnorm_tokens$line1 %in% def_lines), , drop = FALSE]
+  expect_identical(nrow(qnorm_outside), 0L,
+                   info = paste0("qnorm() misfit arithmetic must be centralised in ",
+                                 ".zhMisfitCount(); found qnorm() call(s) outside it at line(s): ",
+                                 paste(qnorm_outside$line1, collapse = ", ")))
 })
