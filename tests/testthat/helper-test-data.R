@@ -27,7 +27,7 @@
     }
     installed_root <- base::system.file(package = "kaefa")
     installed_path <- tryCatch(
-      file.path(installed_root, paste(package_path, collapse = "/")),
+      do.call(file.path, as.list(c(installed_root, package_path))),
       error = function(e) ""
     )
 

@@ -235,9 +235,9 @@ Guardrails:
   name: test-fast
 
   on:
-    pull_request:
-      branches: [main, master, develop]
     push:
+      branches: [main, master, develop]
+    pull_request:
       branches: [main, master, develop]
 
   permissions:
@@ -246,15 +246,22 @@ Guardrails:
   jobs:
     test-fast:
       runs-on: ubuntu-latest
+
       steps:
         - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
         - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
           with:
             use-public-rspm: true
+
         - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
           with:
             extra-packages: any::testthat
             needs: check
+
+        - name: Install kaefa package for fast tests
+          run: R CMD INSTALL .
+
         - name: Run fast productization tests
           run: |
             Rscript - <<'RSCRIPT'
@@ -262,6 +269,8 @@ Guardrails:
             testthat::test_file("tests/testthat/test-benchmark-manifest.R",
                                 reporter = reporter)
             testthat::test_file("tests/testthat/test-shiny-product-surface.R",
+                                reporter = reporter)
+            testthat::test_file("tests/testthat/test-core-api-contract.R",
                                 reporter = reporter)
             RSCRIPT
   ```
