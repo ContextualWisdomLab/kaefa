@@ -29,6 +29,18 @@ test_that("Shiny upload validation identifies invalid columns", {
                         fixed = TRUE)))
 })
 
+test_that("Shiny invalid-column messages truncate long column lists", {
+  invalid_columns <- paste0("text_", seq_len(10))
+  validation_message <- kaefa:::.kaefaStudioInvalidColumnMessage(
+    invalid_columns
+  )
+
+  expect_match(validation_message,
+               "text_1, text_2, text_3, text_4, text_5, text_6, text_7, text_8, ...",
+               fixed = TRUE)
+  expect_false(grepl("text_9", validation_message, fixed = TRUE))
+})
+
 test_that("Shiny upload surface rejects RDS files instead of reading them", {
   app_path <- shiny_app_path()
   app_source <- readLines(app_path, warn = FALSE)

@@ -12,7 +12,6 @@ RUN apt-get update \
       libssl-dev \
       libxml2-dev \
       libuv1-dev \
-      pandoc \
       xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
