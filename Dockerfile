@@ -1,6 +1,6 @@
-FROM r-base:4.4.2
+FROM r-base:4.4.2@sha256:fe9b29520eeb5292d814b0958783c0ddfcdab37402967a3e67307604354f98d7
 
-ENV R_REPOS=https://cloud.r-project.org
+ENV R_REPOS=https://packagemanager.posit.co/cran/2026-07-02
 
 WORKDIR /opt/kaefa
 

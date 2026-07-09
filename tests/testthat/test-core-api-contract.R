@@ -14,8 +14,7 @@ repo_file <- function(...) {
 
 namespace_exports <- function() {
   if (!requireNamespace("kaefa", quietly = TRUE)) {
-    testthat::fail("kaefa namespace not available")
-    return(character())
+    stop("kaefa namespace not available", call. = FALSE)
   }
 
   getNamespaceExports("kaefa")

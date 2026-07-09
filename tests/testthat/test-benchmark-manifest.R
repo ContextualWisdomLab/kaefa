@@ -38,7 +38,14 @@ test_that("benchmark manifest has required columns", {
     "notes"
   )
 
-  expect_true(all(required_columns %in% names(manifest)))
+  missing_columns <- setdiff(required_columns, names(manifest))
+  if (length(missing_columns) > 0) {
+    testthat::fail(paste("benchmark manifest missing columns:", paste(
+      missing_columns,
+      collapse = ", "
+    )))
+    return(invisible(NULL))
+  }
 
   numeric_columns <- c(
     "rows",
@@ -51,9 +58,16 @@ test_that("benchmark manifest has required columns", {
     suppressWarnings(as.numeric(column))
   })
 
-  expect_true(all(vapply(parsed_numeric, function(column) {
+  non_numeric_columns <- names(parsed_numeric)[!vapply(parsed_numeric, function(column) {
     all(!is.na(column))
-  }, logical(1))))
+  }, logical(1))]
+  if (length(non_numeric_columns) > 0) {
+    testthat::fail(paste("benchmark manifest non-numeric columns:", paste(
+      non_numeric_columns,
+      collapse = ", "
+    )))
+    return(invisible(NULL))
+  }
 
   manifest[numeric_columns] <- parsed_numeric
 

@@ -6,4 +6,9 @@
 .Ruserdata
 *.Rcheck
 *.tar.gz
-docs/superpowers
+docs
+tests
+vignettes
+examples
+revdep
+*.Rproj
