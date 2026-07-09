@@ -17,7 +17,8 @@
 
 .kaefa_repo_file <- function(..., package_path = NULL) {
   installed_package <- find.package("kaefa", quiet = TRUE)
-  if (!is.null(package_path) && length(installed_package) > 0) {
+  package_installed <- any(nzchar(installed_package))
+  if (!is.null(package_path) && package_installed) {
     installed_path <- tryCatch(
       do.call(system.file, c(as.list(package_path), list(package = "kaefa"))),
       error = function(e) ""

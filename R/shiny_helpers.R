@@ -50,6 +50,10 @@
 }
 
 .kaefaStudioReportMetadataLines <- function(run_options, data, input) {
+  if (is.null(run_options)) {
+    run_options <- list()
+  }
+
   option_value <- function(name, fallback) {
     if (!is.null(run_options[[name]])) {
       return(run_options[[name]])

@@ -61,4 +61,10 @@ test_that("dot-prefixed exports are tracked as cleanup candidates", {
     },
     logical(1)
   )))
+
+  expect_true(any(grepl(
+    ".covdataClassifieder` is a legacy misspelling",
+    contract,
+    fixed = TRUE
+  )))
 })

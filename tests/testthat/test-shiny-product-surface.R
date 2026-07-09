@@ -67,6 +67,35 @@ test_that("Shiny report includes reproducibility metadata", {
                         fixed = TRUE)))
 })
 
+test_that("Shiny report metadata falls back when run options are missing", {
+  sample_data <- data.frame(
+    item_1 = c(1, 2, 3),
+    item_2 = c(3, 2, 1)
+  )
+  sample_input <- list(
+    minFactors = 1,
+    maxFactors = 2,
+    rotation = "bifactorQ",
+    modelSelection = "DIC",
+    saveHistory = FALSE
+  )
+
+  metadata_lines <- kaefa:::.kaefaStudioReportMetadataLines(
+    NULL,
+    sample_data,
+    sample_input
+  )
+
+  expect_true(any(grepl("Analysis started: not recorded",
+                        metadata_lines, fixed = TRUE)))
+  expect_true(any(grepl("Data shape: 3 rows x 2 items",
+                        metadata_lines, fixed = TRUE)))
+  expect_true(any(grepl("- Minimum factors: 1",
+                        metadata_lines, fixed = TRUE)))
+  expect_true(any(grepl("- Save model history: FALSE",
+                        metadata_lines, fixed = TRUE)))
+})
+
 test_that("Shiny app centralizes analysis state resets", {
   app_path <- shiny_app_path()
   app_source <- readLines(app_path, warn = FALSE)

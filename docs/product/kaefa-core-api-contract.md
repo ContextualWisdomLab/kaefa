@@ -143,7 +143,8 @@ Contract notes:
 
 The current `NAMESPACE` exports several dot-prefixed helpers:
 
-- `.covdataClassifieder`
+- `.covdataClassifieder` is a legacy misspelling of "Classifier"; keep it as
+  the compatibility spelling until the export policy is explicitly changed.
 - `.covdataFixedEffectComb`
 - `.exportParmsEME`
 - `.mirt`
