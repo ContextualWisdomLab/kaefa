@@ -15,6 +15,26 @@
   stop("Cannot locate kaefa package root for test bootstrap.", call. = FALSE)
 }
 
+.kaefa_repo_file <- function(..., package_path = NULL) {
+  if (!is.null(package_path) && requireNamespace("kaefa", quietly = TRUE)) {
+    installed_path <- do.call(
+      system.file,
+      c(as.list(package_path), list(package = "kaefa"))
+    )
+
+    if (nzchar(installed_path) && file.exists(installed_path)) {
+      return(installed_path)
+    }
+  }
+
+  source_path <- file.path(.find_kaefa_root(), ...)
+  if (!file.exists(source_path)) {
+    stop("kaefa test file not found: ", source_path, call. = FALSE)
+  }
+
+  source_path
+}
+
 .ensure_kaefa_namespace <- function() {
   if (requireNamespace("kaefa", quietly = TRUE)) {
     return(invisible(TRUE))

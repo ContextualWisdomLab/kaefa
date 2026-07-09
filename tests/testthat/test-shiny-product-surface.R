@@ -1,26 +1,10 @@
 shiny_app_path <- function() {
-  installed_path <- system.file(
+  .kaefa_repo_file(
+    "inst",
     "shiny-app",
     "app.R",
-    package = "kaefa"
+    package_path = c("shiny-app", "app.R")
   )
-
-  if (nzchar(installed_path) && file.exists(installed_path)) {
-    return(installed_path)
-  }
-
-  app_paths <- c(
-    file.path("inst", "shiny-app", "app.R"),
-    file.path("..", "..", "inst", "shiny-app", "app.R")
-  )
-  app_path <- app_paths[file.exists(app_paths)][1]
-
-  if (is.na(app_path) || !nzchar(app_path)) {
-    testthat::fail("Shiny app source file not found")
-    return(invisible(NULL))
-  }
-
-  app_path
 }
 
 test_that("Shiny upload validation identifies invalid columns", {

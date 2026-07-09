@@ -1,28 +1,14 @@
 benchmark_manifest_path <- function() {
-  installed_path <- system.file(
+  .kaefa_repo_file(
+    "inst",
     "benchmarks",
     "manifest.csv",
-    package = "kaefa"
+    package_path = c("benchmarks", "manifest.csv")
   )
-
-  if (nzchar(installed_path) && file.exists(installed_path)) {
-    return(installed_path)
-  }
-
-  repo_paths <- c(
-    file.path("inst", "benchmarks", "manifest.csv"),
-    file.path("..", "..", "inst", "benchmarks", "manifest.csv")
-  )
-  repo_paths[file.exists(repo_paths)][1]
 }
 
 test_that("benchmark manifest has required columns", {
   manifest_path <- benchmark_manifest_path()
-
-  if (is.na(manifest_path) || !nzchar(manifest_path)) {
-    testthat::fail("benchmark manifest not found")
-    return(invisible(NULL))
-  }
 
   manifest <- read.csv(manifest_path, stringsAsFactors = FALSE)
   required_columns <- c(

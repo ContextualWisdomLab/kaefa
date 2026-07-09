@@ -1,17 +1,3 @@
-repo_file <- function(...) {
-  repo_paths <- c(
-    file.path(...),
-    file.path("..", "..", ...)
-  )
-  repo_path <- repo_paths[file.exists(repo_paths)][1]
-
-  if (is.na(repo_path) || !nzchar(repo_path)) {
-    testthat::skip(paste("repository file not found:", file.path(...)))
-  }
-
-  repo_path
-}
-
 namespace_exports <- function() {
   if (!requireNamespace("kaefa", quietly = TRUE)) {
     stop("kaefa namespace not available", call. = FALSE)
@@ -22,7 +8,7 @@ namespace_exports <- function() {
 
 api_contract_lines <- function() {
   readLines(
-    repo_file("docs", "product", "kaefa-core-api-contract.md"),
+    .kaefa_repo_file("docs", "product", "kaefa-core-api-contract.md"),
     warn = FALSE
   )
 }
