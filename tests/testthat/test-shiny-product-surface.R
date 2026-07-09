@@ -29,6 +29,16 @@ test_that("Shiny upload validation identifies invalid columns", {
                         fixed = TRUE)))
 })
 
+test_that("Shiny upload surface rejects RDS files instead of reading them", {
+  app_path <- shiny_app_path()
+  app_source <- readLines(app_path, warn = FALSE)
+
+  expect_true(any(grepl('accept = c(".csv")', app_source, fixed = TRUE)))
+  expect_true(any(grepl("RDS uploads are not supported", app_source,
+                        fixed = TRUE)))
+  expect_false(any(grepl("readRDS", app_source, fixed = TRUE)))
+})
+
 test_that("Shiny report includes reproducibility metadata", {
   app_path <- shiny_app_path()
 
