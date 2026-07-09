@@ -22,8 +22,9 @@
   )
   package_installed <- any(nzchar(installed_package))
   if (!is.null(package_path) && package_installed) {
+    relative_path <- paste(package_path, collapse = .Platform$file.sep)
     installed_path <- tryCatch(
-      do.call(base::system.file, c(as.list(package_path), list(package = "kaefa"))),
+      base::system.file(relative_path, package = "kaefa"),
       error = function(e) ""
     )
 
