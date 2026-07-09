@@ -49,6 +49,23 @@ test_that(".zhMisfitCount drops NA Zh by default and can propagate them", {
   expect_true(is.na(kaefa:::.zhMisfitCount(c(-4, NA, -0.1), 50, 0.005, na.rm = FALSE)))
 })
 
+test_that(".zhMisfitCount is stable over randomized Zh boundaries", {
+  set.seed(20260709)
+  for (i in seq_len(200)) {
+    n <- sample(2:5000, 1)
+    fit_indices_cutoff <- sample(c(0.001, 0.005, 0.01, 0.05), 1)
+    Zh <- rnorm(sample(1:80, 1), mean = -2, sd = 2)
+    if (length(Zh) >= 3L) {
+      Zh[sample(seq_along(Zh), 1)] <- NA_real_
+    }
+
+    expected <- as.integer(
+      sum(Zh + qnorm(0.975) / sqrt(n) < qnorm(fit_indices_cutoff / 2), na.rm = TRUE)
+    )
+    expect_identical(kaefa:::.zhMisfitCount(Zh, n, fit_indices_cutoff), expected)
+  }
+})
+
 test_that("the Zh misfit arithmetic is centralised in one helper", {
   # Locate R/kaefa.R relative to the test working directory (testthat runs from
   # tests/testthat/ during R CMD check, from the package root interactively).
