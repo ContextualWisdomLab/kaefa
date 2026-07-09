@@ -67,3 +67,14 @@ test_that("benchmark manifest has required columns", {
   expect_true(all(manifest$expected_factor_max <= manifest$items))
   expect_true(all(manifest$expected_runtime_seconds > 0))
 })
+
+test_that("repo file lookup falls back when installed resource is absent", {
+  manifest_path <- .kaefa_repo_file(
+    "inst",
+    "benchmarks",
+    "manifest.csv",
+    package_path = c("missing", "manifest.csv")
+  )
+
+  expect_true(file.exists(manifest_path))
+})

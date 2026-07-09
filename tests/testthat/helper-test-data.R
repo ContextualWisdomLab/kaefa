@@ -16,10 +16,11 @@
 }
 
 .kaefa_repo_file <- function(..., package_path = NULL) {
-  if (!is.null(package_path) && requireNamespace("kaefa", quietly = TRUE)) {
-    installed_path <- do.call(
-      system.file,
-      c(as.list(package_path), list(package = "kaefa"))
+  installed_package <- find.package("kaefa", quiet = TRUE)
+  if (!is.null(package_path) && length(installed_package) > 0) {
+    installed_path <- tryCatch(
+      do.call(system.file, c(as.list(package_path), list(package = "kaefa"))),
+      error = function(e) ""
     )
 
     if (nzchar(installed_path) && file.exists(installed_path)) {
