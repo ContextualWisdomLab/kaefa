@@ -7,10 +7,7 @@ benchmark_manifest_path <- function() {
   )
 }
 
-test_that("benchmark manifest has required columns", {
-  manifest_path <- benchmark_manifest_path()
-
-  manifest <- read.csv(manifest_path, stringsAsFactors = FALSE)
+expect_valid_benchmark_manifest <- function(manifest) {
   required_columns <- c(
     "dataset_id",
     "source",
@@ -66,6 +63,23 @@ test_that("benchmark manifest has required columns", {
     return(invisible(NULL))
   }
 
+  integer_columns <- c(
+    "rows",
+    "items",
+    "expected_factor_min",
+    "expected_factor_max"
+  )
+  non_integer_columns <- names(parsed_numeric[integer_columns])[!vapply(parsed_numeric[integer_columns], function(column) {
+    all(column == floor(column))
+  }, logical(1))]
+  if (length(non_integer_columns) > 0) {
+    testthat::fail(paste("benchmark manifest non-whole-number values in columns:", paste(
+      non_integer_columns,
+      collapse = ", "
+    )))
+    return(invisible(NULL))
+  }
+
   manifest[numeric_columns] <- parsed_numeric
 
   expect_equal(anyDuplicated(manifest$dataset_id), 0L)
@@ -77,6 +91,24 @@ test_that("benchmark manifest has required columns", {
   expect_true(all(manifest$expected_factor_max >= manifest$expected_factor_min))
   expect_true(all(manifest$expected_factor_max <= manifest$items))
   expect_true(all(manifest$expected_runtime_seconds > 0))
+  invisible(manifest)
+}
+
+test_that("benchmark manifest has required columns", {
+  manifest_path <- benchmark_manifest_path()
+
+  manifest <- read.csv(manifest_path, stringsAsFactors = FALSE)
+  expect_valid_benchmark_manifest(manifest)
+})
+
+test_that("benchmark manifest rejects fractional integral fields", {
+  manifest <- read.csv(benchmark_manifest_path(), stringsAsFactors = FALSE)
+  manifest$rows[1] <- manifest$rows[1] + 0.5
+
+  testthat::expect_failure(
+    expect_valid_benchmark_manifest(manifest),
+    "whole-number"
+  )
 })
 
 test_that("repo file lookup falls back when installed resource is absent", {

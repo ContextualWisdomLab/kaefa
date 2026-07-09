@@ -1,26 +1,10 @@
 test_that("test file lookup falls back when package lookup fails", {
-  helper_env <- environment(.kaefa_repo_file)
-  had_find_package <- exists("find.package", envir = helper_env,
-                             inherits = FALSE)
-  original_find_package <- if (had_find_package) {
-    get("find.package", envir = helper_env, inherits = FALSE)
-  } else {
-    NULL
-  }
-  assign(
-    "find.package",
-    function(...) {
+  testthat::local_mocked_bindings(
+    find.package = function(...) {
       stop("kaefa package lookup failed", call. = FALSE)
     },
-    envir = helper_env
+    .package = "base"
   )
-  on.exit({
-    if (had_find_package) {
-      assign("find.package", original_find_package, envir = helper_env)
-    } else {
-      rm("find.package", envir = helper_env)
-    }
-  }, add = TRUE)
 
   expect_match(
     .kaefa_repo_file(
@@ -31,4 +15,16 @@ test_that("test file lookup falls back when package lookup fails", {
     ),
     "manifest[.]csv$"
   )
+})
+
+test_that("test file lookup uses explicit base package helpers", {
+  helper_source <- readLines(
+    testthat::test_path("helper-test-data.R"),
+    warn = FALSE
+  )
+
+  expect_true(any(grepl("base::find.package", helper_source, fixed = TRUE)))
+  expect_true(any(grepl("base::system.file", helper_source, fixed = TRUE)))
+  expect_false(any(grepl("do.call(system.file", helper_source,
+                          fixed = TRUE)))
 })
