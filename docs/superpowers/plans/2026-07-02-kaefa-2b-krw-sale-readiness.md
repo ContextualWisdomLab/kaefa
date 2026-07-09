@@ -57,7 +57,7 @@ Actions, FigJam/Figma diagrams without Figma Code Connect.
 - CI gap today: `.github/workflows/R-CMD-check.yaml` runs
   `check-r-package` with `args: 'c("--no-manual", "--no-tests")'`, so the large
   test suite is not currently a required package-check gate.
-- License posture today: `DESCRIPTION` declares `GPL-3`, and `LICENSE`
+- License posture today: `DESCRIPTION` declares `GPL-3`, and `COPYING`
   contains the GPL-3 text. Dependency license review still matters because
   `mirt` is GPL (>= 3).
 - Figma output: FigJam roadmap created at
@@ -143,7 +143,7 @@ Guardrails:
 
 **Files:**
 
-- Modify: `LICENSE`
+- Replace: `LICENSE` with `COPYING`
 - Modify: `DESCRIPTION`
 - Create: `docs/diligence/license-and-ip.md`
 
@@ -161,8 +161,9 @@ Guardrails:
 
 - [x] **Step 2: Fix the license file**
 
-  If GPL-3 remains the current posture, replace `LICENSE` with the full GPL-3
-  text or the correct CRAN-compatible license file expected by R packaging.
+  If GPL-3 remains the current posture, keep `DESCRIPTION` on the standard
+  `License: GPL-3` field and place the full GPL-3 text in `COPYING`, avoiding
+  a custom R package `LICENSE` file.
 
 - [x] **Step 3: Document dependency license implications**
 

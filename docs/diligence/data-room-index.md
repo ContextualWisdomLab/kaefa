@@ -80,7 +80,7 @@ from decisions that still need owner, legal, or customer input.
   `docs/operations/deployment.md`.
   Status: no persistence unless user exports.
 - License posture:
-  `LICENSE`, `DESCRIPTION`, `docs/diligence/license-and-ip.md`.
+  `COPYING`, `DESCRIPTION`, `docs/diligence/license-and-ip.md`.
   Status: GPL posture documented.
 - Legal decisions:
   `docs/diligence/license-and-ip.md`.

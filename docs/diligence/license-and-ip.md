@@ -8,17 +8,17 @@
 License: GPL-3
 ```
 
-The repository `LICENSE` file now begins:
+The repository `COPYING` file now begins:
 
 ```text
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
 ```
 
-The prior placeholder `LICENSE` file has been replaced with the GPL-3 text
-distributed with the local R runtime. This resolves the repository-file
-mismatch, but it does not resolve ownership, contributor-rights, or commercial
-redistribution decisions.
+The prior placeholder `LICENSE` file has been removed, and the GPL-3 text now
+lives in `COPYING` so the R package keeps the standard `License: GPL-3`
+metadata. This resolves the repository-file mismatch, but it does not resolve
+ownership, contributor-rights, or commercial redistribution decisions.
 
 ## Dependency Constraints
 

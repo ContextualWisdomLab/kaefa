@@ -37,7 +37,7 @@ enterprise pilot, or 2B KRW acquisition candidate.
 
 ## License And IP
 
-- `DESCRIPTION` and `LICENSE` agree.
+- `DESCRIPTION` declares GPL-3 and `COPYING` carries the GPL-3 text.
 - Dependency license implications are documented.
 - Copyright ownership and contributor rights are reviewed.
 - Commercial posture is explicit: GPL-only, dual-license, hosted service, or
