@@ -1,8 +1,5 @@
 namespace_exports <- function() {
-  if (!requireNamespace("kaefa", quietly = TRUE)) {
-    stop("kaefa namespace not available", call. = FALSE)
-  }
-
+  .ensure_kaefa_namespace()
   getNamespaceExports("kaefa")
 }
 

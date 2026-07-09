@@ -48,7 +48,7 @@ test_that("benchmark manifest has required columns", {
     all(!is.na(column))
   }, logical(1))]
   if (length(non_numeric_columns) > 0) {
-    testthat::fail(paste("benchmark manifest non-numeric columns:", paste(
+    testthat::fail(paste("benchmark manifest non-numeric or missing values in columns:", paste(
       non_numeric_columns,
       collapse = ", "
     )))
