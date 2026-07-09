@@ -55,6 +55,17 @@ test_that("benchmark manifest has required columns", {
     return(invisible(NULL))
   }
 
+  non_finite_columns <- names(parsed_numeric)[!vapply(parsed_numeric, function(column) {
+    all(is.finite(column))
+  }, logical(1))]
+  if (length(non_finite_columns) > 0) {
+    testthat::fail(paste("benchmark manifest non-finite values in columns:", paste(
+      non_finite_columns,
+      collapse = ", "
+    )))
+    return(invisible(NULL))
+  }
+
   manifest[numeric_columns] <- parsed_numeric
 
   expect_equal(anyDuplicated(manifest$dataset_id), 0L)
