@@ -67,55 +67,49 @@ test_that(".zhMisfitCount is stable over randomized Zh boundaries", {
 })
 
 test_that("the Zh misfit arithmetic is centralised in one helper", {
-  # Locate R/kaefa.R relative to the test working directory (testthat runs from
-  # tests/testthat/ during R CMD check, from the package root interactively).
-  candidates <- c("../../R/kaefa.R", "R/kaefa.R",
-                  file.path(testthat::test_path(), "..", "..", "R", "kaefa.R"))
-  src_path <- candidates[file.exists(candidates)][1]
-  skip_if(is.na(src_path), "R/kaefa.R not found from test working directory")
+  ns <- asNamespace("kaefa")
+  expect_identical(sum(ls(ns, all.names = TRUE) == ".zhMisfitCount"), 1L)
 
-  # Parse the source into an AST so the helper definition check inspects real
-  # code expressions rather than raw lines.
-  exprs <- parse(src_path, keep.source = TRUE)
-  src <- readLines(src_path, warn = FALSE)
+  call_name <- function(x) {
+    if (is.call(x) && is.symbol(x[[1L]])) as.character(x[[1L]]) else NA_character_
+  }
+  walk_calls <- function(x) {
+    found <- list()
+    visit <- function(node) {
+      if (is.call(node)) {
+        found[[length(found) + 1L]] <<- node
+        lapply(as.list(node), visit)
+      }
+    }
+    visit(x)
+    found
+  }
+  contains_symbol <- function(x, name) {
+    if (is.symbol(x)) {
+      return(identical(as.character(x), name))
+    }
+    (is.call(x) || is.pairlist(x)) && any(vapply(as.list(x), contains_symbol, logical(1L), name))
+  }
+  contains_call <- function(x, name) {
+    if (!is.call(x)) {
+      return(FALSE)
+    }
+    identical(call_name(x), name) || any(vapply(as.list(x), contains_call, logical(1L), name))
+  }
 
-  # The canonical helper must be defined exactly once, as a top-level
-  # `.zhMisfitCount <- function(...)` assignment.
-  is_def <- vapply(exprs, function(e) {
-    is.call(e) && length(e) == 3L &&
-      as.character(e[[1L]]) %in% c("<-", "=") &&
-      is.symbol(e[[2L]]) && identical(as.character(e[[2L]]), ".zhMisfitCount") &&
-      is.call(e[[3L]]) && identical(as.character(e[[3L]][[1L]]), "function")
+  helper_calls <- walk_calls(body(get(".zhMisfitCount", ns, inherits = FALSE)))
+  expect_identical(sum(vapply(helper_calls, function(x) identical(call_name(x), "qnorm"),
+                              logical(1L))),
+                   1L)
+
+  evaluate_calls <- walk_calls(body(get("evaluateItemFit", ns, inherits = FALSE)))
+  expect_identical(sum(vapply(evaluate_calls,
+                              function(x) identical(call_name(x), ".zhMisfitCount"),
+                              logical(1L))),
+                   3L)
+
+  inline_rule <- vapply(evaluate_calls, function(x) {
+    contains_call(x, "qnorm") && contains_symbol(x, "Zh")
   }, logical(1L))
-  expect_identical(sum(is_def), 1L,
-                   info = "expected exactly one .zhMisfitCount() definition")
-
-  # Line span of the helper definition, used to confine the correction arithmetic.
-  def_ref  <- utils::getSrcref(exprs)[[which(is_def)]]
-  def_lines <- def_ref[[1L]]:def_ref[[3L]]
-
-  # The three known decision sites must call the helper. Additional legitimate
-  # helper reuse elsewhere should not fail this guard.
-  expect_identical(
-    length(grep("countZh\\[length\\(countZh\\) \\+ 1\\]\\s*<-\\s*\\.zhMisfitCount\\(", src)),
-    1L
-  )
-  expect_identical(
-    length(grep("\\.zhMisfitCount\\(estItemFitRotationSearchTmp", src)),
-    1L
-  )
-  expect_identical(
-    length(grep("ZhCond\\s*<-\\s*\\.zhMisfitCount\\(", src)),
-    1L
-  )
-
-  # The helper body may contain the qnorm-based formula. Outside it, a line that
-  # combines Zh with qnorm(...) is likely an inline re-implementation of the same
-  # rule and should fail. Unrelated qnorm() calls remain allowed.
-  outside_helper <- src[-def_lines]
-  outside_code <- outside_helper[!grepl("^\\s*#", outside_helper)]
-  inline_rule <- grep("Zh.*qnorm\\s*\\(|qnorm\\s*\\(.*Zh", outside_code, value = TRUE)
-  expect_identical(length(inline_rule), 0L,
-                   info = paste0("inline Zh/qnorm rule outside .zhMisfitCount():\n",
-                                 paste(inline_rule, collapse = "\n")))
+  expect_identical(sum(inline_rule), 0L)
 })

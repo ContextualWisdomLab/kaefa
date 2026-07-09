@@ -290,12 +290,14 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 # @return integer count of items flagged as misfitting.
 # @keywords internal
 # @noRd
+.zhMisfitReferenceQuantile <- qnorm(0.975)
+
 .zhMisfitCount <- function(Zh, n, fitIndicesCutOff, na.rm = TRUE) {
     # as.integer() makes the return type match the documented integer count and the
     # expect_identical(..., 2L) tests; sum() over a logical vector is a double. When
     # na.rm = FALSE and any Zh is NA, sum() yields NA_real_ and as.integer() preserves
     # it as NA_integer_ (the rotation-scan site relies on this NA propagation).
-    as.integer(sum(Zh + qnorm(0.975) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm))
+    as.integer(sum(Zh + .zhMisfitReferenceQuantile / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm))
 }
 
 #' assessment of fit indices of the calibrated model
