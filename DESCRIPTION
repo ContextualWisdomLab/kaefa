@@ -23,7 +23,7 @@ Description: The software of automated exploratory
     even data has too complicated structure.
     This project started in 2013, and restructured in 2017.
 Language: en-GB
-License: GPL-3 + file LICENSE
+License: GPL-3
 URL: https://github.com/seonghobae/kaefa, http://seonghobae.me
 BugReports: https://github.com/seonghobae/kaefa/issues
 Encoding: UTF-8

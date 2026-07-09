@@ -57,9 +57,9 @@ Actions, FigJam/Figma diagrams without Figma Code Connect.
 - CI gap today: `.github/workflows/R-CMD-check.yaml` runs
   `check-r-package` with `args: 'c("--no-manual", "--no-tests")'`, so the large
   test suite is not currently a required package-check gate.
-- License risk today: `DESCRIPTION` declares `GPL-3 + file LICENSE`, but
-  `LICENSE` currently contains only `NA`. Dependency license review also matters
-  because `mirt` is GPL (>= 3).
+- License posture today: `DESCRIPTION` declares `GPL-3`, and `LICENSE`
+  contains the GPL-3 text. Dependency license review still matters because
+  `mirt` is GPL (>= 3).
 - Figma output: FigJam roadmap created at
   <https://www.figma.com/board/yGly1YSL1InCPRUrBW2p03?utm_source=codex&utm_content=edit_in_figjam&oai_id=&request_id=3fe47445-60f9-4008-ac4d-21e45def1572>.
 - Continued Figma output: secondary scratch FigJam board created at
@@ -173,7 +173,7 @@ Guardrails:
 
   ## Current package license
 
-  kaefa declares `GPL-3 + file LICENSE` in `DESCRIPTION`.
+  kaefa declares `GPL-3` in `DESCRIPTION`.
 
   ## Dependency constraints
 

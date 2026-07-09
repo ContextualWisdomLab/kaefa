@@ -5,7 +5,7 @@
 `DESCRIPTION` currently declares:
 
 ```text
-License: GPL-3 + file LICENSE
+License: GPL-3
 ```
 
 The repository `LICENSE` file now begins:
@@ -53,9 +53,8 @@ until copyright ownership and GPL dependency implications are reviewed.
   embedding.
 - Decide whether the buyer receives source code, hosted service rights,
   support/maintenance rights, or a mixed package.
-- Confirm whether `License: GPL-3 + file LICENSE` should remain as-is or be
-  simplified for CRAN/package convention while preserving the repository GPL-3
-  notice.
+- Confirm whether owner/legal review authorizes any future dual-license or
+  commercial distribution structure beyond the current GPL-3 package posture.
 
 ## Recommended Next Decision
 
