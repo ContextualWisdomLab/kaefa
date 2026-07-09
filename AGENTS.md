@@ -57,10 +57,12 @@ working on this repo. Keep this block; re-runs replace it in place.
   Dockerfile or k8s manifest. So findings will typically be a vulnerable
   dependency (bump the version / constraint in `DESCRIPTION`) or a leaked secret
   or misconfig in a checked-in file. For a genuine false positive, add a narrow,
-  documented entry to `.trivyignore(.yaml)` at the repo root — never a blanket
-  ignore.
-- Reproduce locally with a fresh DB and the merge ref, not just the PR head:
-  `trivy --download-db-only` first, then `trivy fs .` (a stale DB misses findings).
+  documented entry to `.trivyignore` or `.trivyignore.yaml` at the repo root —
+  never a blanket ignore.
+- Reproduce locally from the PR merge ref, not just the PR head:
+  `git fetch origin pull/<PR_NUMBER>/merge && git checkout --detach FETCH_HEAD`,
+  then `trivy fs --download-db-only .` and `trivy fs .` (a stale DB misses
+  findings).
 - The org `code_scanning` ruleset is intentionally **CodeQL-only** (multiple
   code-scanning tools can't converge on one PR ref). Gating is by the Security
   Scan **job result**, not the `code_scanning` rule — don't add tools to that rule.
