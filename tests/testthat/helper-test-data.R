@@ -22,8 +22,12 @@
   )
   package_installed <- any(nzchar(installed_package))
   if (!is.null(package_path) && package_installed) {
+    if (!is.character(package_path)) {
+      stop("package_path must be a character vector.", call. = FALSE)
+    }
+    installed_root <- base::system.file(package = "kaefa")
     installed_path <- tryCatch(
-      Reduce(file.path, as.list(package_path), init = base::system.file(package = "kaefa")),
+      file.path(installed_root, paste(package_path, collapse = "/")),
       error = function(e) ""
     )
 
