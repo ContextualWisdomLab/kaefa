@@ -273,7 +273,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 #     Zh + qnorm(0.975) / sqrt(n)  <  qnorm(fitIndicesCutOff / 2)
 #
 # i.e. a one-sided lower-tail test at level fitIndicesCutOff/2 with a 1.96/sqrt(n)
-# small-sample correction (qnorm(0.975) == abs(qnorm(.025))). This rule is applied
+# small-sample correction. This rule is applied
 # at three decision sites inside evaluateItemFit() (the rotation scan, the
 # best-candidate check, and the final ZhCond gate) and MUST stay identical in all
 # three, otherwise the model search selects rotations/models under inconsistent
@@ -295,7 +295,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
     # expect_identical(..., 2L) tests; sum() over a logical vector is a double. When
     # na.rm = FALSE and any Zh is NA, sum() yields NA_real_ and as.integer() preserves
     # it as NA_integer_ (the rotation-scan site relies on this NA propagation).
-    as.integer(sum(Zh + abs(qnorm(.025)) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm))
+    as.integer(sum(Zh + qnorm(0.975) / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm))
 }
 
 #' assessment of fit indices of the calibrated model

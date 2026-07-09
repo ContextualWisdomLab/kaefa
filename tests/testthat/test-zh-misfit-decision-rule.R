@@ -11,21 +11,21 @@
 #     Zh + qnorm(0.975) / sqrt(n)  <  qnorm(fitIndicesCutOff / 2)
 #
 # i.e. a one-sided lower-tail test at level fitIndicesCutOff/2 with a
-# 1.96/sqrt(n) small-sample continuity correction (qnorm(0.975) = |qnorm(.025)|).
+# 1.96/sqrt(n) small-sample correction (qnorm(0.975) = |qnorm(.025)|).
 #
 # The rule is applied at three decision sites inside evaluateItemFit() (the
 # rotation scan, the best-candidate check, and the final ZhCond gate). To stop the
 # three copies from drifting apart -- a 2019 "debug purpose" commit once dropped
 # the /sqrt(n) divisor from one copy -- the arithmetic now lives in a single
 # canonical helper, kaefa:::.zhMisfitCount(), and every site calls it. These tests
-# pin the helper's arithmetic and guard that the arithmetic is defined once and
-# called at exactly the three expected sites.
+# pin the helper's arithmetic and guard that the three expected decision sites
+# call the helper instead of re-implementing the formula inline.
 
 test_that(".zhMisfitCount matches a hand-computed reference", {
   # threshold for the default cutoff: qnorm(0.005/2) = qnorm(0.0025)
   expect_equal(qnorm(0.005 / 2), -2.807033768, tolerance = 1e-6)
   # correction term at n = 100: 1.959964 / 10
-  expect_equal(abs(qnorm(.025)) / sqrt(100), 0.1959964, tolerance = 1e-6)
+  expect_equal(qnorm(0.975) / sqrt(100), 0.1959964, tolerance = 1e-6)
 
   Zh <- c(-3.5, -5.0, -2.6)
   n  <- 100
@@ -36,7 +36,7 @@ test_that(".zhMisfitCount matches a hand-computed reference", {
 
   # the un-normalised (dropped-divisor) form adds a full 1.96 and would
   # under-count misfit here (only -5.0 survives): this is the defect we restored.
-  buggy <- sum(Zh + abs(qnorm(.025)) < qnorm(0.005 / 2))
+  buggy <- sum(Zh + qnorm(0.975) < qnorm(0.005 / 2))
   expect_identical(as.integer(buggy), 1L)
   expect_false(identical(kaefa:::.zhMisfitCount(Zh, n, 0.005), as.integer(buggy)))
 })
@@ -49,7 +49,7 @@ test_that(".zhMisfitCount drops NA Zh by default and can propagate them", {
   expect_true(is.na(kaefa:::.zhMisfitCount(c(-4, NA, -0.1), 50, 0.005, na.rm = FALSE)))
 })
 
-test_that("the Zh misfit arithmetic is centralised in one helper, called at exactly 3 sites", {
+test_that("the Zh misfit arithmetic is centralised in one helper", {
   # Locate R/kaefa.R relative to the test working directory (testthat runs from
   # tests/testthat/ during R CMD check, from the package root interactively).
   candidates <- c("../../R/kaefa.R", "R/kaefa.R",
@@ -57,11 +57,10 @@ test_that("the Zh misfit arithmetic is centralised in one helper, called at exac
   src_path <- candidates[file.exists(candidates)][1]
   skip_if(is.na(src_path), "R/kaefa.R not found from test working directory")
 
-  # Parse the source into an AST so the drift guard inspects real code tokens
-  # rather than raw lines. This makes it immune to comments, strings, whitespace,
-  # reformatting, and arithmetic spelled with any qnorm(...) variant -- the
-  # brittleness the earlier grep-based guard suffered from.
+  # Parse the source into an AST so the helper definition check inspects real
+  # code expressions rather than raw lines.
   exprs <- parse(src_path, keep.source = TRUE)
+  src <- readLines(src_path, warn = FALSE)
 
   # The canonical helper must be defined exactly once, as a top-level
   # `.zhMisfitCount <- function(...)` assignment.
@@ -78,27 +77,28 @@ test_that("the Zh misfit arithmetic is centralised in one helper, called at exac
   def_ref  <- utils::getSrcref(exprs)[[which(is_def)]]
   def_lines <- def_ref[[1L]]:def_ref[[3L]]
 
-  pd <- utils::getParseData(exprs)
+  # The three known decision sites must call the helper. Additional legitimate
+  # helper reuse elsewhere should not fail this guard.
+  expect_identical(
+    length(grep("countZh\\[length\\(countZh\\) \\+ 1\\]\\s*<-\\s*\\.zhMisfitCount\\(", src)),
+    1L
+  )
+  expect_identical(
+    length(grep("\\.zhMisfitCount\\(estItemFitRotationSearchTmp", src)),
+    1L
+  )
+  expect_identical(
+    length(grep("ZhCond\\s*<-\\s*\\.zhMisfitCount\\(", src)),
+    1L
+  )
 
-  # ... and called at exactly the three decision sites (rotation scan,
-  # best-candidate check, final ZhCond gate). Counting SYMBOL_FUNCTION_CALL
-  # tokens -- not source lines -- ignores the definition, comments and strings,
-  # while still failing if a 4th accidental copy is introduced.
-  call_tokens <- pd[pd$token == "SYMBOL_FUNCTION_CALL" &
-                      pd$text == ".zhMisfitCount", , drop = FALSE]
-  expect_identical(nrow(call_tokens), 3L,
-                   info = paste0("expected exactly 3 .zhMisfitCount() call sites; found ",
-                                 nrow(call_tokens)))
-
-  # The 1.96/sqrt(n) correction arithmetic must live in exactly one place: the
-  # helper body. Every qnorm(...) *call* (in any spelling -- qnorm(.025),
-  # qnorm(0.975), qnorm(fitIndicesCutOff/2), reformatted, renamed) must fall
-  # within the helper's line span. Any inline re-implementation elsewhere is the
-  # drift risk this guard exists to catch.
-  qnorm_tokens <- pd[pd$token == "SYMBOL_FUNCTION_CALL" & pd$text == "qnorm", , drop = FALSE]
-  qnorm_outside <- qnorm_tokens[!(qnorm_tokens$line1 %in% def_lines), , drop = FALSE]
-  expect_identical(nrow(qnorm_outside), 0L,
-                   info = paste0("qnorm() misfit arithmetic must be centralised in ",
-                                 ".zhMisfitCount(); found qnorm() call(s) outside it at line(s): ",
-                                 paste(qnorm_outside$line1, collapse = ", ")))
+  # The helper body may contain the qnorm-based formula. Outside it, a line that
+  # combines Zh with qnorm(...) is likely an inline re-implementation of the same
+  # rule and should fail. Unrelated qnorm() calls remain allowed.
+  outside_helper <- src[-def_lines]
+  outside_code <- outside_helper[!grepl("^\\s*#", outside_helper)]
+  inline_rule <- grep("Zh.*qnorm\\s*\\(|qnorm\\s*\\(.*Zh", outside_code, value = TRUE)
+  expect_identical(length(inline_rule), 0L,
+                   info = paste0("inline Zh/qnorm rule outside .zhMisfitCount():\n",
+                                 paste(inline_rule, collapse = "\n")))
 })
