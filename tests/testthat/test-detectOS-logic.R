@@ -217,44 +217,49 @@ test_that("SSH commands with key paths are constructed correctly", {
 
 context("detectOS - Key file detection logic")
 
+is_ssh_key_file_path <- function(path) {
+  grepl("\\.(pem|key)$", path, ignore.case = TRUE)
+}
+
 test_that("grepl correctly identifies .pem files", {
   # Test various .pem file paths
-  expect_true(grepl("pem", "key.pem"))
-  expect_true(grepl("pem", "/home/user/credentials.pem"))
-  expect_true(grepl("pem", "~/ssh/id_rsa.pem"))
-  expect_true(grepl("pem", "C:\\Users\\key.pem"))  # Windows path
+  expect_true(is_ssh_key_file_path("key.pem"))
+  expect_true(is_ssh_key_file_path("/home/user/credentials.pem"))
+  expect_true(is_ssh_key_file_path("~/ssh/id_rsa.pem"))
+  expect_true(is_ssh_key_file_path("C:\\Users\\key.pem"))  # Windows path
   
   # Should not match non-.pem files
-  expect_false(grepl("pem", "key.key"))
-  expect_false(grepl("pem", "key.txt"))
-  expect_false(grepl("pem", ""))
+  expect_false(is_ssh_key_file_path("key.txt"))
+  expect_false(is_ssh_key_file_path("pem"))
+  expect_false(is_ssh_key_file_path(""))
 })
 
 test_that("grepl correctly identifies .key files", {
   # Test various .key file paths
-  expect_true(grepl("key", "private.key"))
-  expect_true(grepl("key", "/home/user/id_rsa.key"))
-  expect_true(grepl("key", "~/ssh/private.key"))
+  expect_true(is_ssh_key_file_path("private.key"))
+  expect_true(is_ssh_key_file_path("/home/user/id_rsa.key"))
+  expect_true(is_ssh_key_file_path("~/ssh/private.key"))
+  expect_true(is_ssh_key_file_path("~/ssh/private.KEY"))
   
   # Variable-like strings without a .key suffix are not key files.
-  expect_true(grepl("key", "/path/with/key/in/it"))
-  expect_false(grepl("\\.key$", "sshKeyPath", ignore.case = TRUE))
+  expect_false(is_ssh_key_file_path("/path/with/key/in/it"))
+  expect_false(is_ssh_key_file_path("sshKeyPath"))
 })
 
 test_that("Combined pem/key detection works as expected", {
-  # Test the OR logic: (grepl("pem", path) || grepl("key", path))
+  # Test the suffix logic: grepl("\\.(pem|key)$", path, ignore.case = TRUE)
   
   # .pem files
-  expect_true(grepl("pem", "file.pem") || grepl("key", "file.pem"))
+  expect_true(is_ssh_key_file_path("file.pem"))
   
   # .key files
-  expect_true(grepl("pem", "file.key") || grepl("key", "file.key"))
+  expect_true(is_ssh_key_file_path("file.key"))
   
   # Neither
-  expect_false(grepl("pem", "file.txt") || grepl("key", "file.txt"))
+  expect_false(is_ssh_key_file_path("file.txt"))
   
-  # Both (edge case)
-  expect_true(grepl("pem", "key.pem") || grepl("key", "key.pem"))
+  # Substring-only matches are not key files.
+  expect_false(is_ssh_key_file_path("key.pem.backup"))
 })
 
 test_that("NULL and NA handling in key path detection", {
