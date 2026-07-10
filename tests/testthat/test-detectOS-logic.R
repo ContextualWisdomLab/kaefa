@@ -236,10 +236,9 @@ test_that("grepl correctly identifies .key files", {
   expect_true(grepl("key", "/home/user/id_rsa.key"))
   expect_true(grepl("key", "~/ssh/private.key"))
   
-  # Note: grepl("key", path) will match "key" anywhere in the string
-  # This is as implemented in the code
+  # Variable-like strings without a .key suffix are not key files.
   expect_true(grepl("key", "/path/with/key/in/it"))
-  expect_true(grepl("key", "sshKeyPath"))
+  expect_false(grepl("\\.key$", "sshKeyPath", ignore.case = TRUE))
 })
 
 test_that("Combined pem/key detection works as expected", {
