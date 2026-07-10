@@ -68,7 +68,7 @@ test_that(".zhMisfitCount is stable over randomized Zh boundaries", {
 
 test_that("the Zh misfit arithmetic is centralised in one helper", {
   ns <- asNamespace("kaefa")
-  expect_identical(sum(ls(ns, all.names = TRUE) == ".zhMisfitCount"), 1L)
+  expect_identical(as.integer(sum(ls(ns, all.names = TRUE) == ".zhMisfitCount")), 1L)
 
   call_name <- function(x) {
     if (is.call(x) && is.symbol(x[[1L]])) as.character(x[[1L]]) else NA_character_
@@ -98,18 +98,18 @@ test_that("the Zh misfit arithmetic is centralised in one helper", {
   }
 
   helper_calls <- walk_calls(body(get(".zhMisfitCount", ns, inherits = FALSE)))
-  expect_identical(sum(vapply(helper_calls, function(x) identical(call_name(x), "qnorm"),
-                              logical(1L))),
+  expect_identical(as.integer(sum(vapply(helper_calls, function(x) identical(call_name(x), "qnorm"),
+                                         logical(1L)))),
                    1L)
 
   search_calls <- walk_calls(body(get("aefa", ns, inherits = FALSE)))
-  expect_identical(sum(vapply(search_calls,
-                              function(x) identical(call_name(x), ".zhMisfitCount"),
-                              logical(1L))),
+  expect_identical(as.integer(sum(vapply(search_calls,
+                                         function(x) identical(call_name(x), ".zhMisfitCount"),
+                                         logical(1L)))),
                    3L)
 
   inline_rule <- vapply(search_calls, function(x) {
     contains_call(x, "qnorm") && contains_symbol(x, "Zh")
   }, logical(1L))
-  expect_identical(sum(inline_rule), 0L)
+  expect_identical(as.integer(sum(inline_rule)), 0L)
 })
