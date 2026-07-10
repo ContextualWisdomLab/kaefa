@@ -14,7 +14,8 @@ Use this file as the local operating guide when modifying `kaefa`.
 - Shiny app: `inst/shiny-app/app.R`
 - Tests: `tests/testthat/`
 - Local CI workflow definitions: `.github/workflows/`
-- Org-level required gates: central workflows in `ContextualWisdomLab/.github`
+- External org-level required gates: central workflows in
+  `ContextualWisdomLab/.github`
 
 ## Working Rules
 
@@ -64,10 +65,18 @@ working on this repo. Keep this block; re-runs replace it in place.
   checked-in file. For a genuine false positive, add a narrow, documented entry
   to `.trivyignore` or `.trivyignore.yaml` at the repo root — never a blanket
   ignore.
-- Reproduce locally from the PR merge ref, not just the PR head:
-  `git fetch origin pull/<PR_NUMBER>/merge && git checkout --detach FETCH_HEAD`,
-  then `trivy fs --download-db-only .` and `trivy fs .` (a stale DB misses
-  findings).
+- Reproduce locally from the PR merge ref, not just the PR head, where
+  `<upstream-remote>` points to `ContextualWisdomLab/kaefa` (`origin` in an org
+  clone, often `upstream` in a fork):
+
+  ```sh
+  git fetch <upstream-remote> pull/<PR_NUMBER>/merge
+  git checkout --detach FETCH_HEAD
+  trivy fs --download-db-only .
+  trivy fs .
+  ```
+
+  A stale Trivy DB misses findings.
 - The org `code_scanning` ruleset is intentionally **CodeQL-only** (multiple
   code-scanning tools can't converge on one PR ref). Gating is by the Security
   Scan **job result**, not the `code_scanning` rule — don't add tools to that rule.
