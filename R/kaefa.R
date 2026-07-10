@@ -283,13 +283,8 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 # candidate counts (so a candidate whose Zh contains NA is later excluded by the
 # is.finite() filter), whereas the two boolean gates drop NAs.
 #
-# @param Zh numeric vector of Zh item-fit statistics.
-# @param n integer sample size used for the 1.96/sqrt(n) small-sample correction.
-# @param fitIndicesCutOff two-sided significance level for the misfit test.
-# @param na.rm whether to drop NA Zh values before counting (default TRUE).
-# @return integer count of items flagged as misfitting.
-# @keywords internal
-# @noRd
+# Inputs: a numeric Zh vector, sample size n, two-sided misfit cutoff, and NA
+# handling mode. Returns an integer count of items flagged as misfitting.
 .zhMisfitReferenceQuantile <- qnorm(0.975)
 
 .zhMisfitCount <- function(Zh, n, fitIndicesCutOff, na.rm = TRUE) {
