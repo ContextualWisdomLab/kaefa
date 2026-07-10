@@ -50,10 +50,9 @@ working on this repo. Keep this block; re-runs replace it in place.
 
 - Every PR runs an org-level central **Security Scan** required gate:
   `osv-scan` + `dependency-review` (diff-scoped) and `trivy-fs` (repo-wide,
-  CRITICAL/HIGH, fixable only). These checks are enforced by
-  `ContextualWisdomLab/.github` required workflows, not only by this repo's
-  local `.github/workflows/`. They run against every PR base, **including
-  stacked PRs**.
+  CRITICAL/HIGH). These checks are enforced by `ContextualWisdomLab/.github`
+  required workflows, not only by this repo's local `.github/workflows/`. They
+  run against every PR base, **including stacked PRs**.
 - A failing `trivy-fs` is a **REAL finding, not a flake.** Read the job log
   (it prints each finding's rule id / severity / file) or the run's SARIF
   results, then **remediate** — do not weaken or disable the gate.
@@ -76,10 +75,9 @@ working on this repo. Keep this block; re-runs replace it in place.
 ### Code exploration
 
 - There is currently **no `.codegraph/` index** at the repo root, so use normal
-  search (grep/find, ripgrep) to locate and understand code. If a `.codegraph/`
-  index is later added, prefer CodeGraph first (`codegraph explore "<query>"`,
-  or the code-review-graph MCP tools) before grep/find — it surfaces
-  callers/callees/impact that text search misses.
+  search, such as `rg`, to locate and understand code. If a `.codegraph/` index
+  is later added, prefer CodeGraph-style semantic exploration before text search
+  when caller/callee/impact context matters.
 
 ### This repo's role in the ecosystem
 
@@ -102,9 +100,9 @@ working on this repo. Keep this block; re-runs replace it in place.
 ### Research grounding (attach paper PDFs)
 
 - Substantive feature/process PRs should find the relevant academic papers and
-  **commit their PDFs into the PR** (e.g. a `docs/papers/` or `references/` dir)
-  with full citations, respecting copyright: attach only when redistribution is
-  permissible; otherwise cite + link + a short summary.
+  **include PDFs with the PR** (e.g. in a `docs/papers/` or `references/` dir)
+  with full citations, respecting copyright: include files only when
+  redistribution is permissible; otherwise cite + link + a short summary.
 - For this repo, that means the IRT / psychometrics literature underpinning
   item-fit statistics and optimal-model search (e.g. item-fit indices, model
   selection, and the aFIPC/FIPC methods kaefa feeds into fast-mlsirm).
