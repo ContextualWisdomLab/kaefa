@@ -2,6 +2,14 @@
 
 context("AEFA Utility Functions")
 
+exported <- function(name) getExportedValue("kaefa", name)
+aefaInit <- exported("aefaInit")
+evaluateItemFit <- exported("evaluateItemFit")
+aefaResults <- exported("aefaResults")
+recursiveFormula <- exported("recursiveFormula")
+aefa <- exported("aefa")
+engineAEFA <- exported("engineAEFA")
+
 # ============================================================
 # Test 1: aefaInit Function
 # ============================================================

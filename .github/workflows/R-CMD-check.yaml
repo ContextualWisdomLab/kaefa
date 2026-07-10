@@ -49,7 +49,7 @@ jobs:
 
       - name: Run Zh formula regression tests
         run: |
-          R CMD INSTALL .
+          Rscript -e 'install.packages(".", repos = NULL, type = "source")'
           Rscript -e 'library(kaefa); testthat::test_file("tests/testthat/test-zh-misfit-decision-rule.R")'
 
       - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
