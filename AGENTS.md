@@ -13,7 +13,8 @@ Use this file as the local operating guide when modifying `kaefa`.
 - Shared helpers: `R/utils.R`
 - Shiny app: `inst/shiny-app/app.R`
 - Tests: `tests/testthat/`
-- CI and security gates: `.github/workflows/`
+- Local CI workflow definitions: `.github/workflows/`
+- Org-level required gates: central workflows in `ContextualWisdomLab/.github`
 
 ## Working Rules
 
@@ -47,18 +48,22 @@ working on this repo. Keep this block; re-runs replace it in place.
 
 ### Security & review gate
 
-- Every PR runs a central **Security Scan** required gate: `osv-scan` +
-  `dependency-review` (diff-scoped) and `trivy-fs` (repo-wide, CRITICAL/HIGH,
-  fixable only). It runs against every PR base, **including stacked PRs**.
+- Every PR runs an org-level central **Security Scan** required gate:
+  `osv-scan` + `dependency-review` (diff-scoped) and `trivy-fs` (repo-wide,
+  CRITICAL/HIGH, fixable only). These checks are enforced by
+  `ContextualWisdomLab/.github` required workflows, not only by this repo's
+  local `.github/workflows/`. They run against every PR base, **including
+  stacked PRs**.
 - A failing `trivy-fs` is a **REAL finding, not a flake.** Read the job log
   (it prints each finding's rule id / severity / file) or the run's SARIF
   results, then **remediate** — do not weaken or disable the gate.
-- This is an **R package** (deps in `DESCRIPTION` under `Imports:`); there is no
-  Dockerfile or k8s manifest. So findings will typically be a vulnerable
-  dependency (bump the version / constraint in `DESCRIPTION`) or a leaked secret
-  or misconfig in a checked-in file. For a genuine false positive, add a narrow,
-  documented entry to `.trivyignore` or `.trivyignore.yaml` at the repo root —
-  never a blanket ignore.
+- This is an **R package** (deps in `DESCRIPTION` under `Imports:`) with a root
+  `Dockerfile` for containerized use; there is no known k8s manifest. Findings
+  will typically be a vulnerable R dependency (bump the version / constraint in
+  `DESCRIPTION`), a vulnerable Docker base image or OS package, a leaked secret,
+  or a misconfig in a checked-in file. For a genuine false positive, add a
+  narrow, documented entry to `.trivyignore` or `.trivyignore.yaml` at the repo
+  root — never a blanket ignore.
 - Reproduce locally from the PR merge ref, not just the PR head:
   `git fetch origin pull/<PR_NUMBER>/merge && git checkout --detach FETCH_HEAD`,
   then `trivy fs --download-db-only .` and `trivy fs .` (a stale DB misses
