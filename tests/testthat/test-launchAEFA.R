@@ -100,10 +100,12 @@ test_that("launchAEFA validates app.R syntax", {
 })
 
 test_that("launchAEFA function has proper documentation", {
-  # Check that function has help documentation
-  help_file <- utils::help("launchAEFA", package = "kaefa")
-  expect_true(length(help_file) > 0)
-  expect_true(all(file.exists(help_file)))
+  rd_file <- .kaefa_repo_file("man", "launchAEFA.Rd")
+  expect_true(file.exists(rd_file))
+
+  rd_text <- readLines(rd_file, warn = FALSE)
+  expect_true(any(grepl("\\\\alias\\{launchAEFA\\}", rd_text)))
+  expect_true(any(grepl("\\\\usage\\{", rd_text)))
 })
 
 test_that("launchAEFA produces appropriate message", {

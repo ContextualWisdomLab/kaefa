@@ -271,7 +271,12 @@ test_that("Default parameter values are unchanged", {
   defaults <- formals(aefaInit)
   
   # debug should default to FALSE
-  expect_equal(as.logical(defaults$debug), FALSE)
+  expect_true(
+    isFALSE(defaults$debug) ||
+      identical(defaults$debug, quote(FALSE)) ||
+      identical(defaults$debug, quote(F)),
+    info = "debug should default to FALSE"
+  )
   
   # loadPercentage should default to 50
   expect_equal(as.numeric(defaults$loadPercentage), 50)

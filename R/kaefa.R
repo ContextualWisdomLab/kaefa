@@ -265,6 +265,36 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
     }
 }
 
+# Canonical Zh item-misfit decision rule (single source of truth).
+#
+# An item is flagged as misfitting when the standardised log-likelihood person/item
+# fit statistic Zh satisfies
+#
+#     Zh + qnorm(0.975) / sqrt(n)  <  qnorm(fitIndicesCutOff / 2)
+#
+# i.e. a one-sided lower-tail test at level fitIndicesCutOff/2 with a 1.96/sqrt(n)
+# small-sample correction. This rule is applied
+# at three decision sites inside the aefa()/efa() model search (the rotation scan, the
+# best-candidate check, and the final ZhCond gate) and MUST stay identical in all
+# three, otherwise the model search selects rotations/models under inconsistent
+# misfit thresholds. Centralising the arithmetic here removes the drift risk that
+# previously let a 2019 "debug purpose" commit drop the /sqrt(n) divisor from one
+# copy. `na.rm` is exposed because the rotation-scan site deliberately keeps NA
+# candidate counts (so a candidate whose Zh contains NA is later excluded by the
+# is.finite() filter), whereas the two boolean gates drop NAs.
+#
+# Inputs: a numeric Zh vector, sample size n, two-sided misfit cutoff, and NA
+# handling mode. Returns an integer count of items flagged as misfitting.
+.zhMisfitReferenceQuantile <- qnorm(0.975)
+
+.zhMisfitCount <- function(Zh, n, fitIndicesCutOff, na.rm = TRUE) {
+    # as.integer() makes the return type match the documented integer count and the
+    # expect_identical(..., 2L) tests; sum() over a logical vector is a double. When
+    # na.rm = FALSE and any Zh is NA, sum() yields NA_real_ and as.integer() preserves
+    # it as NA_integer_ (the rotation-scan site relies on this NA propagation).
+    as.integer(sum(Zh + .zhMisfitReferenceQuantile / sqrt(n) < qnorm(fitIndicesCutOff / 2), na.rm = na.rm))
+}
+
 #' assessment of fit indices of the calibrated model
 #'
 #' @param mirtModel insert estimated \code{mirt::mirt} or \code{mirt::mixedmirt} model.
@@ -453,6 +483,7 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
 #'
 #' @return automated exploratory factor analytic models
 #' @export
+#' @export efa
 #'
 #' @aliases efa
 #'
@@ -818,8 +849,9 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                       for(countZh_iter in estItemFitRotationSearch){
                         if(!is.null(countZh_iter)){
-                          countZh[length(countZh) + 1] <- sum((countZh_iter$Zh)+abs(qnorm(.025))/sqrt(nrow(data)) <
-                                                                qnorm(fitIndicesCutOff/2))
+                          # na.rm = FALSE: an NA count keeps this candidate out of the
+                          # is.finite() selection below (step 3), preserving prior behaviour.
+                          countZh[length(countZh) + 1] <- .zhMisfitCount(countZh_iter$Zh, nrow(data), fitIndicesCutOff, na.rm = FALSE)
                         } else {
                           countZh[length(countZh) + 1] <- NA
                         }
@@ -852,7 +884,12 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                       }
 
                       # estimate item fit measures
-                      if(sum(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh +abs(qnorm(.025)) < qnorm(fitIndicesCutOff/2)) > 0){
+                      # NOTE: restore the small-sample correction 1.96/sqrt(n) on the Zh
+                      # misfit-count rule so it matches the two sibling occurrences of the
+                      # same decision (steps 2 and the final ZhCond check). The /sqrt(nrow(data))
+                      # divisor was accidentally dropped in a 2019 "debug purpose" commit,
+                      # leaving this copy adding a full 1.96 instead of 1.96/sqrt(n).
+                      if(.zhMisfitCount(estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]$Zh, nrow(data), fitIndicesCutOff, na.rm = TRUE) > 0){
                         estItemFit <- estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]
                       } else {
                         estItemFit <- tryCatch(evaluateItemFit(estModel, RemoteClusters = RemoteClusters,
@@ -891,8 +928,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                   # checkup conditions
                   if ("Zh" %in% colnames(estItemFit)) {
-                    ZhCond <- sum(estItemFit$Zh+abs(qnorm(.025))/sqrt(nrow(data)) < qnorm(fitIndicesCutOff/2), na.rm = T) !=
-                      0  # p < .005
+                    ZhCond <- .zhMisfitCount(estItemFit$Zh, nrow(data), fitIndicesCutOff, na.rm = TRUE) != 0  # p < .005
                   } else {
                     ZhCond <- FALSE
                   }
