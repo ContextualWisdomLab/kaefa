@@ -1,0 +1,14 @@
+.git
+.github
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rcheck
+*.tar.gz
+docs
+tests
+vignettes
+examples
+revdep
+*.Rproj

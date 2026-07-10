@@ -1,0 +1,2 @@
+dataset_id,source,license,rows,items,response_type,expected_factor_min,expected_factor_max,expected_runtime_seconds,notes
+science,mirt::Science,GPL-3-or-later,392,4,mixed,1,2,120,mirt package example data; smoke benchmark for dependency and manifest validation

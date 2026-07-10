@@ -1,4 +1,62 @@
 # Shared helpers for test data generation.
+.find_kaefa_root <- function() {
+  candidates <- unique(c(
+    getwd(),
+    testthat::test_path("../.."),
+    testthat::test_path("..")
+  ))
+
+  for (candidate in candidates) {
+    if (file.exists(file.path(candidate, "DESCRIPTION"))) {
+      return(normalizePath(candidate, mustWork = TRUE))
+    }
+  }
+
+  stop("Cannot locate kaefa package root for test bootstrap.", call. = FALSE)
+}
+
+.kaefa_repo_file <- function(..., package_path = NULL) {
+  installed_package <- tryCatch(
+    base::find.package("kaefa", quiet = TRUE),
+    error = function(e) ""
+  )
+  package_installed <- any(nzchar(installed_package))
+  if (!is.null(package_path) && package_installed) {
+    if (!is.character(package_path)) {
+      stop("package_path must be a character vector.", call. = FALSE)
+    }
+    installed_root <- base::system.file(package = "kaefa")
+    installed_path <- tryCatch(
+      do.call(file.path, as.list(c(installed_root, package_path))),
+      error = function(e) ""
+    )
+
+    if (nzchar(installed_path) && file.exists(installed_path)) {
+      return(installed_path)
+    }
+  }
+
+  source_path <- file.path(.find_kaefa_root(), ...)
+  if (!file.exists(source_path)) {
+    stop("kaefa test file not found: ", source_path, call. = FALSE)
+  }
+
+  source_path
+}
+
+.ensure_kaefa_namespace <- function() {
+  if (requireNamespace("kaefa", quietly = TRUE)) {
+    return(invisible(TRUE))
+  }
+
+  if (!requireNamespace("pkgload", quietly = TRUE)) {
+    testthat::skip("kaefa is not installed and pkgload is unavailable")
+  }
+
+  pkgload::load_all(.find_kaefa_root(), export_all = FALSE, quiet = TRUE)
+  invisible(TRUE)
+}
+
 create_test_data <- function(n_items = 10, n_obs = 100) {
   set.seed(123)
   data <- data.frame(matrix(
@@ -40,6 +98,7 @@ create_binary_test_data <- function(n_items = 10, n_obs = 100) {
 
 aefa <- function(...) {
   .skip_expensive_ci_calls("aefa")
+  .ensure_kaefa_namespace()
   defaults <- list(
     NCYCLES = 120,
     BURNIN = 40,
@@ -57,6 +116,7 @@ efa <- aefa
 
 engineAEFA <- function(...) {
   .skip_expensive_ci_calls("engineAEFA")
+  .ensure_kaefa_namespace()
   defaults <- list(
     NCYCLES = 120,
     BURNIN = 40,
