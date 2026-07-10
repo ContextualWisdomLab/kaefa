@@ -483,6 +483,7 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
 #'
 #' @return automated exploratory factor analytic models
 #' @export
+#' @export efa
 #'
 #' @aliases efa
 #'
