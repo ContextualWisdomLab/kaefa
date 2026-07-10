@@ -13,7 +13,7 @@
 # i.e. a one-sided lower-tail test at level fitIndicesCutOff/2 with a
 # 1.96/sqrt(n) small-sample correction (qnorm(0.975) = |qnorm(.025)|).
 #
-# The rule is applied at three decision sites inside evaluateItemFit() (the
+# The rule is applied at three decision sites inside the aefa()/efa() model search (the
 # rotation scan, the best-candidate check, and the final ZhCond gate). To stop the
 # three copies from drifting apart -- a 2019 "debug purpose" commit once dropped
 # the /sqrt(n) divisor from one copy -- the arithmetic now lives in a single
@@ -102,13 +102,13 @@ test_that("the Zh misfit arithmetic is centralised in one helper", {
                               logical(1L))),
                    1L)
 
-  evaluate_calls <- walk_calls(body(get("evaluateItemFit", ns, inherits = FALSE)))
-  expect_identical(sum(vapply(evaluate_calls,
+  search_calls <- walk_calls(body(get("aefa", ns, inherits = FALSE)))
+  expect_identical(sum(vapply(search_calls,
                               function(x) identical(call_name(x), ".zhMisfitCount"),
                               logical(1L))),
                    3L)
 
-  inline_rule <- vapply(evaluate_calls, function(x) {
+  inline_rule <- vapply(search_calls, function(x) {
     contains_call(x, "qnorm") && contains_symbol(x, "Zh")
   }, logical(1L))
   expect_identical(sum(inline_rule), 0L)

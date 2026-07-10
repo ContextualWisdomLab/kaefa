@@ -274,7 +274,7 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
 #
 # i.e. a one-sided lower-tail test at level fitIndicesCutOff/2 with a 1.96/sqrt(n)
 # small-sample correction. This rule is applied
-# at three decision sites inside evaluateItemFit() (the rotation scan, the
+# at three decision sites inside the aefa()/efa() model search (the rotation scan, the
 # best-candidate check, and the final ZhCond gate) and MUST stay identical in all
 # three, otherwise the model search selects rotations/models under inconsistent
 # misfit thresholds. Centralising the arithmetic here removes the drift risk that
