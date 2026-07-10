@@ -57,13 +57,14 @@ working on this repo. Keep this block; re-runs replace it in place.
 - A failing `trivy-fs` is a **REAL finding, not a flake.** Read the job log
   (it prints each finding's rule id / severity / file) or the run's SARIF
   results, then **remediate** — do not weaken or disable the gate.
-- This is an **R package** (deps in `DESCRIPTION` under `Imports:`) with a root
-  `Dockerfile` for containerized use; there is no known k8s manifest. Findings
-  will typically be a vulnerable R dependency (bump the version / constraint in
-  `DESCRIPTION`), a vulnerable Docker base image or OS package, a leaked secret,
-  or a misconfig in a checked-in file. For a genuine false positive, add a
-  narrow, documented entry to `.trivyignore` or `.trivyignore.yaml` at the repo
-  root — never a blanket ignore.
+- This is an **R package** (deps in `DESCRIPTION` fields such as `Depends:`,
+  `Imports:`, and `Suggests:`) with a root `Dockerfile` for containerized use;
+  there is no known k8s manifest. Findings will typically be a vulnerable R
+  dependency (bump the version / constraint in `DESCRIPTION`), a vulnerable
+  Docker base image or OS package, a leaked secret, or a misconfig in a
+  checked-in file. For a genuine false positive, add a narrow, documented entry
+  to `.trivyignore` or `.trivyignore.yaml` at the repo root — never a blanket
+  ignore.
 - Reproduce locally from the PR merge ref, not just the PR head:
   `git fetch origin pull/<PR_NUMBER>/merge && git checkout --detach FETCH_HEAD`,
   then `trivy fs --download-db-only .` and `trivy fs .` (a stale DB misses
