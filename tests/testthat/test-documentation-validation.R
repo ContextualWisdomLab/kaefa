@@ -2,6 +2,11 @@
 
 context("Documentation Validation Tests")
 
+exported <- function(name) getExportedValue("kaefa", name)
+documented_aefa <- exported("aefa")
+documented_efa <- exported("efa")
+documented_engineAEFA <- exported("engineAEFA")
+
 # ============================================================
 # Test 1: Algorithm Description Validation
 # ============================================================
@@ -10,14 +15,11 @@ test_that("Package implements greedy search as documented", {
   # README states: "The automated exploratory factor analysis (aefa) framework 
   # implements a greedy search algorithm"
   
-  # Verify main function exists
-  expect_true(exists("aefa"))
-  
   # Verify the function is capable of exploratory analysis
-  expect_true(is.function(aefa))
+  expect_true(is.function(documented_aefa))
   
   # Check function has parameters for factor extraction range
-  aefa_params <- names(formals(aefa))
+  aefa_params <- names(formals(documented_aefa))
   expect_true("minExtraction" %in% aefa_params)
   expect_true("maxExtraction" %in% aefa_params)
 })
@@ -26,23 +28,20 @@ test_that("Algorithm iteratively evaluates model candidates", {
   # README: "Evaluates multiple model candidates with different factor structures"
   
   # The function should accept factor extraction parameters
-  expect_true("minExtraction" %in% names(formals(aefa)))
-  expect_true("maxExtraction" %in% names(formals(aefa)))
+  expect_true("minExtraction" %in% names(formals(documented_aefa)))
+  expect_true("maxExtraction" %in% names(formals(documented_aefa)))
   
   # engineAEFA should evaluate different item response models
-  expect_true(exists("engineAEFA"))
-  expect_true("model" %in% names(formals(engineAEFA)))
+  expect_true(is.function(documented_engineAEFA))
+  expect_true("model" %in% names(formals(documented_engineAEFA)))
 })
 
 test_that("Algorithm selects based on information criteria", {
   # README: "Selects the best model based on information criteria 
   # (DIC, AIC, BIC, etc.)"
   
-  # The aefa function documentation should mention this
-  aefa_help <- try(capture.output(help("aefa")), silent = TRUE)
-  
   # Function exists and is documented
-  expect_true(exists("aefa"))
+  expect_true(is.function(documented_aefa))
 })
 
 test_that("Algorithm implements iterative refinement", {
@@ -50,7 +49,7 @@ test_that("Algorithm implements iterative refinement", {
   # optimal solution"
   
   # Function should have convergence-related parameters
-  engine_params <- names(formals(engineAEFA))
+  engine_params <- names(formals(documented_engineAEFA))
   expect_true("NCYCLES" %in% engine_params)
   expect_true("BURNIN" %in% engine_params)
   expect_true("SEMCYCLES" %in% engine_params)
@@ -164,7 +163,7 @@ test_that("Exported functions match documentation", {
 
 test_that("Function aliases work correctly", {
   # efa should be an alias for aefa
-  expect_identical(efa, aefa)
+  expect_identical(documented_efa, documented_aefa)
 })
 
 # ============================================================
@@ -173,7 +172,7 @@ test_that("Function aliases work correctly", {
 
 test_that("Main functions have all documented parameters", {
   # Check aefa parameters
-  aefa_params <- names(formals(aefa))
+  aefa_params <- names(formals(documented_aefa))
   required_params <- c("data", "model", "minExtraction", "maxExtraction")
   
   for (param in required_params) {
@@ -184,7 +183,7 @@ test_that("Main functions have all documented parameters", {
 
 test_that("engineAEFA has all documented parameters", {
   # Check engineAEFA parameters
-  engine_params <- names(formals(engineAEFA))
+  engine_params <- names(formals(documented_engineAEFA))
   required_params <- c("data", "model", "GenRandomPars", "NCYCLES", 
                        "BURNIN", "SEMCYCLES")
   
