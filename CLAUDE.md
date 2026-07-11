@@ -27,6 +27,15 @@ remotes::install_deps(dependencies = c("Depends", "Imports", "LinkingTo"),
                       repos = Sys.getenv("R_REPOS"), upgrade = "never")
 RSCRIPT
 
+# Add Suggests plus the dev tooling the commands below rely on (the Dockerfile
+# itself stops at Depends/Imports/LinkingTo)
+Rscript - <<'RSCRIPT'
+remotes::install_deps(dependencies = TRUE,
+                      repos = Sys.getenv("R_REPOS"), upgrade = "never")
+install.packages(c("testthat", "rcmdcheck", "devtools", "rmarkdown"),
+                 repos = Sys.getenv("R_REPOS"))
+RSCRIPT
+
 # Install the package (required before running testthat files directly)
 R CMD INSTALL .
 
