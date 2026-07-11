@@ -18,8 +18,14 @@ The default branch is `develop`.
 All commands assume the repo root as the working directory.
 
 ```sh
-# Install dependencies (mirrors the Dockerfile)
-Rscript -e 'remotes::install_deps(dependencies = c("Depends", "Imports", "LinkingTo"))'
+# Install dependencies (mirrors the Dockerfile: install remotes first, then
+# resolve from the pinned Posit snapshot in R_REPOS without upgrading)
+export R_REPOS=https://packagemanager.posit.co/cran/2026-07-02
+Rscript - <<'RSCRIPT'
+install.packages("remotes", repos = Sys.getenv("R_REPOS"))
+remotes::install_deps(dependencies = c("Depends", "Imports", "LinkingTo"),
+                      repos = Sys.getenv("R_REPOS"), upgrade = "never")
+RSCRIPT
 
 # Install the package (required before running testthat files directly)
 R CMD INSTALL .
@@ -28,7 +34,9 @@ R CMD INSTALL .
 Rscript -e 'library(testthat); library(kaefa); test_check("kaefa")'
 # or: devtools::test()
 
-# Single test file (this is how CI runs targeted tests)
+# Single test file (CI's targeted Zh regression step installs the package
+# first, then runs exactly this test_file call)
+Rscript -e 'install.packages(".", repos = NULL, type = "source")'
 Rscript -e 'library(kaefa); testthat::test_file("tests/testthat/test-zh-misfit-decision-rule.R")'
 
 # Fast productization gate (what the test-fast workflow runs)
