@@ -52,7 +52,7 @@ RSCRIPT
 
 # R CMD check as CI runs it (note: tests are skipped here)
 Rscript -e 'rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-tests"),
-  build_args = "--no-manual", error_on = "error")'
+  build_args = c("--no-manual"), error_on = "error")'
 
 # Regenerate roxygen2 docs after editing roxygen comments in R/
 Rscript -e 'devtools::document()'
