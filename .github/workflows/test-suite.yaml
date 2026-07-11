@@ -22,6 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
 
+    env:
+      # Explicitly run skip_on_cran()-guarded tests; don't rely on the
+      # setup-r action's implicit NOT_CRAN default.
+      NOT_CRAN: true
+
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
