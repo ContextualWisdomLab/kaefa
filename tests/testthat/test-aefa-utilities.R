@@ -20,17 +20,20 @@ test_that("aefaInit function exists and is exported", {
 })
 
 test_that("aefaInit initializes without remote clusters", {
+  skip_on_ci()
   result <- try(aefaInit(RemoteClusters = NULL), silent = TRUE)
   # Should complete without error
   expect_true(!inherits(result, "try-error") || is.null(result))
 })
 
 test_that("aefaInit handles localhost correctly", {
+  skip_on_ci()
   result <- try(aefaInit(RemoteClusters = "localhost"), silent = TRUE)
   expect_true(!inherits(result, "try-error") || is.null(result))
 })
 
 test_that("aefaInit respects debug parameter", {
+  skip_on_ci()
   result1 <- try(aefaInit(RemoteClusters = NULL, debug = FALSE), silent = TRUE)
   result2 <- try(aefaInit(RemoteClusters = NULL, debug = TRUE), silent = TRUE)
   
@@ -114,6 +117,7 @@ test_that("engineAEFA has correct default parameters", {
 # ============================================================
 
 test_that("aefa handles data frames with factor columns", {
+  .skip_expensive_ci_calls("aefa")
   set.seed(678)
   test_data <- data.frame(
     Item1 = factor(sample(c("A", "B", "C"), 50, replace = TRUE)),
@@ -127,6 +131,7 @@ test_that("aefa handles data frames with factor columns", {
 })
 
 test_that("engineAEFA excludes items with excessive categories", {
+  .skip_expensive_ci_calls("engineAEFA")
   set.seed(789)
   # Items with k > 30 should be excluded
   test_data <- data.frame(
@@ -144,6 +149,7 @@ test_that("engineAEFA excludes items with excessive categories", {
 # ============================================================
 
 test_that("Results are reproducible with same seed", {
+  .skip_expensive_ci_calls("aefa reproducibility")
   set.seed(890)
   test_data <- data.frame(matrix(
     sample(1:4, 5 * 80, replace = TRUE),

@@ -131,20 +131,16 @@ test_that("test coverage is comprehensive", {
 })
 
 test_that("documentation changes are thoroughly tested", {
-  man_dir <- system.file("man", package = "kaefa")
-  
   # Files that had spelling corrections in this commit
   changed_files <- c("aefa.Rd", "aefaInit.Rd", "engineAEFA.Rd", 
                     "evaluateItemFit.Rd", "kaefa.Rd", "recursiveFormula.Rd")
   
   files_validated <- 0
   
-  if (dir.exists(man_dir)) {
-    for (file_name in changed_files) {
-      file_path <- file.path(man_dir, file_name)
-      if (file.exists(file_path)) {
-        files_validated <- files_validated + 1
-      }
+  for (file_name in changed_files) {
+    file_path <- .kaefa_repo_file("man", file_name)
+    if (file.exists(file_path)) {
+      files_validated <- files_validated + 1
     }
   }
   
