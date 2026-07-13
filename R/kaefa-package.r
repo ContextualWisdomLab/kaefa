@@ -22,10 +22,12 @@
 #'
 #' The kaefa may inspect this issues from the MMMM or MM
 #' in statistical learning theory perspectives using model
-#' selection criteria like the DIC (Kang, 2008; Kang, Cohen, & Sung, 2009;
-#' Jiao, Kamata, Wang, & Jin, 2012; Jiao & Zhang, 2015) with maximising
-#' generalisability of the number of factor decisions in every calibration
-#' (Kang, 2008; Preacher, Zhang, Kim, & Mels, 2013).
+#' likelihood-based model-selection criteria such as AIC, AICc, BIC, and
+#' sample-size-adjusted BIC. Posterior DIC (Spiegelhalter et al., 2002) is
+#' accepted only when the fitted model actually supplies it; DIC is not
+#' reconstructed from AIC. These criteria support generalisable factor-count
+#' decisions in each calibration (Kang, 2008; Preacher, Zhang, Kim, & Mels,
+#' 2013).
 #'
 #' If researcher provide of demographical information in kaefa,
 #' kaefa will inspect the optimal number of factor and optimal IRT model,

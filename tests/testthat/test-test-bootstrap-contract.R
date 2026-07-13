@@ -31,3 +31,17 @@ test_that("test file lookup uses explicit base package helpers", {
     perl = TRUE
   ))
 })
+
+test_that("test defaults preserve positional data and override named options", {
+  data_arg <- data.frame(item = 1:3)
+
+  merged <- .merge_test_defaults(
+    list(NCYCLES = 120, BURNIN = 40),
+    list(data_arg, BURNIN = 10)
+  )
+
+  expect_identical(merged[[1]], data_arg)
+  expect_identical(names(merged)[[1]], "")
+  expect_identical(merged$NCYCLES, 120)
+  expect_identical(merged$BURNIN, 10)
+})

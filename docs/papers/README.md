@@ -86,10 +86,43 @@ cited with its DOI. Open-access / preprint links are noted where available.
 
   Both have expectation 1 under good fit.
 
+## 5. Corrected Akaike information criterion (`AICc`)
+
+- **Source:** Hurvich, C. M., & Tsai, C.-L. (1989). Regression and time series
+  model selection in small samples. *Biometrika, 76*(2), 297-307.
+  DOI: [10.1093/biomet/76.2.297](https://doi.org/10.1093/biomet/76.2.297)
+- **Canonical equation.** For maximized log-likelihood `logLik`, parameter count
+  `k`, and sample size `n`:
+
+      AIC  = -2 * logLik + 2 * k
+      AICc = AIC + 2 * k * (k + 1) / (n - k - 1)
+
+  Current `mirt` fits supply `AIC` and `logLik` but do not consistently expose
+  `AICc`. Kaefa therefore recovers `k = (AIC + 2 * logLik) / 2` and applies the
+  correction exactly. The statistic is undefined when `n <= k + 1`; kaefa
+  reports that reason rather than returning a fabricated finite score.
+
+## 6. Deviance information criterion (`DIC`) boundary
+
+- **Source:** Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & van der Linde,
+  A. (2002). Bayesian measures of model complexity and fit. *Journal of the
+  Royal Statistical Society: Series B, 64*(4), 583-639.
+  DOI: [10.1111/1467-9868.00353](https://doi.org/10.1111/1467-9868.00353)
+- **Canonical equation.** With posterior mean deviance `Dbar`, deviance at the
+  posterior mean parameters `D(theta_bar)`, and effective parameter count `pD`:
+
+      pD  = Dbar - D(theta_bar)
+      DIC = Dbar + pD
+
+  DIC is a posterior-deviance criterion. The maximum-likelihood/MAP models
+  produced by current `mirt` versions do not expose the posterior quantities
+  needed to reconstruct it. Kaefa accepts DIC only when the fitted model
+  supplies a finite DIC value and never relabels AIC as DIC.
+
 ## Audit note
 
 kaefa does **not** re-implement `P(theta)`, the MML-EM E-/M-step, `S-X2`, `infit`,
-or `outfit`; those are delegated verbatim to `mirt` and are therefore correct by
-construction (subject to `mirt`'s own validation). The only package-local numeric
-formulas are the fit-based **decision rules** documented above; the `Zh` rule is
-the one that had drifted out of internal consistency and has been restored.
+or `outfit`; those are delegated verbatim to `mirt` and remain subject to
+`mirt`'s validation. Package-local formulas and decision rules are pinned above:
+the `Zh` cutoff, the exact Hurvich-Tsai AICc correction, and the explicit
+posterior-information boundary that prevents DIC from being fabricated.

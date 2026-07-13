@@ -1,5 +1,24 @@
 # kaefa.R
 
+#' Choose a bounded local worker count for AEFA
+#'
+#' @param cpu_idle Optional scalar percentage of idle CPU capacity.
+#' @param physical_cores Detected physical core count.
+#' @return A positive integer worker count.
+#' @keywords internal
+#' @noRd
+.aefaParallelProcessorCount <- function(cpu_idle, physical_cores) {
+  if (length(physical_cores) != 1L || !is.numeric(physical_cores) ||
+      !is.finite(physical_cores) || physical_cores < 1) {
+    return(1L)
+  }
+  if (length(cpu_idle) == 1L && is.numeric(cpu_idle) &&
+      is.finite(cpu_idle) && cpu_idle < 10) {
+    return(1L)
+  }
+  as.integer(max(1, round(physical_cores / 3)))
+}
+
 #' Initalize aefa engine,
 #' This function initalise the aefa cluster.
 #' If someone have Remote Cluster informaiton with SSH, put the information in the argument.
@@ -214,52 +233,38 @@ aefaInit <- function(RemoteClusters = getOption("kaefaServers"), debug = F, sshK
         # connList <- connList[sample(x = 1:length(connList), size = length(connList))]
         return(connList)
     }
-
-
-
-    if (is.null(suppressWarnings(NCmisc::top()$CPU$idle))) {
-        parallelProcessors <- round(parallel::detectCores(all.tests = FALSE, logical = FALSE)/3)
-        if (1 >= parallelProcessors) {
-            parallelProcessors <- 1
+    cpuIdle <- tryCatch(
+      suppressWarnings(NCmisc::top()$CPU$idle),
+      error = function(e) {
+        if (isTRUE(debug)) {
+          message("CPU idle sampling unavailable; using detected core count: ",
+                  conditionMessage(e))
         }
-    } else if (suppressWarnings(NCmisc::top()$CPU$idle) > 50) {
-        parallelProcessors <- round(parallel::detectCores(all.tests = FALSE, logical = FALSE)/3)
-        if (1 >= parallelProcessors) {
-            parallelProcessors <- 1
-        }
-    } else if (suppressWarnings(NCmisc::top()$CPU$idle) <= 50) {
-        parallelProcessors <- round(parallel::detectCores(all.tests = FALSE, logical = FALSE)/3)
-        if (1 >= parallelProcessors) {
-            parallelProcessors <- 1
-        }
-    } else if (suppressWarnings(NCmisc::top()$CPU$idle) < 30) {
-        parallelProcessors <- round(parallel::detectCores(all.tests = FALSE, logical = FALSE)/3)
-        if (1 >= parallelProcessors) {
-            parallelProcessors <- 1
-        }
-    } else if (suppressWarnings(NCmisc::top()$CPU$idle) < 10) {
-        parallelProcessors <- 1
-    }
+        NULL
+      }
+    )
+    physicalCores <- parallel::detectCores(all.tests = FALSE, logical = FALSE)
+    parallelProcessors <- .aefaParallelProcessorCount(cpuIdle, physicalCores)
 
     # setting up cluster
     if (!is.null(RemoteClusters)) {
       halfCores <- function() { max(1, round(0.3 * future::availableCores()))}
       try(future::plan(list(
         future::tweak(future::cluster, workers = assignClusterNodes(RemoteClusters), gc = T, homogeneous = FALSE, earlySignal = T),
-        future::tweak(future::multiprocess, workers = halfCores, gc = T, earlySignal = T)
+        future::tweak(future::multisession, workers = halfCores, gc = T, earlySignal = T)
       )))
         # try(future::plan(future::tweak("future::cluster",
         #                                     workers = tryCatch(assignClusterNodes(RemoteClusters), error = function(e){assignClusterNodes(RemoteClusters)}), gc = T
         #                  )))
     } else if (NROW(future::plan("list")) == 1) {
         if (length(grep("openblas|microsoft", extSoftVersion()["BLAS"])) > 0) {
-            options(aefaConn = future::plan("future::multiprocess", workers = parallelProcessors),
+            options(aefaConn = future::plan(future::multisession, workers = parallelProcessors),
                 gc = T)
         } else if (parallel::detectCores(logical = F) == 1) {
             options(aefaConn = future::plan(future::sequential), gc = T)
         } else {
             options(aefaConn = (tryCatch(future::plan(strategy = list(future::tweak(future::cluster(workers = parallelProcessors)),
-                future::multiprocess(workers = parallelProcessors)), gc = T), error = function(e) {
+                future::tweak(future::multisession, workers = parallelProcessors)), gc = T), error = function(e) {
             })))
         }
     }
@@ -432,6 +437,142 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
     }
 }
 
+#' Extract a scientifically valid information criterion from a mirt fit
+#'
+#' DIC is a posterior-deviance criterion (Spiegelhalter et al., 2002) and
+#' therefore cannot be reconstructed from a maximum-likelihood AIC value.
+#' AICc is reconstructed only from its original small-sample correction
+#' (Hurvich and Tsai, 1989): AIC + 2 k (k + 1) / (n - k - 1).
+#'
+#' @param fit The model's named fit-statistic list.
+#' @param criterion Requested information criterion.
+#' @param sample_size Number of response patterns used to fit the model.
+#' @return One finite information-criterion value.
+#' @keywords internal
+#' @noRd
+.aefaFitCriterionValue <- function(fit, criterion, sample_size) {
+  criterion <- toupper(criterion)
+  fit_value <- function(name) {
+    value <- fit[[name]]
+    if (length(value) == 1L && is.numeric(value) && is.finite(value)) {
+      return(as.numeric(value))
+    }
+    NULL
+  }
+
+  if (criterion == "DIC") {
+    value <- fit_value("DIC")
+    if (is.null(value)) {
+      stop(
+        paste0(
+          "DIC is unavailable: DIC requires posterior deviance draws and an ",
+          "effective parameter count, but this mirt ML/MAP fit does not supply ",
+          "a DIC value. Use AIC, AICc, BIC, or saBIC; DIC is never replaced by AIC."
+        ),
+        call. = FALSE
+      )
+    }
+    return(value)
+  }
+
+  if (criterion == "CAIC") {
+    stop(
+      "CAIC is ambiguous and is not an alias for corrected AIC; use 'AICc' explicitly.",
+      call. = FALSE
+    )
+  }
+
+  if (criterion == "AICC") {
+    value <- fit_value("AICc")
+    if (!is.null(value)) {
+      return(value)
+    }
+
+    aic <- fit_value("AIC")
+    log_likelihood <- fit_value("logLik")
+    if (is.null(aic) || is.null(log_likelihood)) {
+      stop(
+        "AICc is unavailable because the fit supplies neither AICc nor both AIC and logLik.",
+        call. = FALSE
+      )
+    }
+    if (length(sample_size) != 1L || !is.numeric(sample_size) ||
+        !is.finite(sample_size) || sample_size <= 0) {
+      stop("AICc requires one finite positive sample size.", call. = FALSE)
+    }
+
+    parameter_count <- (aic + 2 * log_likelihood) / 2
+    if (!is.finite(parameter_count) || parameter_count < 0) {
+      stop("AICc could not recover a valid parameter count from AIC and logLik.", call. = FALSE)
+    }
+    if (sample_size <= parameter_count + 1) {
+      stop(
+        paste0(
+          "AICc is undefined because n (", sample_size,
+          ") must be greater than k + 1 (", parameter_count + 1, ")."
+        ),
+        call. = FALSE
+      )
+    }
+
+    return(aic + (2 * parameter_count * (parameter_count + 1)) /
+      (sample_size - parameter_count - 1))
+  }
+
+  fit_name <- switch(
+    criterion,
+    AIC = "AIC",
+    BIC = "BIC",
+    SABIC = "SABIC",
+    NULL
+  )
+  if (is.null(fit_name)) {
+    stop(
+      "Unsupported model selection criterion. Use AIC, AICc, BIC, saBIC, or model-supplied DIC.",
+      call. = FALSE
+    )
+  }
+
+  value <- fit_value(fit_name)
+  if (is.null(value)) {
+    stop(
+      paste0(criterion, " is unavailable because the fitted model does not supply a finite value."),
+      call. = FALSE
+    )
+  }
+  value
+}
+
+#' Select the original candidate index with the lowest finite score
+#'
+#' @param scores Numeric vector aligned one-to-one with model candidates.
+#' @return The original candidate index, or \code{NA_integer_} when none is valid.
+#' @keywords internal
+#' @noRd
+.aefaBestScoreIndex <- function(scores) {
+  finite_indices <- which(is.finite(scores))
+  if (length(finite_indices) == 0L) {
+    return(NA_integer_)
+  }
+  finite_indices[[which.min(scores[finite_indices])]]
+}
+
+#' Return proposed item exclusions that can make calibration progress
+#'
+#' @param excluded Item names already excluded from calibration.
+#' @param proposed Item names proposed by the current fit diagnostic.
+#' @param available Item names present in the fitted model.
+#' @return Unique, available item names not previously excluded.
+#' @keywords internal
+#' @noRd
+.aefaValidNewItemExclusions <- function(excluded, proposed, available) {
+  excluded <- unique(as.character(excluded))
+  proposed <- unique(as.character(proposed))
+  available <- unique(as.character(available))
+  proposed <- proposed[!is.na(proposed) & nzchar(proposed)]
+  setdiff(intersect(proposed, available), excluded)
+}
+
 #' doing automated exploratory factor analysis (aefa) for research capability to identify unexplained factor structure with complexly cross-classified multilevel structured data in R environment
 #'
 #' This function implements a greedy search algorithm to efficiently explore the model space and find improved model configurations.
@@ -463,8 +604,14 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
 #'
 #' @param resampling Do you want to do resampling with replace? default is TRUE and activate nrow is over samples argument.
 #' @param samples Specify the number samples with resampling. default is 5000.
-#' @param printDebugMsg Do you want to see the debugging messeages? default is FALSE
-#' @param modelSelectionCriteria Which critera want to use model selection work? 'DIC' (default), 'AIC', 'AICc', 'BIC', 'saBIC' available. AIC and DIC will be identical when no prior parameter distributions are included.
+#' @param printDebugMsg Show additional debugging messages. Default is FALSE.
+#'   Nonfatal fallback reasons and terminal errors remain visible regardless.
+#' @param modelSelectionCriteria Information criterion used for model selection.
+#'   \code{"AIC"} is the default for the maximum-likelihood/MAP models fitted by
+#'   current versions of \pkg{mirt}. \code{"AICc"}, \code{"BIC"}, and
+#'   \code{"saBIC"} are also available. \code{"DIC"} is accepted only when the
+#'   fitted model actually supplies a posterior-based DIC value; it is never
+#'   substituted with AIC.
 #' @param saveRawEstModels Do you want to save raw estimated models before model selection work? default is FALSE
 #' @param fitEMatUIRT Do you want to fit the model with EM at UIRT? default is FALSE
 #' @param ranefautocomb Do you want to find global-optimal random effect combination? default is TRUE
@@ -514,7 +661,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
     filename = "aefa.RDS", printItemFit = T, rotate = c("bifactorQ","geominQ", "geominT", "bentlerQ", "bentlerT",
                                                         "oblimin", "simplimax", "tandemII",
                                                         "tandemI", "entropy", "quartimax"), resampling = T, samples = 5000,
-    printDebugMsg = F, modelSelectionCriteria = "DIC", saveRawEstModels = F, fitEMatUIRT = F,
+    printDebugMsg = F, modelSelectionCriteria = "AIC", saveRawEstModels = F, fitEMatUIRT = F,
     ranefautocomb = T, PV_Q1 = T, tryLCA = F, forcingQMC = F, turnOffMixedEst = F,
     fitIndicesCutOff = 0.005, anchor = colnames(data), skipggum = F, powertest = F, idling = 0, leniency = F) {
 
@@ -623,13 +770,19 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                 tryCatch(rm(estModel), error = function(e) {NULL})
             }
             modelDONE <- FALSE
+            modelAttempt <- 0L
+            lastModelError <- "engineAEFA returned no model"
             while (!modelDONE) {
+              modelAttempt <- modelAttempt + 1L
               if(workDirectory != getwd()){
                 setwd('/tmp')
                 setwd(workDirectory)
               }
               tryCatch(aefaInit(RemoteClusters = RemoteClusters, debug = printDebugMsg,
-                  sshKeyPath = sshKeyPath), error = function(e) {NULL})
+                  sshKeyPath = sshKeyPath), error = function(e) {
+                    message("AEFA cluster initialization was unavailable; continuing locally: ",
+                            conditionMessage(e))
+                  })
                 # general condition
                 estModel <- tryCatch(engineAEFA(data = data.frame(data[, !colnames(data) %in%
                   badItemNames]), model = model, GenRandomPars = GenRandomPars, NCYCLES = NCYCLES,
@@ -639,9 +792,24 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                   fitEMatUIRT = fitEMatUIRT, ranefautocomb = ranefautocomb, tryLCA = tryLCA,
                   forcingQMC = forcingQMC, turnOffMixedEst = turnOffMixedEst, anchor = anchor[!anchor %in% DIFitems],
                   skipggumInternal = skipggum, powertest = powertest, idling = idling, leniency = leniency), error = function(e) {
+                    lastModelError <<- conditionMessage(e)
+                    NULL
                 })
-                if (exists("estModel")) {
+                if (!is.null(estModel)) {
                   modelDONE <- TRUE
+                } else if (modelAttempt >= 3L) {
+                  stop(
+                    paste0(
+                      "AEFA model estimation failed after ", modelAttempt,
+                      " attempts. Last error: ", lastModelError
+                    ),
+                    call. = FALSE
+                  )
+                } else {
+                  message(
+                    "AEFA model estimation attempt ", modelAttempt,
+                    " failed; retrying. Reason: ", lastModelError
+                  )
                 }
             }
 
@@ -714,47 +882,36 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                 if (class(estModel) == "list") {
                   # model fit evaluation
-                  modModelFit <- vector()
+                  # Keep scores aligned with their original candidates. A skipped
+                  # Heywood solution must not shift the selected model index.
+                  modModelFit <- rep(Inf, NROW(estModel))
                   for (i in 1:NROW(estModel)) {
                     if (sum(c("MixedClass", "SingleGroupClass", "DiscreteClass", "MultipleGroupClass") %in%
                       class(estModel[[i]])) > 0) {
 
                       # heywood case filter
                       if(class(estModel[[i]]) %in% "MixedClass"){
-                        if(sum(invisible(.exportParmsEME(estModel[[i]], quiet = T))@Fit$h2 > 1) > 0){
+                        if(any(invisible(.exportParmsEME(estModel[[i]], quiet = T))@Fit$h2 > 1,
+                               na.rm = TRUE)){
                           next()
                         }
                       } else if(class(estModel[[i]]) %in% "SingleGroupClass"){
-                        if(sum(estModel[[i]]@Fit$h2 > 1) > 0){
+                        if(any(estModel[[i]]@Fit$h2 > 1, na.rm = TRUE)){
                           next()
                         }
                       }
-                      if (toupper(modelSelectionCriteria) %in% c("DIC")) {
-                        modModelFit[[length(modModelFit) + 1]] <- estModel[[i]]@Fit$DIC
-                      } else if (toupper(modelSelectionCriteria) %in% c("AIC")) {
-                        modModelFit[[length(modModelFit) + 1]] <- estModel[[i]]@Fit$AIC
-                      } else if (toupper(modelSelectionCriteria) %in% c("AICC", "CAIC")) {
-                        modModelFit[[length(modModelFit) + 1]] <- estModel[[i]]@Fit$AICc
-                      } else if (toupper(modelSelectionCriteria) %in% c("BIC")) {
-                        modModelFit[[length(modModelFit) + 1]] <- estModel[[i]]@Fit$BIC
-                      } else if (toupper(modelSelectionCriteria) %in% c("SABIC")) {
-                        modModelFit[[length(modModelFit) + 1]] <- estModel[[i]]@Fit$SABIC
-                      } else {
-                        stop("please specify model fit type correctly: DIC (default), AIC, BIC, AICc (aka cAIC), saBIC")
-                      }
+                      modModelFit[[i]] <- .aefaFitCriterionValue(
+                        fit = estModel[[i]]@Fit,
+                        criterion = modelSelectionCriteria,
+                        sample_size = nrow(estModel[[i]]@Data$data)
+                      )
                     }
                   }
 
                   # select model
-                  if (exists("modModelFit")) {
-                    if (length(which(modModelFit == min(modModelFit[is.finite(modModelFit)],
-                      na.rm = T))[1]) > 0) {
-                      estModel <- estModel[[which(modModelFit == min(modModelFit[is.finite(modModelFit)],
-                        na.rm = T))[1]]]
-                    } else {
-                      message("Can not find any optimal model")
-                      STOP <- T
-                    }
+                  selectedModelIndex <- .aefaBestScoreIndex(modModelFit)
+                  if (!is.na(selectedModelIndex)) {
+                    estModel <- estModel[[selectedModelIndex]]
                   } else {
                     message("Can not find any optimal model")
                     STOP <- T
@@ -776,7 +933,7 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                       }
                     }
                   }
-                  # save model history of DIC evaluated model
+                  # save the selected model history
                   if (saveModelHistory) {
                     if(workDirectory != getwd()){
                       setwd('/tmp')
@@ -792,7 +949,10 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                     })
                   }
                   fitDONE <- FALSE
+                  fitAttempt <- 0L
+                  lastFitError <- "evaluateItemFit returned no fit statistics"
                   while (!fitDONE) {
+                    fitAttempt <- fitAttempt + 1L
                     if(workDirectory != getwd()){
                       setwd('/tmp')
                       setwd(workDirectory)
@@ -893,7 +1053,10 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                         estItemFit <- estItemFitRotationSearchTmp[[paste0(rotateCandidates)]]
                       } else {
                         estItemFit <- tryCatch(evaluateItemFit(estModel, RemoteClusters = RemoteClusters,
-                                                               rotate = rotateCandidates, PV_Q1 = PV_Q1), error = function(e) {NULL})
+                                                               rotate = rotateCandidates, PV_Q1 = PV_Q1), error = function(e) {
+                          lastFitError <<- conditionMessage(e)
+                          NULL
+                        })
                       }
 
 
@@ -901,13 +1064,30 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                       # estimate item fit measures
                       rotateCandidates <- 'none'
                       estItemFit <- tryCatch(evaluateItemFit(estModel, RemoteClusters = RemoteClusters,
-                        rotate = rotateCandidates, PV_Q1 = PV_Q1), error = function(e) {NULL})
+                        rotate = rotateCandidates, PV_Q1 = PV_Q1), error = function(e) {
+                          lastFitError <<- conditionMessage(e)
+                          NULL
+                        })
                     }
 
                     if (exists("estItemFit")) {
                       if (length(estItemFit) != 0) {
                         fitDONE <- TRUE
                       }
+                    }
+                    if (!fitDONE && fitAttempt >= 3L) {
+                      stop(
+                        paste0(
+                          "AEFA item-fit evaluation failed after ", fitAttempt,
+                          " attempts. Last error: ", lastFitError
+                        ),
+                        call. = FALSE
+                      )
+                    } else if (!fitDONE) {
+                      message(
+                        "AEFA item-fit evaluation attempt ", fitAttempt,
+                        " failed; retrying. Reason: ", lastFitError
+                      )
                     }
                   }
                   if (printItemFit) {
@@ -982,8 +1162,22 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                     S_X2Cond4 <- FALSE
                   }
 
-                  # flagging bad item
-                  if (ZhCond) {
+                  itemFitRemovalRequired <- any(c(
+                    ZhCond, PVCond1, PVCond2, PVCond3,
+                    S_X2Cond1, S_X2Cond2, S_X2Cond3, S_X2Cond4
+                  ))
+                  badItemNamesBefore <- unique(as.character(badItemNames))
+
+                  # A factor model cannot keep deleting indicators indefinitely.
+                  # Retain the current fitted model at the established three-item
+                  # floor and make the residual misfit visible in the log.
+                  if (itemFitRemovalRequired && length(estItemFit$item) <= 3L) {
+                    message(
+                      "AEFA item exclusion stopped at the three-item floor; ",
+                      "the retained model still has item-fit diagnostics above the configured cutoff."
+                    )
+                    STOP <- TRUE
+                  } else if (ZhCond) {
                     badItemNames <- c(badItemNames, as.character(estItemFit$item[which(estItemFit$Zh ==
                       min(estItemFit$Zh[is.finite(estItemFit$Zh)], na.rm = T))]))
                   } else if (PVCond1) {
@@ -1009,8 +1203,15 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
                                                                                          max(estItemFit$RMSEA.S_X2[is.finite(estItemFit$RMSEA.S_X2)],
                                                                                              na.rm = T))]))
                   } else if(class(estModel) %in% "MultipleGroupClass" && checkDIF){ # DIF part (fixed effect)
-                    if (toupper(modelSelectionCriteria) %in% c("DIC")) { # find out
-                      seqStat <- 'AIC'
+                    if (toupper(modelSelectionCriteria) %in% c("DIC")) {
+                      stop(
+                        paste0(
+                          "DIC cannot be substituted with AIC during sequential DIF selection; ",
+                          "mirt::DIF does not provide a posterior-DIC sequence statistic. ",
+                          "Use AIC, AICc, BIC, or saBIC."
+                        ),
+                        call. = FALSE
+                      )
                     } else if (toupper(modelSelectionCriteria) %in% c("AIC")) {
                       seqStat <- 'AIC'
                     } else if (toupper(modelSelectionCriteria) %in% c("AICC", "CAIC")) {
@@ -1079,6 +1280,40 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 
                   } else {
                     STOP <- TRUE
+                  }
+
+                  if (itemFitRemovalRequired && !STOP) {
+                    proposedBadItems <- setdiff(
+                      unique(as.character(badItemNames)),
+                      badItemNamesBefore
+                    )
+                    availableItems <- colnames(estModel@Data$data)
+                    validNewBadItems <- .aefaValidNewItemExclusions(
+                      excluded = badItemNamesBefore,
+                      proposed = proposedBadItems,
+                      available = availableItems
+                    )
+                    invalidProposals <- setdiff(proposedBadItems, availableItems)
+                    badItemNames <- unique(c(badItemNamesBefore, validNewBadItems))
+
+                    if (length(invalidProposals) > 0L) {
+                      message(
+                        "AEFA item diagnostic proposed names absent from the fitted model: ",
+                        paste(invalidProposals, collapse = ", ")
+                      )
+                    }
+                    if (length(validNewBadItems) == 0L) {
+                      message(
+                        "AEFA item exclusion stopped because the diagnostic did not identify ",
+                        "a new available item; repeated calibration would make no progress."
+                      )
+                      STOP <- TRUE
+                    } else {
+                      message(
+                        "AEFA item-fit exclusion: ",
+                        paste(validNewBadItems, collapse = ", ")
+                      )
+                    }
                   }
 
                   # adjust model if supplied model is confirmatory model

@@ -4,6 +4,8 @@
 
 context("AEFA Advanced Parameter Interactions and Combinations")
 
+.ensure_kaefa_namespace()
+
 expect_valid_aefa <- function(result) {
   expect_false(inherits(result, "try-error"))
   expect_s3_class(result, "aefa")
@@ -15,16 +17,15 @@ expect_valid_aefa <- function(result) {
 # Test Suite 1: Model Selection Criteria Variations
 # ============================================================
 
-test_that("aefa respects different model selection criteria - DIC", {
-  test_data <- create_test_data(n_items = 5, n_obs = 100)
-  
-  result <- try(aefa(test_data, 
-                     minExtraction = 1, 
-                     maxExtraction = 1,
-                     modelSelectionCriteria = "DIC"), 
-                silent = TRUE)
-  
-  expect_valid_aefa(result)
+test_that("DIC is not fabricated for mirt ML/MAP fits", {
+  expect_error(
+    kaefa:::.aefaFitCriterionValue(
+      list(AIC = 120, logLik = -50),
+      criterion = "DIC",
+      sample_size = 100
+    ),
+    "posterior deviance draws.*never replaced by AIC"
+  )
 })
 
 test_that("aefa respects different model selection criteria - AIC", {
