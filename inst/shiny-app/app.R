@@ -53,8 +53,8 @@ ui <- fluidPage(
                   selected = "bifactorQ"),
       
       selectInput("modelSelection", "Model Selection Criteria:",
-                  choices = c("DIC", "AIC", "AICc", "BIC", "SABIC"),
-                  selected = "DIC"),
+                  choices = c("AIC", "AICc", "BIC", "SABIC"),
+                  selected = "AIC"),
       
       checkboxInput("saveHistory", "Save Model History", TRUE),
       
@@ -139,7 +139,7 @@ ui <- fluidPage(
                  tags$ul(
                    tags$li(strong("Minimum/Maximum Factors:"), "Set the range of factors to explore. The algorithm will test models with different numbers of factors and select the best one."),
                    tags$li(strong("Rotation Method:"), "Choose the rotation method for factor loadings. 'bifactorQ' is recommended for most cases."),
-                   tags$li(strong("Model Selection Criteria:"), "Choose the criteria for selecting the best model. 'DIC' (Deviance Information Criterion) is the default.")
+                   tags$li(strong("Model Selection Criteria:"), "Choose the criterion for selecting the best model. AIC is the default for the maximum-likelihood/MAP models fitted by mirt; AICc applies the finite-sample correction.")
                  ),
                  
                  h4("Step 3: Run the Analysis"),

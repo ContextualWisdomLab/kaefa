@@ -29,7 +29,7 @@ launchAEFA()
 2. **Configure Model**:
    - Set minimum and maximum number of factors to explore
    - Choose rotation method (bifactorQ recommended for most cases)
-   - Select model selection criteria (DIC is default)
+   - Select model selection criteria (AIC is default for mirt ML/MAP fits)
    - Optionally enable model history saving to inspect candidate models
 
 3. **Run Analysis**: Click the "Run Analysis" button
@@ -56,7 +56,9 @@ following inputs and pass them to `aefa()`:
 - **Rotation method**: select input mapped to `rotate` (e.g., `bifactorQ`,
   `geominQ`, `oblimin`).
 - **Model selection criteria**: select input mapped to
-  `modelSelectionCriteria` (e.g., `DIC`, `AIC`, `AICc`, `BIC`, `saBIC`).
+  `modelSelectionCriteria` (e.g., `AIC`, `AICc`, `BIC`, `saBIC`). DIC is an
+  API-only option and requires a fitted model that actually supplies posterior
+  DIC; the application never substitutes AIC for it.
 - **Model history toggle**: checkbox mapped to `saveModelHistory` (recommended
   for inspecting candidate models).
 

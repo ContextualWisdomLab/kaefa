@@ -90,7 +90,7 @@ test_that("aefa greedy search evaluates model candidates", {
       expect_true(is.list(result$itemFitTrials))
       last_model <- result$estModelTrials[[length(result$estModelTrials)]]
       if (isS4(last_model) && "Fit" %in% slotNames(last_model)) {
-        fit_values <- c(last_model@Fit$AIC, last_model@Fit$BIC, last_model@Fit$DIC)
+        fit_values <- c(last_model@Fit$AIC, last_model@Fit$BIC, last_model@Fit$SABIC)
         expect_true(any(is.finite(fit_values)),
                     info = "Selected model should include information criteria values")
       }
@@ -107,7 +107,7 @@ test_that("aefa greedy search evaluates model candidates", {
 test_that("aefa uses information criteria for model selection", {
   test_data <- create_test_data(n_items = 6, n_obs = 100)
   
-  # The function should select best model based on DIC, AIC, BIC, etc.
+  # The function should select the best model using a criterion supplied by mirt.
   result <- try(aefa(test_data, minExtraction = 1, maxExtraction = 2), silent = TRUE)
   
   if (!inherits(result, "try-error") && !is.null(result)) {

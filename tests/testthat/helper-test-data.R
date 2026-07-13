@@ -80,7 +80,16 @@ create_binary_test_data <- function(n_items = 10, n_obs = 100) {
 }
 
 .merge_test_defaults <- function(defaults, dots) {
-  utils::modifyList(defaults, dots)
+  dot_names <- names(dots)
+  if (is.null(dot_names)) {
+    dot_names <- rep("", length(dots))
+  }
+
+  is_named <- !is.na(dot_names) & nzchar(dot_names)
+  positional <- dots[!is_named]
+  named <- dots[is_named]
+
+  c(positional, utils::modifyList(defaults, named))
 }
 
 .skip_expensive_ci_calls <- function(function_name) {

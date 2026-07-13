@@ -44,7 +44,7 @@ aefa(
   resampling = T,
   samples = 5000,
   printDebugMsg = F,
-  modelSelectionCriteria = "DIC",
+  modelSelectionCriteria = "AIC",
   saveRawEstModels = F,
   fitEMatUIRT = F,
   ranefautocomb = T,
@@ -107,7 +107,12 @@ aefa(
 
 \item{printDebugMsg}{Do you want to see the debugging messages? default is FALSE}
 
-\item{modelSelectionCriteria}{Which criteria want to use model selection work? 'DIC' (default), 'AIC', 'AICc', 'BIC', 'saBIC' available. AIC and DIC will be identical when no prior parameter distributions are included.}
+\item{modelSelectionCriteria}{Information criterion used for model selection.
+\code{"AIC"} is the default for the maximum-likelihood/MAP models fitted by
+current versions of \pkg{mirt}. \code{"AICc"}, \code{"BIC"}, and
+\code{"saBIC"} are also available. \code{"DIC"} is accepted only when the
+fitted model actually supplies a posterior-based DIC value; it is never
+substituted with AIC.}
 
 \item{saveRawEstModels}{Do you want to save raw estimated models before model selection work? default is FALSE}
 

@@ -18,8 +18,9 @@ find improved model configurations. The algorithm iteratively:
 
 1.  Evaluates multiple model candidates with different factor structures
     and item response models
-2.  Selects the best model based on information criteria (DIC, AIC, BIC,
-    etc.)
+2.  Selects the best model using AIC by default, with AICc, BIC, and
+    sample-size-adjusted BIC available. DIC is used only when a fitted model
+    actually supplies posterior DIC; it is never approximated with AIC.
 3.  Assesses item fit and removes poorly fitting items one at a time
 4.  Re-estimates the model until convergence to a locally optimal
     solution
@@ -38,6 +39,13 @@ research (Preacher, Zhang, Kim, & Mels, 2013; Jennrich & Bentler, 2011).
 - Jennrich, R. I., & Bentler, P. M. (2011). Exploratory bi-factor
   analysis. Psychometrika, 76(4), 537-549.
   <https://doi.org/10.1007/s11336-011-9218-4>
+- Hurvich, C. M., & Tsai, C.-L. (1989). Regression and time series model
+  selection in small samples. Biometrika, 76(2), 297-307.
+  <https://doi.org/10.1093/biomet/76.2.297>
+- Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & van der Linde, A.
+  (2002). Bayesian measures of model complexity and fit. Journal of the
+  Royal Statistical Society: Series B, 64(4), 583-639.
+  <https://doi.org/10.1111/1467-9868.00353>
 
 ## Installation
 

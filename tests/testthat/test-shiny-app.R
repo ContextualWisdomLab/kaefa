@@ -191,7 +191,7 @@ test_that("Model selection criteria choices are valid", {
   ui_html <- as.character(ui)
   
   # Check for expected model selection criteria
-  expected_criteria <- c("DIC", "AIC", "AICc", "BIC", "SABIC")
+  expected_criteria <- c("AIC", "AICc", "BIC", "SABIC")
   
   for (criterion in expected_criteria) {
     expect_true(
