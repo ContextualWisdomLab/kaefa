@@ -9,7 +9,8 @@ test_that("launchAEFA function exists and is exported", {
 test_that("launchAEFA returns error when app directory not found", {
   # Mock system.file to return empty string
   with_mocked_bindings(
-    system.file = function(...) "",
+    .kaefa_shiny_app_dir = function() "",
+    .package = "kaefa",
     {
       expect_error(
         launchAEFA(),
@@ -124,7 +125,7 @@ test_that("launchAEFA produces appropriate message", {
         captured$args <- list(...)
         invisible(NULL)
       },
-      .env = asNamespace("shiny"),
+      .package = "shiny",
       {
         expect_message(
           launchAEFA(port = 1234, launch.browser = FALSE),
@@ -143,7 +144,8 @@ test_that("launchAEFA produces appropriate message", {
 test_that("launchAEFA error message is descriptive", {
   # Test error message includes helpful guidance
   with_mocked_bindings(
-    system.file = function(...) "",
+    .kaefa_shiny_app_dir = function() "",
+    .package = "kaefa",
     {
       expect_error(
         launchAEFA(),

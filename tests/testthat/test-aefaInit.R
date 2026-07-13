@@ -3,6 +3,13 @@
 
 context("aefaInit - detectOS helper function")
 
+# These tests exercise live process, SSH, CPU-load, and memory probes. Hosted CI
+# cannot make the external cluster state deterministic, and several cases wait
+# for the production 100-second stabilization loop by design. Keep them for
+# interactive/local integration runs instead of letting external hosts occupy a
+# required pull-request runner for hours.
+skip_on_ci()
+
 # Since detectOS is an internal function within aefaInit, we need to test it indirectly
 # or extract it for testing. For now, we'll test the overall behavior.
 

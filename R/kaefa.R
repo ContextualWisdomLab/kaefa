@@ -1162,6 +1162,10 @@ aefa <- efa <- function(data, model = NULL, minExtraction = 1, maxExtraction = i
 #' }
 aefaResults <- function(mirtModel, rotate = NULL, suppress = 0, which.inspect = NULL, printRawCoefs = F, simplifyRawCoefs = T, returnModel = F) {
 
+    if (!inherits(mirtModel, "aefa")) {
+      stop("mirtModel must inherit from class 'aefa'.", call. = FALSE)
+    }
+
     if (class(mirtModel) == "aefa") {
         if(is.null(which.inspect)){
 
@@ -1346,6 +1350,10 @@ recursiveFormula <- function(mirtModel, mins = F, divide = F, rotate = NULL, ind
 
 }
 
+.kaefa_shiny_app_dir <- function() {
+  system.file("shiny-app", package = "kaefa")
+}
+
 #' Launch interactive Shiny interface for kaefa
 #'
 #' @description
@@ -1364,7 +1372,7 @@ recursiveFormula <- function(mirtModel, mins = F, divide = F, rotate = NULL, ind
 #' launchAEFA()
 #' }
 launchAEFA <- function(...) {
-  appDir <- system.file("shiny-app", package = "kaefa")
+  appDir <- .kaefa_shiny_app_dir()
   
   if (appDir == "") {
     stop(

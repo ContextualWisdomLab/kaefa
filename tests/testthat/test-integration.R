@@ -42,16 +42,16 @@ context("Integration - System compatibility")
 
 test_that("aefaInit works on systems with /etc/os-release", {
   skip_on_cran()
+  .skip_expensive_ci_calls("aefaInit system integration")
   
   # Check if /etc/os-release exists
   has_os_release <- file.exists("/etc/os-release")
   
   if (has_os_release) {
-    expect_silent({
-      tryCatch(
-        aefaInit(RemoteClusters = "localhost", debug = FALSE),
-        error = function(e) NULL
-      )
+    expect_no_error({
+      suppressMessages(suppressWarnings(invisible(capture.output(
+        aefaInit(RemoteClusters = "localhost", debug = FALSE)
+      ))))
     })
   } else {
     skip("System does not have /etc/os-release")
@@ -60,13 +60,13 @@ test_that("aefaInit works on systems with /etc/os-release", {
 
 test_that("aefaInit handles systems without /etc/os-release gracefully", {
   skip_on_cran()
+  .skip_expensive_ci_calls("aefaInit system integration")
   
   # The function should handle errors gracefully even if OS detection fails
-  expect_silent({
-    tryCatch(
-      aefaInit(RemoteClusters = "localhost", debug = FALSE),
-      error = function(e) NULL
-    )
+  expect_no_error({
+    suppressMessages(suppressWarnings(invisible(capture.output(
+      aefaInit(RemoteClusters = "localhost", debug = FALSE)
+    ))))
   })
 })
 
@@ -92,15 +92,15 @@ context("Integration - Error recovery")
 
 test_that("aefaInit recovers from transient system command failures", {
   skip_on_cran()
+  .skip_expensive_ci_calls("aefaInit system integration")
   
   # Test resilience to temporary failures
   # The tryCatch blocks should handle errors gracefully
   
-  expect_silent({
-    tryCatch(
-      aefaInit(RemoteClusters = "localhost", debug = FALSE),
-      error = function(e) NULL
-    )
+  expect_no_error({
+    suppressMessages(suppressWarnings(invisible(capture.output(
+      aefaInit(RemoteClusters = "localhost", debug = FALSE)
+    ))))
   })
 })
 

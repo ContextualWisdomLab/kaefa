@@ -1,0 +1,53 @@
+name: test-suite
+
+# Runs the complete testthat suite (26 files), which the previous CI setup
+# skipped: R-CMD-check runs with --no-tests and test-fast runs only 3 files.
+# On push/PR the suite's own CI guards (.skip_expensive_ci_calls, skip_on_ci)
+# keep expensive AEFA estimations out. The weekly scheduled run and manual
+# dispatch set RUN_FULL_AEFA_TESTS=1, which unlocks the estimations guarded
+# by the .skip_expensive_ci_calls helper; tests that call skip_on_ci()
+# directly still skip on GitHub Actions regardless of that variable.
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  schedule:
+    - cron: '17 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    env:
+      # Explicitly run skip_on_cran()-guarded tests; don't rely on the
+      # setup-r action's implicit NOT_CRAN default.
+      NOT_CRAN: true
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
+        with:
+          extra-packages: any::testthat
+          needs: check
+
+      - name: Install kaefa package
+        run: R CMD INSTALL .
+
+      - name: Enable expensive AEFA estimations (scheduled/manual runs only)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: echo "RUN_FULL_AEFA_TESTS=1" >> "$GITHUB_ENV"
+
+      - name: Run full testthat suite
+        run: |
+          Rscript -e 'library(kaefa); testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
