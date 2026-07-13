@@ -4,6 +4,8 @@
 
 context("AEFA Advanced Parameter Interactions and Combinations")
 
+.ensure_kaefa_namespace()
+
 expect_valid_aefa <- function(result) {
   expect_false(inherits(result, "try-error"))
   expect_s3_class(result, "aefa")

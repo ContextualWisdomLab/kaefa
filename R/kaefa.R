@@ -546,7 +546,7 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
 #' Select the original candidate index with the lowest finite score
 #'
 #' @param scores Numeric vector aligned one-to-one with model candidates.
-#' @return The original candidate index, or code{NA_integer_} when none is valid.
+#' @return The original candidate index, or \code{NA_integer_} when none is valid.
 #' @keywords internal
 #' @noRd
 .aefaBestScoreIndex <- function(scores) {
@@ -604,11 +604,12 @@ evaluateItemFit <- function(mirtModel, RemoteClusters = NULL, rotate = "bifactor
 #'
 #' @param resampling Do you want to do resampling with replace? default is TRUE and activate nrow is over samples argument.
 #' @param samples Specify the number samples with resampling. default is 5000.
-#' @param printDebugMsg Do you want to see the debugging messeages? default is FALSE
+#' @param printDebugMsg Show additional debugging messages. Default is FALSE.
+#'   Nonfatal fallback reasons and terminal errors remain visible regardless.
 #' @param modelSelectionCriteria Information criterion used for model selection.
-#'   code{"AIC"} is the default for the maximum-likelihood/MAP models fitted by
-#'   current versions of pkg{mirt}. code{"AICc"}, code{"BIC"}, and
-#'   code{"saBIC"} are also available. code{"DIC"} is accepted only when the
+#'   \code{"AIC"} is the default for the maximum-likelihood/MAP models fitted by
+#'   current versions of \pkg{mirt}. \code{"AICc"}, \code{"BIC"}, and
+#'   \code{"saBIC"} are also available. \code{"DIC"} is accepted only when the
 #'   fitted model actually supplies a posterior-based DIC value; it is never
 #'   substituted with AIC.
 #' @param saveRawEstModels Do you want to save raw estimated models before model selection work? default is FALSE

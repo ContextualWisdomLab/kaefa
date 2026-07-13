@@ -1,3 +1,5 @@
+.ensure_kaefa_namespace()
+
 test_that("AICc preserves the Hurvich-Tsai small-sample correction", {
   fit <- list(AIC = 120, logLik = -50)
   parameter_count <- 10

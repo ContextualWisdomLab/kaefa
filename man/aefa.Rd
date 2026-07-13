@@ -105,7 +105,8 @@ aefa(
 
 \item{samples}{Specify the number samples with resampling. default is 5000.}
 
-\item{printDebugMsg}{Do you want to see the debugging messages? default is FALSE}
+\item{printDebugMsg}{Show additional debugging messages. Default is FALSE.
+Nonfatal fallback reasons and terminal errors remain visible regardless.}
 
 \item{modelSelectionCriteria}{Information criterion used for model selection.
 \code{"AIC"} is the default for the maximum-likelihood/MAP models fitted by
