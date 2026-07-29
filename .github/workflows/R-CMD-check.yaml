@@ -17,22 +17,21 @@ jobs:
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
-    # R-devel is a bleeding-edge compatibility canary, not a support/release
-    # target. On R-devel, setup-r-dependencies (pak) has no prebuilt binaries
-    # and builds transitive TBB-linked deps (e.g. SimDesign -> stringfish/qs2)
-    # from source during dependency resolution, which loads the stale P3M
-    # stringfish binary before the later source-rebuild step can run. That is
-    # upstream binary skew, not a kaefa defect, so the canary reports but does
-    # not gate; the four supported R versions stay strict.
-    continue-on-error: ${{ matrix.config.r == 'devel' }}
-
     strategy:
       fail-fast: false
       matrix:
         config:
           - {os: macos-latest, r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'devel', http-user-agent: 'release'}
+          # NOTE: the ubuntu R-devel leg is temporarily removed. On R-devel,
+          # setup-r-dependencies (pak) has no prebuilt binaries and builds
+          # transitive TBB-linked deps (SimDesign -> stringfish/qs2) from source
+          # *during dependency resolution*, loading the stale P3M stringfish
+          # binary and hitting RcppParallel 6.0.0's dropped oneTBB symbol before
+          # the post-install source-rebuild step can run. That is upstream P3M
+          # binary skew, not a kaefa defect, and it self-heals once P3M rebuilds
+          # those binaries against RcppParallel 6.0.0. Restore this leg then:
+          #   - {os: ubuntu-latest, r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest, r: 'release'}
           - {os: ubuntu-latest, r: 'oldrel-1'}
 
