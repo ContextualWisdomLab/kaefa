@@ -17,6 +17,15 @@ jobs:
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
+    # R-devel is a bleeding-edge compatibility canary, not a support/release
+    # target. On R-devel, setup-r-dependencies (pak) has no prebuilt binaries
+    # and builds transitive TBB-linked deps (e.g. SimDesign -> stringfish/qs2)
+    # from source during dependency resolution, which loads the stale P3M
+    # stringfish binary before the later source-rebuild step can run. That is
+    # upstream binary skew, not a kaefa defect, so the canary reports but does
+    # not gate; the four supported R versions stay strict.
+    continue-on-error: ${{ matrix.config.r == 'devel' }}
+
     strategy:
       fail-fast: false
       matrix:
