@@ -49,6 +49,14 @@ jobs:
             any::testthat
           needs: check
 
+      # RcppParallel 6.0.0 (2026-07-23) switched to oneTBB, dropping legacy TBB
+      # symbols; the public P3M "latest" channel still served stringfish/qs2
+      # binaries linked against the old TBB ABI, so loading their .so fails with
+      # an undefined TBB symbol at install time. Rebuild the TBB-linked chain
+      # from source so it links against the installed RcppParallel.
+      - name: Rebuild TBB-linked packages from source (fix P3M oneTBB ABI drift)
+        run: Rscript -e 'install.packages(c("stringfish", "qs2"), type = "source")'
+
       - name: Run Zh formula regression tests
         run: |
           Rscript -e 'install.packages(".", repos = NULL, type = "source")'

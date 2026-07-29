@@ -41,16 +41,16 @@ jobs:
           extra-packages: any::testthat
           needs: check
 
-      # The public P3M "latest" channel can serve a stringfish binary that was
-      # built against an older RcppParallel/TBB ABI than the RcppParallel binary
-      # resolved on the same day. When that happens, loading stringfish.so fails
-      # at `R CMD INSTALL` with an undefined TBB symbol
-      # (concurrent_vector_base_v3::internal_grow_by), before any test can run.
-      # Rebuilding stringfish from source links it against the RcppParallel that
-      # is actually installed, so the symbol set matches regardless of future
-      # P3M rebuild skew.
-      - name: Rebuild stringfish from source to match installed RcppParallel/TBB ABI
-        run: Rscript -e 'install.packages("stringfish", type = "source")'
+      # RcppParallel 6.0.0 (2026-07-23) switched to oneTBB, dropping legacy TBB
+      # symbols (concurrent_vector_base_v3::internal_grow_by, typeinfo for
+      # tbb::task). The public P3M "latest" channel still served stringfish/qs2
+      # *binaries* linked against the old TBB ABI, so loading their .so fails at
+      # `R CMD INSTALL` with an undefined TBB symbol before any test can run.
+      # Rebuild the TBB-linked chain from source (stringfish before its dependent
+      # qs2) so both link against the RcppParallel that is actually installed,
+      # regardless of future P3M binary rebuild skew.
+      - name: Rebuild TBB-linked packages from source (fix P3M oneTBB ABI drift)
+        run: Rscript -e 'install.packages(c("stringfish", "qs2"), type = "source")'
 
       - name: Install kaefa package
         run: R CMD INSTALL .
