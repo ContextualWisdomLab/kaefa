@@ -20,12 +20,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Ubuntu jobs pin to jammy (22.04): noble (24.04) ubuntu-latest
+        # source-builds the mirt -> ... -> stringfish chain, whose
+        # stringfish.so then fails to load with an Intel TBB ABI mismatch
+        # (undefined symbol tbb::...concurrent_vector_base_v3::internal_grow_by).
+        # P3M ships jammy binaries that avoid the source compile. Same pin as
+        # test-suite.yaml/test-fast.yaml and aFIPC's r.yml; revisit once P3M
+        # ships noble binaries. macOS/Windows are unaffected.
         config:
           - {os: macos-latest, r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'oldrel-1'}
+          - {os: ubuntu-22.04, r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-22.04, r: 'release'}
+          - {os: ubuntu-22.04, r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

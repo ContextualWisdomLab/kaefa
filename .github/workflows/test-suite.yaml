@@ -21,7 +21,16 @@ permissions:
 
 jobs:
   test-suite:
-    runs-on: ubuntu-latest
+    # Pin to jammy (22.04): Posit P3M ships precompiled Linux binaries for the
+    # current R release on jammy, but not for noble (24.04, today's
+    # ubuntu-latest). On noble, setup-r-dependencies source-builds the
+    # mirt -> SimDesign -> qs -> stringfish chain, and the source-built
+    # stringfish.so fails to load with an Intel TBB ABI mismatch (undefined
+    # symbol tbb::internal::concurrent_vector_base_v3::internal_grow_by),
+    # aborting `R CMD INSTALL .` / `library(kaefa)` before the suite can run.
+    # Jammy binaries avoid the source compile entirely; same pin as aFIPC's
+    # r.yml. Revisit once P3M ships noble binaries for this chain.
+    runs-on: ubuntu-22.04
     timeout-minutes: 180
 
     env:

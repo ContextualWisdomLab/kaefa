@@ -11,7 +11,12 @@ permissions:
 
 jobs:
   test-fast:
-    runs-on: ubuntu-latest
+    # Pin to jammy (22.04): noble (24.04) ubuntu-latest source-builds the
+    # mirt -> ... -> stringfish chain, whose stringfish.so then fails to load
+    # with an Intel TBB ABI mismatch, aborting `R CMD INSTALL .`. P3M ships
+    # jammy binaries that avoid the source compile. Same pin as test-suite.yaml
+    # and aFIPC's r.yml; revisit once P3M ships noble binaries.
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
