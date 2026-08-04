@@ -38,13 +38,15 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
         with:
-          # stringfish binaries were built against the legacy TBB bundled with
-          # RcppParallel <6.2; force a source build so it links the oneTBB in
-          # RcppParallel 6.2.0. Drop once upstream binaries are rebuilt.
-          extra-packages: |
-            any::testthat
-            cran::stringfish?source
+          extra-packages: any::testthat
           needs: check
+
+      # stringfish binaries (CRAN/P3M) still link the legacy TBB from
+      # RcppParallel <6.2 and fail to load against RcppParallel 6.2.0's oneTBB.
+      # Rebuild from real CRAN source (P3M serves binaries even via its source
+      # API). Drop once upstream binaries are rebuilt.
+      - name: Rebuild stringfish from source (TBB mismatch with RcppParallel 6.2.0)
+        run: Rscript -e 'install.packages("stringfish", type = "source", repos = "https://cloud.r-project.org")'
 
       - name: Install kaefa package
         run: R CMD INSTALL .
