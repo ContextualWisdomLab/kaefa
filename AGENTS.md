@@ -101,7 +101,7 @@ working on this repo. Keep this block; re-runs replace it in place.
   **contextual-orchestrator** (LLM cost/perf/upstream-LB gateway, beyond
   LiteLLM), **codec-carver** (STT/omni-modal speech-video codec),
   **fast-mlsirm** (LLM-as-a-Judge calibration + evaluation-item quality; uses
-  aFIPC FIPC + kaefa item-fit), **feelanet-adfs** (passwordless SSO —
+  aFIPC FIPC + kaefa item-fit), **keyverse** (passwordless SSO —
   OIDC/SCIM/ADFS/LDAP/FIDO2/OAuth2.1), **newsdom-api** (PDF->DOM sidecar), and
   **semantic-data-portal** (upper-ontology/catalog/governance plane with its
   own graph engine).
