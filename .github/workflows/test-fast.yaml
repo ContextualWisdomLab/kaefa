@@ -20,6 +20,12 @@ jobs:
         with:
           use-public-rspm: true
 
+      # ponytail: source-build stringfish BEFORE dependency setup — packages built
+      # from source during install (e.g. SimDesign) load it at build time and die
+      # on the broken prebuilt binary (oneTBB ABI skew). Drop with the step below.
+      - name: Source-build stringfish (RcppParallel oneTBB ABI skew)
+        run: Rscript -e 'install.packages("stringfish", type = "source")'
+
       - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
         with:
           extra-packages: any::testthat
@@ -30,7 +36,9 @@ jobs:
       # Rebuild everything LinkingTo RcppParallel from source so it links the installed
       # copy. Drop once upstream binaries re-sync.
       - name: Rebuild RcppParallel-linked packages from source (oneTBB ABI skew)
-        run: Rscript -e 'bad <- tools::dependsOnPkgs("RcppParallel", dependencies = "LinkingTo"); if (length(bad)) install.packages(bad, type = "source")'
+        run: >-
+          Rscript -e 'bad <- tools::dependsOnPkgs("RcppParallel", dependencies = "LinkingTo");
+          if (length(bad)) install.packages(bad, type = "source")'
 
       - name: Install kaefa package for fast tests
         run: R CMD INSTALL .
