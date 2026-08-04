@@ -45,8 +45,8 @@ jobs:
       # RcppParallel <6.2 and fail to load against RcppParallel 6.2.0's oneTBB.
       # Rebuild from real CRAN source (P3M serves binaries even via its source
       # API). Drop once upstream binaries are rebuilt.
-      - name: Rebuild stringfish from source (TBB mismatch with RcppParallel 6.2.0)
-        run: Rscript -e 'install.packages("stringfish", type = "source", repos = "https://cloud.r-project.org")'
+      - name: Rebuild stringfish and qs2 from source (TBB mismatch with RcppParallel 6.2.0)
+        run: Rscript -e 'install.packages(c("stringfish", "qs2"), type = "source", repos = "https://cloud.r-project.org")'
 
       - name: Install kaefa package
         run: R CMD INSTALL .
