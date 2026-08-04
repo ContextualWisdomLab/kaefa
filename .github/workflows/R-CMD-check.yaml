@@ -50,10 +50,9 @@ jobs:
           needs: check
 
       # ponytail: CRAN/RSPM binary skew — stringfish binaries lag RcppParallel's
-      # oneTBB update (Symbol not found: tbb::internal::NFS_Allocate). Rebuild from
+      # oneTBB update (undefined tbb::internal symbols, all platforms). Rebuild from
       # source so it links the installed RcppParallel. Drop once upstream binaries sync.
       - name: Rebuild stringfish from source (RcppParallel ABI skew)
-        if: runner.os != 'Linux'
         run: Rscript -e 'install.packages("stringfish", type = "source")'
 
       - name: Run Zh formula regression tests
