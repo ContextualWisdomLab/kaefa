@@ -42,19 +42,24 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      # stringfish/qs2 binaries (CRAN/P3M) still link the legacy TBB from
+      # RcppParallel <6.2 and fail to load against RcppParallel 6.2.0's oneTBB.
+      # On R-devel this breaks the SimDesign source build inside
+      # setup-r-dependencies itself, so prebuild BOTH from real CRAN source
+      # before dependency resolution (P3M serves binaries even via its source
+      # API); pak then keeps the installed same-version copies. Drop once
+      # upstream binaries are rebuilt.
+      - name: Prebuild stringfish and qs2 from source (TBB mismatch with RcppParallel 6.2.0)
+        run: |
+          Rscript -e 'install.packages(c("Rcpp", "RcppParallel"), repos = Sys.getenv("RSPM", unset = "https://cloud.r-project.org"))'
+          Rscript -e 'install.packages(c("stringfish", "qs2"), type = "source", repos = "https://cloud.r-project.org")'
+
       - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
         with:
           extra-packages: |
             any::rcmdcheck
             any::testthat
           needs: check
-
-      # stringfish binaries (CRAN/P3M) still link the legacy TBB from
-      # RcppParallel <6.2 and fail to load against RcppParallel 6.2.0's oneTBB.
-      # Rebuild from real CRAN source (P3M serves binaries even via its source
-      # API). Drop once upstream binaries are rebuilt.
-      - name: Rebuild stringfish and qs2 from source (TBB mismatch with RcppParallel 6.2.0)
-        run: Rscript -e 'install.packages(c("stringfish", "qs2"), type = "source", repos = "https://cloud.r-project.org")'
 
       - name: Run Zh formula regression tests
         run: |
