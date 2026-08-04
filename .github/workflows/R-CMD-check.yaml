@@ -44,9 +44,16 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
         with:
+          # ponytail: RcppParallel 6.2.0 (oneTBB) broke the ABI of prebuilt
+          # qs2/stringfish binaries (undefined tbb::internal symbols). Build both
+          # from source and bust the package cache; drop these two refs and
+          # cache-version once CRAN/PPM binaries are rebuilt against 6.2.0.
+          cache-version: 2
           extra-packages: |
             any::rcmdcheck
             any::testthat
+            stringfish=?source
+            qs2=?source
           needs: check
 
       - name: Run Zh formula regression tests
