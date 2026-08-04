@@ -25,10 +25,12 @@ jobs:
           extra-packages: any::testthat
           needs: check
 
-      # ponytail: CRAN/RSPM binary skew — stringfish binaries lag RcppParallel's
-      # oneTBB update. Rebuild from source; drop once upstream binaries sync.
-      - name: Rebuild stringfish from source (RcppParallel ABI skew)
-        run: Rscript -e 'install.packages("stringfish", type = "source")'
+      # ponytail: CRAN/RSPM binary skew — prebuilt binaries (stringfish, qs2, ...) lag
+      # RcppParallel's oneTBB update (undefined tbb::internal / tbb::task symbols).
+      # Rebuild everything LinkingTo RcppParallel from source so it links the installed
+      # copy. Drop once upstream binaries re-sync.
+      - name: Rebuild RcppParallel-linked packages from source (oneTBB ABI skew)
+        run: Rscript -e 'bad <- tools::dependsOnPkgs("RcppParallel", dependencies = "LinkingTo"); if (length(bad)) install.packages(bad, type = "source")'
 
       - name: Install kaefa package for fast tests
         run: R CMD INSTALL .
