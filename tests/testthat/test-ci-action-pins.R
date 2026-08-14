@@ -119,12 +119,22 @@ testthat::test_that("CI rebuilds oneTBB dependents around dependency setup", {
       fixed = TRUE
     )))
     testthat::expect_true(any(grepl(
+      'type = "source"',
+      pre_block,
+      fixed = TRUE
+    )))
+    testthat::expect_true(any(grepl(
       'dependsOnPkgs("RcppParallel", dependencies = "LinkingTo")',
       post_block,
       fixed = TRUE
     )))
     testthat::expect_true(any(grepl(
-      'type = "source"',
+      'install.packages("RcppParallel", type = "source"',
+      post_block,
+      fixed = TRUE
+    )))
+    testthat::expect_true(any(grepl(
+      'install.packages(linked, type = "source"',
       post_block,
       fixed = TRUE
     )))
