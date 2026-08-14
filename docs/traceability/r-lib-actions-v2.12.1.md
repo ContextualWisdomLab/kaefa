@@ -23,7 +23,7 @@ runner 또는 package 호환성 회귀가 확인되면 네 action을 함께 마�
 ## 참고문헌
 
 R-lib. (2026, June 23). *r-lib/actions v2.12.1* [Software release notes].
-https://github.com/r-lib/actions/blob/v2-branch/NEWS.md
+https://github.com/r-lib/actions/blob/d3c5be51b12e724e68f33216ca3c148b66d5f0b6/NEWS.md
 
 R-lib. (2026). *Update NEWS for v2.12.1* [Source code commit].
 https://github.com/r-lib/actions/commit/d3c5be51b12e724e68f33216ca3c148b66d5f0b6
