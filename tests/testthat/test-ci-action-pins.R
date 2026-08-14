@@ -57,8 +57,16 @@ testthat::test_that("R CMD check refreshes the reviewed dependency cache ABI", {
     dependency_step:min(dependency_step + 8L, length(workflow_lines))
   ]
 
+  active_cache_version_pattern <- paste0(
+    "^[[:space:]]*cache-version:[[:space:]]*",
+    "['\\\"]2['\\\"][[:space:]]*(#.*)?$"
+  )
+  testthat::expect_false(
+    grepl(active_cache_version_pattern, "# cache-version: '2'", perl = TRUE),
+    info = "A commented cache-version example must not satisfy the contract"
+  )
   testthat::expect_true(
-    any(grepl("cache-version: '2'", dependency_block, fixed = TRUE)),
+    any(grepl(active_cache_version_pattern, dependency_block, perl = TRUE)),
     info = "The reviewed macOS TBB ABI cache refresh must remain explicit"
   )
 })
