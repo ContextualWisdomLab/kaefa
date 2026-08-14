@@ -70,3 +70,36 @@ testthat::test_that("R CMD check refreshes the reviewed dependency cache ABI", {
     info = "The reviewed macOS TBB ABI cache refresh must remain explicit"
   )
 })
+
+testthat::test_that("macOS rebuilds TBB-linked packages from source", {
+  workflow_path <- testthat::test_path(
+    "..", "..", ".github", "workflows", "R-CMD-check.yaml"
+  )
+  workflow_lines <- readLines(workflow_path, warn = FALSE)
+  rebuild_step <- grep(
+    "name: Rebuild macOS TBB dependents from source",
+    workflow_lines,
+    fixed = TRUE
+  )
+  testthat::expect_length(rebuild_step, 1L)
+  rebuild_block <- workflow_lines[
+    rebuild_step:min(rebuild_step + 3L, length(workflow_lines))
+  ]
+
+  testthat::expect_true(
+    any(trimws(rebuild_block) == "if: runner.os == 'macOS'"),
+    info = "Native package rebuild must remain scoped to macOS"
+  )
+  testthat::expect_true(
+    any(grepl(
+      'install.packages(c("RcppParallel", "qs2")',
+      rebuild_block,
+      fixed = TRUE
+    )),
+    info = "Both sides of the observed qs2/RcppParallel ABI boundary must rebuild"
+  )
+  testthat::expect_true(
+    any(grepl('type = "source"', rebuild_block, fixed = TRUE)),
+    info = "macOS native packages must compile against the same local TBB ABI"
+  )
+})

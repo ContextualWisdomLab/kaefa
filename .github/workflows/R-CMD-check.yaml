@@ -51,6 +51,10 @@ jobs:
             any::testthat
           needs: check
 
+      - name: Rebuild macOS TBB dependents from source
+        if: runner.os == 'macOS'
+        run: Rscript -e 'install.packages(c("RcppParallel", "qs2"), repos = "https://cloud.r-project.org", type = "source")'
+
       - name: Run Zh formula regression tests
         run: |
           Rscript -e 'install.packages(".", repos = NULL, type = "source")'
