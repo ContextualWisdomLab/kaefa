@@ -41,3 +41,24 @@ testthat::test_that("CI uses exactly the reviewed r-lib action references", {
     )
   }
 })
+
+testthat::test_that("R CMD check refreshes the reviewed dependency cache ABI", {
+  workflow_path <- testthat::test_path(
+    "..", "..", ".github", "workflows", "R-CMD-check.yaml"
+  )
+  workflow_lines <- readLines(workflow_path, warn = FALSE)
+  dependency_step <- grep(
+    "r-lib/actions/setup-r-dependencies@",
+    workflow_lines,
+    fixed = TRUE
+  )
+  testthat::expect_length(dependency_step, 1L)
+  dependency_block <- workflow_lines[
+    dependency_step:min(dependency_step + 8L, length(workflow_lines))
+  ]
+
+  testthat::expect_true(
+    any(grepl("cache-version: '2'", dependency_block, fixed = TRUE)),
+    info = "The reviewed macOS TBB ABI cache refresh must remain explicit"
+  )
+})
