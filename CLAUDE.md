@@ -57,6 +57,10 @@ testthat::test_file("tests/testthat/test-shiny-product-surface.R",
                     reporter = reporter)
 testthat::test_file("tests/testthat/test-core-api-contract.R",
                     reporter = reporter)
+testthat::test_file("tests/testthat/test-aefa-parameter-recovery.R",
+                    reporter = reporter)
+testthat::test_file("tests/testthat/test-mixedmirt-parameter-recovery.R",
+                    reporter = reporter)
 RSCRIPT
 
 # R CMD check as CI runs it (note: tests are skipped here)
@@ -124,6 +128,8 @@ psychometrics (see AGENTS.md).
 - `R/newEngine.R` — `engineAEFA()`: the candidate-model estimation engine used
   by the aefa loop (MCMC/estimation controls such as NCYCLES, BURNIN,
   SEMCYCLES, rotation choices, etc.).
+- `R/recovery.R` — internal true-parameter RMSE helpers for the AEFA and
+  nested mixedmirt recovery protocols (not exported).
 - `R/utils.R` — shared internals (`.mirt`/`.mixedmirt` wrappers around mirt,
   `.covdataClassifieder`, `.covdataFixedEffectComb`, `.exportParmsEME`) and the
   theta-prior utilities `fitThetaPrior()`, `testThetaPriorCalibration()`,

@@ -13,6 +13,10 @@ testthat::test_file("tests/testthat/test-shiny-product-surface.R",
                     reporter = reporter)
 testthat::test_file("tests/testthat/test-core-api-contract.R",
                     reporter = reporter)
+testthat::test_file("tests/testthat/test-aefa-parameter-recovery.R",
+                    reporter = reporter)
+testthat::test_file("tests/testthat/test-mixedmirt-parameter-recovery.R",
+                    reporter = reporter)
 ```
 
 `R-CMD-check` remains the package installation and multi-OS compatibility gate.
