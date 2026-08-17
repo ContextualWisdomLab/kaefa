@@ -149,6 +149,11 @@
 
 #' Extract IRT item parameters from an aefa history or mirt fit
 #'
+#' `MixedClass` is accepted so the fail-closed contract can be tested: supported
+#' `mirt` versions do not implement `IRTpars` / `simplify` for `coef,MixedClass`.
+#' That path therefore returns no `$items` table and stops. Use
+#' `.extractMixedmirtIrtItems()` for mixedmirt recovery.
+#'
 #' @param fit An `aefa` history, `SingleGroupClass`, or `MixedClass` object.
 #' @return A data.frame of item parameters with item names as row names.
 #' @noRd
@@ -170,10 +175,28 @@
   as.data.frame(items, stringsAsFactors = FALSE)
 }
 
+#' Locate the `par` row in a mixedmirt coefficient block
+#'
+#' Supported `mirt` `coef,MixedClass` methods always emit a `par` row. A missing
+#' `par` row is fail-closed rather than silently using the first row.
+#'
+#' @param mat A coefficient matrix from `mirt::coef()` on a `MixedClass` fit.
+#' @return The string `"par"`.
+#' @noRd
+.mixedmirtParRow <- function(mat) {
+  rn <- rownames(mat)
+  if (is.null(rn) || !("par" %in% rn)) {
+    stop("mixedmirt coefficient block has no 'par' row.", call. = FALSE)
+  }
+  "par"
+}
+
 #' Extract IRT item parameters from a mixedmirt MixedClass fit
 #'
-#' Reuses the shared extractor when `IRTpars` simplification works, then falls
-#' back to slope-intercept `a1`/`d` coefficients (`b = -d / a1` for Rasch).
+#' Supported `mirt` versions do not implement `IRTpars` / `simplify` on
+#' `coef,MixedClass-method`. Extraction therefore reads the named item list
+#' from `mirt::coef(fit)` and accepts either IRT `a`/`b` or slope-intercept
+#' `a1`/`d` (`b = -d / a1` for Rasch). Other column sets fail closed.
 #'
 #' @param fit A `MixedClass` object returned by `.mixedmirt()`.
 #' @return A data.frame with at least columns `a` and `b`.
@@ -182,19 +205,6 @@
   if (!methods::is(fit, "MixedClass")) {
     stop("mixedmirt recovery extraction requires a MixedClass fit.", call. = FALSE)
   }
-  items <- tryCatch(
-    .extractAefaIrtItems(fit),
-    error = function(e) NULL
-  )
-  if (!is.null(items) && all(c("a", "b") %in% colnames(items))) {
-    return(items)
-  }
-  if (!is.null(items) && all(c("a1", "d") %in% colnames(items))) {
-    items$a <- as.numeric(items$a1)
-    items$b <- -as.numeric(items$d) / items$a
-    return(items)
-  }
-
   coefs <- mirt::coef(fit)
   reserved <- c("GroupPars", "group", "items", "Theta")
   item_names <- setdiff(names(coefs), reserved)
@@ -203,7 +213,7 @@
   }
   rows <- lapply(item_names, function(item_name) {
     block <- as.matrix(coefs[[item_name]])
-    par_row <- if ("par" %in% rownames(block)) "par" else 1L
+    par_row <- .mixedmirtParRow(block)
     cols <- colnames(block)
     if (all(c("a", "b") %in% cols)) {
       data.frame(
@@ -257,7 +267,7 @@
         call. = FALSE
       )
     }
-    par_row <- if ("par" %in% rownames(mat)) "par" else 1L
+    par_row <- .mixedmirtParRow(mat)
     if ("b" %in% colnames(mat)) {
       estimate <- as.numeric(mat[par_row, "b"])
       lower <- as.numeric(mat["CI_2.5", "b"])
@@ -320,7 +330,7 @@
       call. = FALSE
     )
   }
-  par_row <- if ("par" %in% rownames(mat)) "par" else 1L
+  par_row <- .mixedmirtParRow(mat)
   estimate <- as.numeric(mat[par_row, cov_cols])
   lower <- if ("CI_2.5" %in% rownames(mat)) as.numeric(mat["CI_2.5", cov_cols]) else NA_real_
   upper <- if ("CI_97.5" %in% rownames(mat)) as.numeric(mat["CI_97.5", cov_cols]) else NA_real_

@@ -14,6 +14,33 @@ test_that("alignment and repeat helpers reject malformed inputs", {
     "must contain columns"
   )
   testthat::expect_error(kaefa:::.extractAefaIrtItems(list()), "aefa history or a mirt model")
+  testthat::expect_error(
+    kaefa:::.extractAefaIrtItems(list(estModelTrials = list())),
+    "no estimated model trials"
+  )
+  testthat::expect_error(
+    kaefa:::.extractAefaIrtItems(structure(list(estModelTrials = list()), class = "aefa")),
+    "no estimated model trials"
+  )
+
+  testthat::skip_if_not_installed("mirt")
+  items <- data.frame(a = 1.2, b = -0.4, row.names = "Item1", stringsAsFactors = FALSE)
+  testthat::with_mocked_bindings(
+    coef = function(...) list(items = items),
+    .package = "mirt",
+    {
+      extracted <- kaefa:::.extractAefaIrtItems(methods::new("SingleGroupClass"))
+      testthat::expect_equal(extracted["Item1", "a"], 1.2)
+      testthat::expect_equal(extracted["Item1", "b"], -0.4)
+      from_history <- kaefa:::.extractAefaIrtItems(
+        structure(
+          list(estModelTrials = list(methods::new("SingleGroupClass"))),
+          class = "aefa"
+        )
+      )
+      testthat::expect_equal(from_history["Item1", "b"], -0.4)
+    }
+  )
 })
 
 test_that("RMSE matches the Monte Carlo recovery definition", {

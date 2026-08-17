@@ -94,6 +94,24 @@ The exclusion log is asserted in
 cannot be claimed as covered. The engine remains R/`mirt`. This protocol
 does not introduce a Rust or GPU numeric core.
 
+## MixedClass extraction contract
+
+Supported `mirt` versions implement `coef,MixedClass-method` without
+`IRTpars` or `simplify`. Calling
+`mirt::coef(fit, IRTpars = TRUE, simplify = TRUE)$items` on a
+`MixedClass` fit therefore returns `NULL`. That is a fail-closed
+contract for `.extractAefaIrtItems()`, not a recovery path.
+
+`.extractMixedmirtIrtItems()` reads the named item list from
+`mirt::coef(fit)` and accepts either IRT `a`/`b` or slope-intercept
+`a1`/`d` (`b = -d / a1` for Rasch). Missing item names, missing `par`
+rows, and item blocks that lack both column sets stop. Interval
+extraction likewise requires Wald rows (`CI_2.5`, `CI_97.5`) and `b`
+or `d`. Group-variance extraction requires exactly one `COV_` column;
+zero or more than one is fail-closed (the latter is the crossed-effects
+exclusion). These branches are pinned by deterministic `MixedClass`
+fixtures in `tests/testthat/test-mixedmirt-parameter-recovery.R`.
+
 ## Tests
 
 - Always-on contracts (also in `test-fast`):
