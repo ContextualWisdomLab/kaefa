@@ -173,8 +173,9 @@ exist and pass in CI:
   behavior.
 - dot-prefixed helpers are either documented or covered by deprecation tests.
 - true-parameter recovery reports five-repeat RMSE for unidimensional 2PL
-  `a`/`b` after item-name alignment, and records multilevel / multiple-membership
-  / time-flow surfaces as exclusions until a registered design exists.
+  `a`/`b` after item-name alignment, and for nested mixedmirt Rasch `b` plus
+  group variance `tau00`. Multiple-membership, crossed, `lr.random` 2PL, and
+  time-flow surfaces remain exclusions until a registered design exists.
 
 ## Split Readiness Rule
 

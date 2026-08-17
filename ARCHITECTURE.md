@@ -36,7 +36,7 @@ explicitly requires vendored source integration.
   `.mixedmirt()` treat a missing (`NA`) second-order test as
   non-convergence when `leniency` is false.
 - `R/recovery.R`: internal true-parameter RMSE helpers used by the AEFA
-  recovery protocol. Not a public API.
+  and nested mixedmirt recovery protocols. Not a public API.
 - `inst/shiny-app/app.R`: bundled Shiny interface logic.
 - `inst/shiny-app/README.md`: Shiny usage and minimal UI configuration guide.
 - `tests/testthat/*.R`: functional, regression, and integration tests.
@@ -63,9 +63,12 @@ explicitly requires vendored source integration.
 - PR merge requires review approval and resolved conversations.
 - Required checks include R-CMD-check matrix and dependency review.
 - Buyer-facing recovery evidence is the five-repeat RMSE protocol in
-  `tests/testthat/test-aefa-parameter-recovery.R`. The formula, alignment,
-  and coverage-exclusion contracts run in `test-fast`. Live `aefa()`
-  five-seed recovery is gated by `RUN_FULL_AEFA_TESTS=1`.
+  `tests/testthat/test-aefa-parameter-recovery.R` and the nested mixedmirt
+  contracts in `tests/testthat/test-mixedmirt-parameter-recovery.R`. The
+  formula, alignment, and coverage-exclusion contracts run in `test-fast`.
+  Live `aefa()` and five-seed `.mixedmirt` recovery are gated by
+  `RUN_FULL_AEFA_TESTS=1`. One-seed `.mirt` and `.mixedmirt` recovery fits
+  run in the full suite.
 - If code scanning is enabled later, alerts can be tracked via GitHub code
   scanning APIs.
 

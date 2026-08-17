@@ -100,7 +100,7 @@ test_that("five-repeat recovery summary has a fixed output schema", {
   )
 })
 
-test_that("recovery coverage log keeps multilevel and time-flow explicit exclusions", {
+test_that("recovery coverage log keeps MM and time-flow explicit exclusions", {
   .ensure_kaefa_namespace()
   coverage <- kaefa:::.recoveryCoverageExclusions()
   testthat::expect_identical(
@@ -109,8 +109,8 @@ test_that("recovery coverage log keeps multilevel and time-flow explicit exclusi
   )
   testthat::expect_true(any(coverage$surface == "unidimensional 2PL via .mirt" &
                               coverage$status == "covered"))
-  testthat::expect_true(any(grepl("mixedmirt", coverage$surface) &
-                              coverage$status == "excluded"))
+  testthat::expect_true(any(grepl("nested two-level random intercept", coverage$surface) &
+                              coverage$status == "covered"))
   testthat::expect_true(any(grepl("multiple-membership", coverage$surface) &
                               coverage$status == "excluded"))
   testthat::expect_true(any(grepl("time-flow", coverage$surface) &

@@ -37,11 +37,15 @@ Covered:
 - Unidimensional 2PL recovery through `kaefa::.mirt` (`N = 1500`,
   `SE = TRUE`, same cycle budget as the FIIFM stability fit).
 - AEFA greedy search on the same 2PL design when `RUN_FULL_AEFA_TESTS=1`.
+- Nested two-level Rasch random-intercept recovery through
+  `kaefa::.mixedmirt` (`fixed = ~ 0 + items`, `random = ~ 1 | group`).
+  See `docs/traceability/mixedmirt-parameter-recovery.md`.
 
 Explicitly excluded until a registered design exists:
 
-- `mixedmirt` multilevel / random-effect recovery.
-- Multiple-membership crossed random effects.
+- `mixedmirt` 2PL / `lr.random` multilevel recovery.
+- Multiple-membership weights (person in more than one group).
+- Crossed random effects claimed as recovered crossed variances.
 - Time-flow / longitudinal membership.
 
 The exclusion log is asserted in the recovery contract so a later claim cannot

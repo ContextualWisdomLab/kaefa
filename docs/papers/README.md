@@ -132,16 +132,51 @@ cited with its DOI. Open-access / preprint links are noted where available.
 
   Harwell et al. treat RMSE (and related Monte Carlo error summaries) as the
   standard way to judge whether an IRT estimator recovers a known generating
-  model. kaefa uses that definition on IRT `a` and `b` after name alignment.
+  model. kaefa uses that definition on IRT `a` and `b` after name alignment,
+  and on the nested mixedmirt group-variance estimand `tau00`.
 - **Usage in kaefa:** internal helpers in `R/recovery.R` and the five-repeat
-  protocol in `docs/traceability/aefa-parameter-recovery.md`. The formula,
+  protocols in `docs/traceability/aefa-parameter-recovery.md` and
+  `docs/traceability/mixedmirt-parameter-recovery.md`. The formula,
   alignment, and five-repeat schema are pinned by
-  `tests/testthat/test-aefa-parameter-recovery.R`. Live `.mirt` and `aefa()`
-  recovery fits live in `tests/testthat/test-aefa-recovery-fits.R`.
-- **Boundary.** Multilevel `mixedmirt`, multiple-membership, and time-flow
-  designs are recorded as exclusions until a true-parameter design is
-  registered. The engine remains R/`mirt`; this protocol does not introduce a
-  Rust or GPU numeric core.
+  `tests/testthat/test-aefa-parameter-recovery.R` and
+  `tests/testthat/test-mixedmirt-parameter-recovery.R`. Live `.mirt`,
+  `aefa()`, and `.mixedmirt` recovery fits live in
+  `tests/testthat/test-aefa-recovery-fits.R` and
+  `tests/testthat/test-mixedmirt-recovery-fits.R`.
+- **Boundary.** `lr.random` 2PL multilevel, multiple-membership weights,
+  crossed random-effect recovery, and time-flow designs remain exclusions
+  until a true-parameter design is registered. The engine remains R/`mirt`;
+  this protocol does not introduce a Rust or GPU numeric core.
+
+## 8. Nested mixedmirt random-effect recovery
+
+- **Sources.**
+  - Chalmers, R. P. (2015). Extended mixed-effects item response models with
+    the MH-RM algorithm. *Journal of Educational Measurement, 52*(2),
+    200-222.
+    DOI: [10.1111/jedm.12072](https://doi.org/10.1111/jedm.12072)
+  - Kamata, A. (2001). Item analysis by the hierarchical generalized linear
+    model. *Journal of Educational Measurement, 38*(1), 79-93.
+    DOI: [10.1111/j.1745-3984.2001.tb01117.x](https://doi.org/10.1111/j.1745-3984.2001.tb01117.x)
+  - Maas, C. J. M., & Hox, J. J. (2005). Sufficient sample sizes for
+    multilevel modeling. *Methodology, 1*(3), 86-92.
+    DOI: [10.1027/1614-2241.1.3.86](https://doi.org/10.1027/1614-2241.1.3.86)
+  - Diez-Roux, A. V. (1998). Bringing context back into epidemiology:
+    Variables and fallacies in multilevel analysis. *American Journal of
+    Public Health, 88*(2), 216-222.
+    DOI: [10.2105/AJPH.88.2.216](https://doi.org/10.2105/AJPH.88.2.216)
+- **Canonical design.** Persons nested in groups; Rasch intercepts as
+  `fixed = ~ 0 + items`; group intercept as `random = ~ 1 | group`. Ability
+  is `theta_ig = u_g + e_ig` with known `tau00 = Var(u_g)`. A single-level
+  fit of the same responses is refused (atomistic fallacy).
+- **Usage in kaefa:** `.mixedmirtNestedRecoveryDesign()`,
+  `.fitMixedmirtNestedRecovery()`, and the RMSE / interval helpers in
+  `R/recovery.R`. Live evidence is
+  `tests/testthat/test-mixedmirt-recovery-fits.R`.
+- **Boundary.** Multiple membership (Chung & Beretvas, 2012), crossed
+  random effects, `lr.random` 2PL, and longitudinal membership are logged
+  as exclusions. Copyrighted PDFs are not redistributed; each source is
+  cited with its DOI.
 
 ## Audit note
 
@@ -150,4 +185,5 @@ or `outfit`; those are delegated verbatim to `mirt` and remain subject to
 `mirt`'s validation. Package-local formulas and decision rules are pinned above:
 the `Zh` cutoff, the exact Hurvich-Tsai AICc correction, the explicit
 posterior-information boundary that prevents DIC from being fabricated, and
-the Harwell et al. RMSE recovery definition.
+the Harwell et al. RMSE recovery definition, and the nested mixedmirt
+`b` / `tau00` recovery design.
