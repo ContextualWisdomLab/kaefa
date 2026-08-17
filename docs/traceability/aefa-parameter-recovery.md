@@ -20,12 +20,15 @@ For a recovered parameter vector \(\hat{\theta}\) and a true vector \(\theta\),
 
     RMSE = sqrt( mean( (hat_theta - theta)^2 ) )
 
-Items are aligned by name before the difference is taken. The required IRT
-columns for the unidimensional 2PL case are `a` (discrimination) and `b`
-(difficulty) from `mirt::coef(..., IRTpars = TRUE, simplify = TRUE)$items`.
+Items are aligned by name before the difference is taken. Estimated and true
+tables must contain the same item names; a partial intersection is rejected.
+The required IRT columns for the unidimensional 2PL case are `a`
+(discrimination) and `b` (difficulty) from
+`mirt::coef(..., IRTpars = TRUE, simplify = TRUE)$items`.
 
-Exactly five seeds are required. The summary schema is: per-run `seed`,
-`parameter`, `rmse`, plus `mean_rmse` and `sd_rmse` by parameter.
+Exactly five seeds are required, and each parameter must have one RMSE value
+for every seed. The summary schema is: per-run `seed`, `parameter`, `rmse`,
+plus `mean_rmse` and `sd_rmse` by parameter.
 
 ## Current coverage
 

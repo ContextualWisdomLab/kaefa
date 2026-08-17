@@ -42,7 +42,15 @@ test_that("IRT parameter alignment is by item name and required columns", {
   )
   other <- truth
   rownames(other) <- c("Q1", "Q2")
-  testthat::expect_error(kaefa:::.alignIrtItemParameters(estimated, other), "shared item names")
+  testthat::expect_error(
+    kaefa:::.alignIrtItemParameters(estimated, other),
+    "same item names"
+  )
+  subset_truth <- truth[1, , drop = FALSE]
+  testthat::expect_error(
+    kaefa:::.alignIrtItemParameters(estimated, subset_truth),
+    "same item names"
+  )
 })
 
 test_that("five-repeat recovery summary has a fixed output schema", {
@@ -69,6 +77,26 @@ test_that("five-repeat recovery summary has a fixed output schema", {
   testthat::expect_error(
     kaefa:::.summariseRecoveryRepeats(rmse_by_repeat[1:4, ]),
     "exactly 5 repeats"
+  )
+  incomplete_b <- rmse_by_repeat[rmse_by_repeat$parameter == "a" |
+                                   rmse_by_repeat$seed != 55L, ]
+  testthat::expect_error(
+    kaefa:::.summariseRecoveryRepeats(incomplete_b),
+    "exactly one RMSE value"
+  )
+  duplicated_a <- rbind(
+    rmse_by_repeat,
+    data.frame(seed = 11L, parameter = "a", rmse = 0.99, stringsAsFactors = FALSE)
+  )
+  testthat::expect_error(
+    kaefa:::.summariseRecoveryRepeats(duplicated_a),
+    "exactly one RMSE value"
+  )
+  missing_rmse <- rmse_by_repeat
+  missing_rmse$rmse[1] <- NA_real_
+  testthat::expect_error(
+    kaefa:::.summariseRecoveryRepeats(missing_rmse),
+    "missing values"
   )
 })
 

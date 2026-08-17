@@ -55,10 +55,15 @@
       call. = FALSE
     )
   }
-  shared <- intersect(est_names, true_names)
-  if (!length(shared)) {
-    stop("No shared item names between estimated and true parameters.", call. = FALSE)
+  missing_estimated_items <- setdiff(true_names, est_names)
+  missing_truth_items <- setdiff(est_names, true_names)
+  if (length(missing_estimated_items) || length(missing_truth_items)) {
+    stop(
+      "Estimated and true parameter tables must contain the same item names.",
+      call. = FALSE
+    )
   }
+  shared <- est_names
   list(
     estimated = estimated[shared, columns, drop = FALSE],
     truth = truth[shared, columns, drop = FALSE],
@@ -83,7 +88,22 @@
   if (length(seeds) != 5L) {
     stop("Recovery protocol requires exactly 5 repeats.", call. = FALSE)
   }
+  if (anyNA(rmse_by_repeat$seed) ||
+      anyNA(rmse_by_repeat$parameter) ||
+      anyNA(rmse_by_repeat$rmse)) {
+    stop("Recovery repeats cannot contain missing values.", call. = FALSE)
+  }
   parameters <- unique(as.character(rmse_by_repeat$parameter))
+  repeat_counts <- table(
+    as.character(rmse_by_repeat$parameter),
+    rmse_by_repeat$seed
+  )
+  if (!length(repeat_counts) || any(repeat_counts != 1L)) {
+    stop(
+      "Each parameter must have exactly one RMSE value for each recovery seed.",
+      call. = FALSE
+    )
+  }
   summary_rows <- lapply(parameters, function(parameter_name) {
     values <- rmse_by_repeat$rmse[as.character(rmse_by_repeat$parameter) == parameter_name]
     data.frame(
