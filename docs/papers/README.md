@@ -119,10 +119,35 @@ cited with its DOI. Open-access / preprint links are noted where available.
   needed to reconstruct it. Kaefa accepts DIC only when the fitted model
   supplies a finite DIC value and never relabels AIC as DIC.
 
+## 7. Monte Carlo parameter recovery RMSE
+
+- **Source:** Harwell, M. R., Stone, C. A., Hsu, T.-C., & Kirisci, L. (1996).
+  Monte Carlo studies in item response theory. *Applied Psychological
+  Measurement, 20*(2), 101-125.
+  DOI: [10.1177/014662169602000201](https://doi.org/10.1177/014662169602000201)
+- **Canonical equation.** For recovered parameters \(\hat{\theta}\) and known
+  true parameters \(\theta\),
+
+      RMSE = sqrt( mean( (hat_theta - theta)^2 ) )
+
+  Harwell et al. treat RMSE (and related Monte Carlo error summaries) as the
+  standard way to judge whether an IRT estimator recovers a known generating
+  model. kaefa uses that definition on IRT `a` and `b` after name alignment.
+- **Usage in kaefa:** internal helpers in `R/recovery.R` and the five-repeat
+  protocol in `docs/traceability/aefa-parameter-recovery.md`. The formula,
+  alignment, and five-repeat schema are pinned by
+  `tests/testthat/test-aefa-parameter-recovery.R`. Live `.mirt` and `aefa()`
+  recovery fits live in `tests/testthat/test-aefa-recovery-fits.R`.
+- **Boundary.** Multilevel `mixedmirt`, multiple-membership, and time-flow
+  designs are recorded as exclusions until a true-parameter design is
+  registered. The engine remains R/`mirt`; this protocol does not introduce a
+  Rust or GPU numeric core.
+
 ## Audit note
 
 kaefa does **not** re-implement `P(theta)`, the MML-EM E-/M-step, `S-X2`, `infit`,
 or `outfit`; those are delegated verbatim to `mirt` and remain subject to
 `mirt`'s validation. Package-local formulas and decision rules are pinned above:
-the `Zh` cutoff, the exact Hurvich-Tsai AICc correction, and the explicit
-posterior-information boundary that prevents DIC from being fabricated.
+the `Zh` cutoff, the exact Hurvich-Tsai AICc correction, the explicit
+posterior-information boundary that prevents DIC from being fabricated, and
+the Harwell et al. RMSE recovery definition.

@@ -1,7 +1,8 @@
 name: test-suite
 
-# Runs the complete testthat suite (26 files), which the previous CI setup
-# skipped: R-CMD-check runs with --no-tests and test-fast runs only 3 files.
+# Runs the complete testthat suite, which the previous CI setup skipped:
+# R-CMD-check runs with --no-tests and test-fast runs a small productization
+# subset.
 # On push/PR the suite's own CI guards (.skip_expensive_ci_calls, skip_on_ci)
 # keep expensive AEFA estimations out. The weekly scheduled run and manual
 # dispatch set RUN_FULL_AEFA_TESTS=1, which unlocks the estimations guarded

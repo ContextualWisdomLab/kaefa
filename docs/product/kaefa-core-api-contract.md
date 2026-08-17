@@ -172,6 +172,9 @@ exist and pass in CI:
 - theta-prior helpers cover fit success, unsupported distribution, and fallback
   behavior.
 - dot-prefixed helpers are either documented or covered by deprecation tests.
+- true-parameter recovery reports five-repeat RMSE for unidimensional 2PL
+  `a`/`b` after item-name alignment, and records multilevel / multiple-membership
+  / time-flow surfaces as exclusions until a registered design exists.
 
 ## Split Readiness Rule
 

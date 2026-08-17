@@ -11,6 +11,7 @@ Use this file as the local operating guide when modifying `kaefa`.
 - Core orchestration: `R/kaefa.R`
 - Estimation engine: `R/newEngine.R`
 - Shared helpers: `R/utils.R`
+- Recovery protocol: `R/recovery.R`
 - Shiny app: `inst/shiny-app/app.R`
 - Tests: `tests/testthat/`
 - Local CI workflow definitions: `.github/workflows/`

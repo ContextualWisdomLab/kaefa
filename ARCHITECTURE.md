@@ -1,6 +1,6 @@
 # kaefa Architecture
 
-Last updated: 2026-02-14
+Last updated: 2026-08-17
 
 ## Purpose
 
@@ -33,6 +33,8 @@ explicitly requires vendored source integration.
 - `R/kaefa.R`: public orchestration entry points and exported runtime behavior.
 - `R/newEngine.R`: candidate-model estimation engine used by the AEFA loop.
 - `R/utils.R`: helper routines and shared utilities.
+- `R/recovery.R`: internal true-parameter RMSE helpers used by the AEFA
+  recovery protocol. Not a public API.
 - `inst/shiny-app/app.R`: bundled Shiny interface logic.
 - `inst/shiny-app/README.md`: Shiny usage and minimal UI configuration guide.
 - `tests/testthat/*.R`: functional, regression, and integration tests.
@@ -58,6 +60,10 @@ explicitly requires vendored source integration.
 
 - PR merge requires review approval and resolved conversations.
 - Required checks include R-CMD-check matrix and dependency review.
+- Buyer-facing recovery evidence is the five-repeat RMSE protocol in
+  `tests/testthat/test-aefa-parameter-recovery.R`. The formula, alignment,
+  and coverage-exclusion contracts run in `test-fast`. Live `aefa()`
+  five-seed recovery is gated by `RUN_FULL_AEFA_TESTS=1`.
 - If code scanning is enabled later, alerts can be tracked via GitHub code
   scanning APIs.
 
