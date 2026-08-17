@@ -6,11 +6,13 @@ test_that(".mirt recovers known 2PL parameters with bounded RMSE", {
   true_a <- matrix(c(0.9, 1.1, 1.3, 1.5, 1.7), ncol = 1)
   true_b <- c(-1.2, -0.6, 0, 0.6, 1.2)
   true_d <- matrix(-true_a[, 1] * true_b, ncol = 1)
+  # Same N and cycle budget as test-fiifm-stability.R. N=400 left the Hessian
+  # missing and a-parameter RMSE / 5-item correlation too noisy for a gate.
   response_data <- as.data.frame(mirt::simdata(
     a = true_a,
     d = true_d,
     itemtype = "2PL",
-    N = 400
+    N = 1500
   ))
   names(response_data) <- paste0("Item", seq_len(ncol(response_data)))
   truth <- data.frame(
@@ -29,30 +31,11 @@ test_that(".mirt recovers known 2PL parameters with bounded RMSE", {
       GenRandomPars = FALSE,
       calcNull = FALSE,
       leniency = FALSE,
-      NCYCLES = 800,
-      BURNIN = 50,
-      SEMCYCLES = 50
+      NCYCLES = 400,
+      BURNIN = 100,
+      SEMCYCLES = 100
     ))
   )
-  if (is.null(fit)) {
-    # A missing Hessian (secondordertest = NA) is not a recovery failure.
-    # Retry with more cycles and allow a missing second-order test.
-    utils::capture.output(
-      fit <- suppressWarnings(kaefa::.mirt(
-        data = response_data,
-        model = 1,
-        method = "EM",
-        itemtype = "2PL",
-        SE = FALSE,
-        GenRandomPars = FALSE,
-        calcNull = FALSE,
-        leniency = TRUE,
-        NCYCLES = 1500,
-        BURNIN = 50,
-        SEMCYCLES = 50
-      ))
-    )
-  }
   if (!methods::is(fit, "SingleGroupClass")) {
     testthat::fail("kaefa::.mirt did not return a single-group fit")
     return(invisible(NULL))

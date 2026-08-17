@@ -31,7 +31,8 @@ Exactly five seeds are required. The summary schema is: per-run `seed`,
 
 Covered:
 
-- Unidimensional 2PL recovery through `kaefa::.mirt`.
+- Unidimensional 2PL recovery through `kaefa::.mirt` (`N = 1500`, same
+  cycle budget as the FIIFM stability fit).
 - AEFA greedy search on the same 2PL design when `RUN_FULL_AEFA_TESTS=1`.
 
 Explicitly excluded until a registered design exists:
