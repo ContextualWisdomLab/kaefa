@@ -74,6 +74,67 @@ test_that("interval inclusion is exact and rejects incomplete bounds", {
   )
 })
 
+test_that("mixedmirt extractors reject non-MixedClass and incomplete inputs", {
+  .ensure_kaefa_namespace()
+  testthat::expect_error(
+    kaefa:::.extractMixedmirtIrtItems(list()),
+    "MixedClass"
+  )
+  testthat::expect_error(
+    kaefa:::.extractMixedmirtItemIntervals(list(), "Item1"),
+    "MixedClass"
+  )
+  testthat::expect_error(
+    kaefa:::.extractMixedmirtGroupVariance(list(), "group"),
+    "MixedClass"
+  )
+  testthat::expect_error(
+    kaefa:::.fitMixedmirtNestedRecovery(list()),
+    "mixedmirtNestedRecoveryDesign"
+  )
+  testthat::expect_error(
+    kaefa:::.recoveryIntervalInclusion(numeric(), numeric(), numeric(), numeric()),
+    "empty"
+  )
+  testthat::expect_error(
+    kaefa:::.rejectAtomisticMixedmirtRecovery(data.frame(group = 1:40), ~ 1),
+    "1 \\| G"
+  )
+  testthat::expect_error(
+    kaefa:::.rejectAtomisticMixedmirtRecovery(
+      data.frame(group = 1:40),
+      ~ 1 | group:items
+    ),
+    "Crossed or interaction"
+  )
+  testthat::expect_error(
+    kaefa:::.rejectAtomisticMixedmirtRecovery(data.frame(group = 1:40), "group"),
+    "nested random-effect formula"
+  )
+  testthat::expect_true(isTRUE(
+    kaefa:::.rejectAtomisticMixedmirtRecovery(
+      data.frame(group = factor(rep(1:40, each = 2))),
+      list(~ 1 | group)
+    )
+  ))
+  testthat::expect_error(
+    kaefa:::.mixedmirtNestedRecoveryDesign(seed = c(1, 2)),
+    "single finite"
+  )
+  testthat::expect_error(
+    kaefa:::.mixedmirtNestedRecoveryDesign(seed = 1L, true_b = NA_real_),
+    "true_b"
+  )
+  testthat::expect_error(
+    kaefa:::.mixedmirtNestedRecoveryDesign(seed = 1L, group_name = ""),
+    "group_name"
+  )
+  testthat::expect_error(
+    kaefa:::.mixedmirtNestedRecoveryDesign(seed = 1L, residual_variance = 0),
+    "residual"
+  )
+})
+
 test_that("mixedmirt coverage log covers nested RE and excludes MM/time-flow", {
   .ensure_kaefa_namespace()
   coverage <- kaefa:::.recoveryCoverageExclusions()

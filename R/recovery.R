@@ -486,10 +486,12 @@
   theta <- u[as.integer(group)] + stats::rnorm(n, mean = 0, sd = sqrt(residual_variance))
   true_a <- matrix(rep(1, length(true_b)), ncol = 1)
   true_d <- matrix(-true_a[, 1] * true_b, ncol = 1)
+  # mirt >= 1.46 rejects itemtype = "Rasch" in simdata as ambiguous.
+  # a = 1 with 2PL is the dichotomous Rasch generating model.
   response_data <- as.data.frame(mirt::simdata(
     a = true_a,
     d = true_d,
-    itemtype = "Rasch",
+    itemtype = "2PL",
     Theta = matrix(theta, ncol = 1)
   ))
   names(response_data) <- paste0("Item", seq_len(ncol(response_data)))

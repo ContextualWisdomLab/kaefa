@@ -1,3 +1,21 @@
+test_that("alignment and repeat helpers reject malformed inputs", {
+  .ensure_kaefa_namespace()
+  testthat::expect_error(
+    kaefa:::.alignIrtItemParameters(1:3, data.frame(a = 1, b = 1, row.names = "I1")),
+    "matrix or data.frame"
+  )
+  testthat::expect_error(
+    kaefa:::.alignIrtItemParameters(data.frame(a = 1, b = 1, row.names = "I1"), 1:3),
+    "matrix or data.frame"
+  )
+  testthat::expect_error(kaefa:::.summariseRecoveryRepeats(1:5), "data.frame")
+  testthat::expect_error(
+    kaefa:::.summariseRecoveryRepeats(data.frame(seed = 1L)),
+    "must contain columns"
+  )
+  testthat::expect_error(kaefa:::.extractAefaIrtItems(list()), "aefa history or a mirt model")
+})
+
 test_that("RMSE matches the Monte Carlo recovery definition", {
   .ensure_kaefa_namespace()
   estimated <- c(0.8, 1.1, 1.4)
