@@ -197,11 +197,13 @@
     }
 
     if(exists('mod')){
-      if(mod@OptimInfo$converged){
+      if(isTRUE(mod@OptimInfo$converged)){
         if(leniency){
           mod
         } else {
-          if(mod@OptimInfo$secondordertest){
+          # mirt can leave secondordertest as NA when the Hessian is unavailable;
+          # `if (NA)` would abort the caller instead of treating the fit as failed.
+          if(isTRUE(mod@OptimInfo$secondordertest)){
             mod
           } else {
             NULL
@@ -229,11 +231,11 @@
                                                           SEMCYCLES = SEMCYCLES,
                                                           symmetric = symmetric))
     if(exists('mod')){
-      if(mod@OptimInfo$converged){
+      if(isTRUE(mod@OptimInfo$converged)){
         if(leniency){
           mod
         } else {
-          if(mod@OptimInfo$secondordertest){
+          if(isTRUE(mod@OptimInfo$secondordertest)){
             mod
           } else {
             NULL

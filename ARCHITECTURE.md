@@ -32,7 +32,9 @@ explicitly requires vendored source integration.
 
 - `R/kaefa.R`: public orchestration entry points and exported runtime behavior.
 - `R/newEngine.R`: candidate-model estimation engine used by the AEFA loop.
-- `R/utils.R`: helper routines and shared utilities.
+- `R/utils.R`: helper routines and shared utilities. `.mirt()` and
+  `.mixedmirt()` treat a missing (`NA`) second-order test as
+  non-convergence when `leniency` is false.
 - `R/recovery.R`: internal true-parameter RMSE helpers used by the AEFA
   recovery protocol. Not a public API.
 - `inst/shiny-app/app.R`: bundled Shiny interface logic.

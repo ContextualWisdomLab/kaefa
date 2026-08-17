@@ -18,6 +18,17 @@
   sqrt(mean((estimated - truth)^2))
 }
 
+# R data.frames never keep rownames as NULL: `rownames(x) <- NULL` resets them
+# to the sequential defaults "1", "2", .... Treat those as unnamed so callers
+# cannot silently align on positional indices.
+.irtItemNames <- function(x) {
+  rn <- rownames(x)
+  if (is.null(rn) || identical(rn, as.character(seq_len(nrow(x))))) {
+    return(NULL)
+  }
+  rn
+}
+
 .alignIrtItemParameters <- function(estimated, truth, columns = c("a", "b")) {
   if (!is.data.frame(estimated) && !is.matrix(estimated)) {
     stop("estimated must be a matrix or data.frame of item parameters.", call. = FALSE)
@@ -27,7 +38,9 @@
   }
   estimated <- as.data.frame(estimated, stringsAsFactors = FALSE)
   truth <- as.data.frame(truth, stringsAsFactors = FALSE)
-  if (is.null(rownames(estimated)) || is.null(rownames(truth))) {
+  est_names <- .irtItemNames(estimated)
+  true_names <- .irtItemNames(truth)
+  if (is.null(est_names) || is.null(true_names)) {
     stop(
       "Estimated and true parameter tables must have item names as row names.",
       call. = FALSE
@@ -42,7 +55,7 @@
       call. = FALSE
     )
   }
-  shared <- intersect(rownames(estimated), rownames(truth))
+  shared <- intersect(est_names, true_names)
   if (!length(shared)) {
     stop("No shared item names between estimated and true parameters.", call. = FALSE)
   }

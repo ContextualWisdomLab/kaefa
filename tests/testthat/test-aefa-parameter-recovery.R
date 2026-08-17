@@ -30,6 +30,12 @@ test_that("IRT parameter alignment is by item name and required columns", {
   unnamed <- estimated
   rownames(unnamed) <- NULL
   testthat::expect_error(kaefa:::.alignIrtItemParameters(unnamed, truth), "row names")
+  truth_unnamed <- truth
+  rownames(truth_unnamed) <- NULL
+  testthat::expect_error(
+    kaefa:::.alignIrtItemParameters(unnamed, truth_unnamed),
+    "row names"
+  )
   testthat::expect_error(
     kaefa:::.alignIrtItemParameters(estimated[, "a", drop = FALSE], truth),
     "Missing recovery columns"

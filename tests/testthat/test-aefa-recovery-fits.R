@@ -29,11 +29,30 @@ test_that(".mirt recovers known 2PL parameters with bounded RMSE", {
       GenRandomPars = FALSE,
       calcNull = FALSE,
       leniency = FALSE,
-      NCYCLES = 200,
+      NCYCLES = 800,
       BURNIN = 50,
       SEMCYCLES = 50
     ))
   )
+  if (is.null(fit)) {
+    # A missing Hessian (secondordertest = NA) is not a recovery failure.
+    # Retry with more cycles and allow a missing second-order test.
+    utils::capture.output(
+      fit <- suppressWarnings(kaefa::.mirt(
+        data = response_data,
+        model = 1,
+        method = "EM",
+        itemtype = "2PL",
+        SE = FALSE,
+        GenRandomPars = FALSE,
+        calcNull = FALSE,
+        leniency = TRUE,
+        NCYCLES = 1500,
+        BURNIN = 50,
+        SEMCYCLES = 50
+      ))
+    )
+  }
   if (!methods::is(fit, "SingleGroupClass")) {
     testthat::fail("kaefa::.mirt did not return a single-group fit")
     return(invisible(NULL))

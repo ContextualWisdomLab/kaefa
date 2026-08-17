@@ -9,8 +9,10 @@ helpers in `R/recovery.R` and pinned by
 coverage exclusions) plus `tests/testthat/test-aefa-recovery-fits.R` (live
 fits).
 
-This is not a public API. External behaviour of `aefa()`, `engineAEFA()`, and
-`.mirt()` is unchanged.
+This is not a public API. External behaviour of `aefa()` and `engineAEFA()` is
+unchanged. `.mirt()` / `.mixedmirt()` now treat a missing
+(`NA`) second-order test as non-convergence when `leniency` is false, instead
+of aborting on `if (NA)`.
 
 ## RMSE definition
 
