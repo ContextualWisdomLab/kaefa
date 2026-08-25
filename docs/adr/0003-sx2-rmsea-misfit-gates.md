@@ -34,8 +34,10 @@ Maydeu-Olivares and Joe (2014). kaefa does not re-implement `S-X2`.
 
 Orlando, M., & Thissen, D. (2000). Likelihood-based item-fit indices for
 dichotomous item response theory models. *Applied Psychological
-Measurement, 24*(1), 50–64. https://doi.org/10.1177/01466216000241003
+Measurement, 24*(1), 50–64.
+[https://doi.org/10.1177/01466216000241003](https://doi.org/10.1177/01466216000241003)
 
 Maydeu-Olivares, A., & Joe, H. (2014). Assessing approximate fit in
 categorical data analysis. *Multivariate Behavioral Research, 49*(4),
-305–328. https://doi.org/10.1080/00273171.2014.911075
+305–328.
+[https://doi.org/10.1080/00273171.2014.911075](https://doi.org/10.1080/00273171.2014.911075)

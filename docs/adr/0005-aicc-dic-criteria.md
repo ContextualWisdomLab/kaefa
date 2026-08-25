@@ -39,9 +39,9 @@ and is never relabelled from AIC. `CAIC` is not treated as an alias for
 
 Hurvich, C. M., & Tsai, C.-L. (1989). Regression and time series model
 selection in small samples. *Biometrika, 76*(2), 297–307.
-https://doi.org/10.1093/biomet/76.2.297
+[https://doi.org/10.1093/biomet/76.2.297](https://doi.org/10.1093/biomet/76.2.297)
 
 Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & van der Linde, A.
 (2002). Bayesian measures of model complexity and fit. *Journal of the
 Royal Statistical Society: Series B, 64*(4), 583–639.
-https://doi.org/10.1111/1467-9868.00353
+[https://doi.org/10.1111/1467-9868.00353](https://doi.org/10.1111/1467-9868.00353)

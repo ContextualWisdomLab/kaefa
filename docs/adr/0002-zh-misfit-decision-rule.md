@@ -43,4 +43,5 @@ final `ZhCond` gate). Those three sites must stay identical.
 Drasgow, F., Levine, M. V., & Williams, E. A. (1985). Appropriateness
 measurement with polychotomous item response models and standardized
 indices. *British Journal of Mathematical and Statistical Psychology,
-38*(1), 67–86. https://doi.org/10.1111/j.2044-8317.1985.tb00817.x
+38*(1), 67–86.
+[https://doi.org/10.1111/j.2044-8317.1985.tb00817.x](https://doi.org/10.1111/j.2044-8317.1985.tb00817.x)
