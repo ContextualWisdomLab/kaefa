@@ -1,10 +1,11 @@
 # kaefa Architecture
 
-Last updated: 2026-02-14
+Last updated: 2026-08-25
 
 ## Purpose
 
 `kaefa` is an R package for automated exploratory factor analysis (AEFA).
+Accepted decisions already true on this branch are recorded in `docs/adr/`.
 It provides:
 
 - core AEFA execution (`aefa`, `engineAEFA`),

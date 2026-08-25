@@ -9,6 +9,7 @@ reference against which `R/kaefa.R` and `R/utils.R` are audited.
 
 The source articles are copyrighted and cannot be redistributed here, so each is
 cited with its DOI. Open-access / preprint links are noted where available.
+Decision records for these rules live in `docs/adr/`.
 
 ## 1. Standardised log-likelihood fit statistic `Zh`
 

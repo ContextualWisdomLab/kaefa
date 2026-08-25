@@ -10,6 +10,8 @@ unexplained factor structures in complex, cross-classified multilevel
 data in R. It uses an automated exploratory factor analysis (aefa)
 framework.
 
+Accepted fit-search decisions are recorded in [`docs/adr/`](docs/adr/).
+
 ## Algorithm
 
 The automated exploratory factor analysis (aefa) framework implements a
