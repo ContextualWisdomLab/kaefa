@@ -1,62 +1,34 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# Thin caller: shared R-CMD-check logic lives in the org-wide reusable
+# workflow. See ContextualWisdomLab/.github#1716,
+# ContextualWisdomLab/.github's docs/adr/0023-r-cmd-check-reusable-workflow-consolidation.md
+# and docs/doctoring/r-cmd-check-reusable-workflow-consolidation.md.
+name: R-CMD-check
+
 on:
   push:
     branches: [main, master, develop]
   pull_request:
     branches: [main, master, develop]
 
-name: R-CMD-check
-
-permissions:
-  contents: read
-
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
-
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
-
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - {os: macos-latest, r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'oldrel-1'}
-
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: r-lib/actions/setup-pandoc@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2
-
-      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
-        with:
-          extra-packages: |
-            any::rcmdcheck
-            any::testthat
-          needs: check
-
-      - name: Run Zh formula regression tests
-        run: |
-          Rscript -e 'install.packages(".", repos = NULL, type = "source")'
-          Rscript -e 'library(kaefa); testthat::test_file("tests/testthat/test-zh-misfit-decision-rule.R")'
-
-      - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2
-        with:
-          error-on: '"error"'
-          upload-snapshots: true
-          args: 'c("--no-manual", "--no-tests")'
-          build_args: 'c("--no-manual")'
+    uses: ContextualWisdomLab/.github/.github/workflows/r-package-check.yml@main
+    with:
+      r_matrix: |
+        [
+          {"os": "macos-latest", "r": "release"},
+          {"os": "windows-latest", "r": "release"},
+          {"os": "ubuntu-latest", "r": "devel", "http-user-agent": "release"},
+          {"os": "ubuntu-latest", "r": "release"},
+          {"os": "ubuntu-latest", "r": "oldrel-1"}
+        ]
+      extra_packages: |
+        any::rcmdcheck
+        any::testthat
+      check_args: 'c("--no-manual", "--no-tests")'
+      pre_check_script: |
+        Rscript -e 'install.packages(".", repos = NULL, type = "source")'
+        Rscript -e 'library(kaefa); testthat::test_file("tests/testthat/test-zh-misfit-decision-rule.R")'
