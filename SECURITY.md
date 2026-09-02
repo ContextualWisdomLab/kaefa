@@ -9,12 +9,19 @@ Older snapshots are accepted on a best-effort basis.
 
 If you discover a potential security issue:
 
-1. Open a private security advisory at:
-   [GitHub security advisories](https://github.com/seonghobae/kaefa/security/advisories/new).
-2. Do not create a public issue before we review and coordinate.
+1. Use this repository's private GitHub Security Advisory workflow when it is
+   available:
+   [GitHub security advisories](https://github.com/ContextualWisdomLab/kaefa/security/advisories/new).
+2. If that private repository feature is unavailable to you, contact the
+   ContextualWisdomLab repository maintainers through an established private
+   channel.
+3. Do not create a public issue, pull-request comment, or discussion before we
+   review and coordinate.
 
-Include: affected version/commit, impact details, reproduction steps,
-and any proof-of-concept details.
+Include the affected version or commit, impact details, reproduction steps,
+and only the minimum proof-of-concept material needed to reproduce safely.
+Do not include secrets, production credentials, or private data in a public
+channel.
 
 ## Scope
 
