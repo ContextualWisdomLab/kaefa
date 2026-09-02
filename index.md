@@ -1,6 +1,11 @@
 # kaefa
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ContextualWisdomLab/kaefa)
+<a href="https://deepwiki.com/ContextualWisdomLab/kaefa">
+  <img
+    src="https://deepwiki.com/badge.svg"
+    alt="Ask DeepWiki"
+  >
+</a>
 
 **kaefa** is an R package for automated exploratory factor analysis (AEFA).
 It helps researchers explore uncertain factor structures, compare candidate
@@ -56,10 +61,11 @@ launchAEFA()
 
 ## Documentation and onboarding
 
-- [Repository README](https://github.com/ContextualWisdomLab/kaefa/blob/develop/README.md)
-  — installation, examples, remote execution, workload sizing, Shiny usage,
-  and quality information.
-- [Architecture](https://github.com/ContextualWisdomLab/kaefa/blob/develop/ARCHITECTURE.md)
+- [Repository README](https://github.com/ContextualWisdomLab/kaefa) —
+  installation, examples, remote execution, workload sizing, Shiny usage, and
+  quality information.
+- **Architecture**
+  <https://github.com/ContextualWisdomLab/kaefa/blob/develop/ARCHITECTURE.md>
   — runtime flow, product boundaries, repository layout, and quality gates.
 - [Source repository](https://github.com/ContextualWisdomLab/kaefa) — issues,
   pull requests, releases, code, and current development activity.
