@@ -29,6 +29,5 @@ jobs:
         any::rcmdcheck
         any::testthat
       check_args: 'c("--no-manual", "--no-tests")'
-      pre_check_script: |
-        Rscript -e 'install.packages(".", repos = NULL, type = "source")'
-        Rscript -e 'library(kaefa); testthat::test_file("tests/testthat/test-zh-misfit-decision-rule.R")'
+      install_package_before_pre_check: true
+      pre_check_test_file: tests/testthat/test-zh-misfit-decision-rule.R
