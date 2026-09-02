@@ -5,6 +5,8 @@
 
 # kaefa
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ContextualWisdomLab/kaefa)
+
 The goal of kaefa is to improve researchers’ ability to identify
 unexplained factor structures in complex, cross-classified multilevel
 data in R. It uses an automated exploratory factor analysis (aefa)
