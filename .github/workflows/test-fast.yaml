@@ -3,8 +3,14 @@ name: test-fast
 on:
   push:
     branches: [main, master, develop]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
   pull_request:
     branches: [main, master, develop]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
 
 permissions:
   contents: read
