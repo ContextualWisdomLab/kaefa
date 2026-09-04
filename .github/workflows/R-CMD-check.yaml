@@ -16,6 +16,8 @@ on:
 jobs:
   R-CMD-check:
     uses: ContextualWisdomLab/.github/.github/workflows/r-package-check.yml@816e3e4970fde4450585de2a7b8df7e2c5f82fe4
+    permissions:
+      contents: read
     with:
       r_matrix: |
         [
