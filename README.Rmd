@@ -68,8 +68,8 @@ the fitted model supplies the required quantities. DIC is used only when a
 fitted model actually supplies posterior DIC; it is not approximated with AIC.
 
 Item-fit/search behavior and accepted `mirt` fit-search decisions are documented
-in [`docs/adr/`](docs/adr/). The research/provenance index is maintained in
-[`docs/papers/README.md`](docs/papers/README.md).
+in [`docs/adr/`](docs/adr/). Algorithm references and formula provenance are
+maintained in [`docs/papers/README.md`](docs/papers/README.md).
 
 ## Product surfaces
 
