@@ -216,9 +216,8 @@ test_that("security fallback and RMSEA rule remain actionable and canonical", {
     security_text,
     gregexpr("mailto:[[:alnum:]._%+@-]+", security_text)
   )[[1]]
-  expect_gt(
-    length(mailto_matches),
-    0,
+  expect_true(
+    length(mailto_matches) > 0,
     info = "SECURITY.md should publish an actionable private fallback"
   )
 
