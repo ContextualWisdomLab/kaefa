@@ -12,9 +12,9 @@ If you discover a potential security issue:
 1. Use this repository's private GitHub Security Advisory workflow when it is
    available:
    [GitHub security advisories](https://github.com/ContextualWisdomLab/kaefa/security/advisories/new).
-2. If that private repository feature is unavailable to you, contact the
-   ContextualWisdomLab repository maintainers through an established private
-   channel.
+2. If that private repository feature is unavailable to you, email the package
+   creator at [me@seonghobae.me](mailto:me@seonghobae.me), the private contact
+   already published in `DESCRIPTION`.
 3. Do not create a public issue, pull-request comment, or discussion before we
    review and coordinate.
 
