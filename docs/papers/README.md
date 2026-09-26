@@ -57,7 +57,7 @@ Decision records for these rules live in `docs/adr/`.
   proportion correct, and `E_{ik}` the model-expected proportion computed from the
   rest-score conditional distribution. It is referred to a chi-square with
   `df = (number of collapsed groups) - (number of item parameters)`.
-- **Usage in kaefa:** `p.S_X2 < fitIndicesCutOff` and `RMSEA.S_X2 >= .05` as misfit
+- **Usage in kaefa:** `p.S_X2 < fitIndicesCutOff` and `round(RMSEA.S_X2, 2) >= .05` as misfit
   conditions (`R/kaefa.R`). The RMSEA cutoff of 0.05 for limited-information item
   fit follows Maydeu-Olivares & Joe — see below.
 
