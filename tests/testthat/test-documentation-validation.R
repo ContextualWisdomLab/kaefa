@@ -192,3 +192,48 @@ test_that("engineAEFA has all documented parameters", {
                 info = paste("engineAEFA should have parameter:", param))
   }
 })
+
+
+# ============================================================
+# Test 7: Operational Documentation Boundaries
+# ============================================================
+
+test_that("security fallback and RMSEA rule remain actionable and canonical", {
+  security_text <- paste(
+    readLines(testthat::test_path("../../SECURITY.md"), warn = FALSE),
+    collapse = "\n"
+  )
+  description_text <- paste(
+    readLines(testthat::test_path("../../DESCRIPTION"), warn = FALSE),
+    collapse = "\n"
+  )
+  papers_text <- paste(
+    readLines(testthat::test_path("../../docs/papers/README.md"), warn = FALSE),
+    collapse = "\n"
+  )
+
+  mailto_matches <- regmatches(
+    security_text,
+    gregexpr("mailto:[[:alnum:]._%+@-]+", security_text)
+  )[[1]]
+  expect_gt(
+    length(mailto_matches),
+    0,
+    info = "SECURITY.md should publish an actionable private fallback"
+  )
+
+  fallback_email <- sub("^mailto:", "", mailto_matches[[1]])
+  expect_true(
+    grepl(fallback_email, description_text, fixed = TRUE),
+    info = "The private fallback must already be published in DESCRIPTION"
+  )
+
+  expect_true(
+    grepl(
+      "`round(RMSEA.S_X2, 2) >= .05` as misfit",
+      papers_text,
+      fixed = TRUE
+    ),
+    info = "Formula provenance must match the accepted rounded RMSEA rule"
+  )
+})
